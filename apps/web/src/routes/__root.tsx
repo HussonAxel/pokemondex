@@ -8,7 +8,9 @@ import type { orpc } from "@/utils/orpc";
 
 import { Toaster } from "@/components/ui/sonner";
 
-import Header from "../components/header";
+import { SidebarLeft } from "@/components/sidebar-left";
+import { SidebarRight } from "@/components/sidebar-right";
+import { SidebarTop } from "@/components/sidebar-top";
 import appCss from "../index.css?url";
 export interface RouterAppContext {
   orpc: typeof orpc;
@@ -47,9 +49,10 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body>
-        <div className="grid h-svh grid-rows-[auto_1fr]">
-          <Header />
+        <div className="grid grid-cols-[auto_1fr_auto] h-full">
+          <SidebarLeft />
           <Outlet />
+          <SidebarRight />
         </div>
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
