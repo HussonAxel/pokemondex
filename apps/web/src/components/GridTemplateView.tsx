@@ -15,6 +15,7 @@ export function GridTemplateView({ itemCount = 30, columns = 6 }) {
   const rows = Math.ceil(itemCount / columns);
 
   const searchParams = useSearch({ from: Route.id });
+  const isShinyView = searchParams.shinyView;
   const navigate = useNavigate({ from: Route.id });
   return (
     <div
@@ -39,7 +40,9 @@ export function GridTemplateView({ itemCount = 30, columns = 6 }) {
           }
         >
           <img
-            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${item}.png`}
+            src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+              isShinyView ? "shiny/" + item : item
+            }.png`}
             alt=""
             className="w-24 h-24 group-hover:scale-120 transition-all duration-300 ease-in-out"
           />

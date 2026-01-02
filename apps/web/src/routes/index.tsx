@@ -13,6 +13,8 @@ export const Route = createFileRoute("/")({
     view: z.enum(["grid", "list"]).optional(),
     search: z.string().optional(),
     activePokemon: z.string().optional(),
+    shinyView: z.boolean().optional(),
+    catchedView: z.boolean().optional(),
   }),
 });
 

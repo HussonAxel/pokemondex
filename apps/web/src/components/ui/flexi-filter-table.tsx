@@ -15,9 +15,17 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  Progress,
+  ProgressIndicator,
+  ProgressTrack,
+} from "@/components/ui/progress";
+
 import { MoreVertical } from "lucide-react";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
+import { cn } from "@/lib/utils";
 const defaultData = [
   {
     id: 1,
@@ -27,6 +35,7 @@ const defaultData = [
     status: ["Fire", "Fly"],
     balance: 1250,
     joined: new Date(2023, 3, 10),
+    catched: true,
   },
   {
     id: 2,
@@ -36,6 +45,7 @@ const defaultData = [
     status: "Active",
     balance: 600,
     joined: new Date(2023, 6, 20),
+    catched: true,
   },
   {
     id: 3,
@@ -45,6 +55,7 @@ const defaultData = [
     status: "Inactive",
     balance: 650,
     joined: new Date(2022, 11, 5),
+    catched: false,
   },
   {
     id: 4,
@@ -54,6 +65,7 @@ const defaultData = [
     status: "Active",
     balance: 0,
     joined: new Date(2023, 0, 15),
+    catched: true,
   },
   {
     id: 5,
@@ -63,6 +75,7 @@ const defaultData = [
     status: "Active",
     balance: -1000,
     joined: new Date(2024, 2, 2),
+    catched: false,
   },
   {
     id: 6,
@@ -72,6 +85,7 @@ const defaultData = [
     status: "Inactive",
     balance: 350,
     joined: new Date(2022, 7, 17),
+    catched: true,
   },
   {
     id: 7,
@@ -81,6 +95,7 @@ const defaultData = [
     status: "Active",
     balance: 900,
     joined: new Date(2023, 2, 11),
+    catched: true,
   },
   {
     id: 8,
@@ -90,6 +105,7 @@ const defaultData = [
     status: "Active",
     balance: 2100,
     joined: new Date(2023, 9, 24),
+    catched: true,
   },
   {
     id: 9,
@@ -99,6 +115,7 @@ const defaultData = [
     status: "Inactive",
     balance: 0,
     joined: new Date(2021, 11, 3),
+    catched: false,
   },
   {
     id: 10,
@@ -108,6 +125,7 @@ const defaultData = [
     status: "Active",
     balance: 150,
     joined: new Date(2022, 4, 19),
+    catched: true,
   },
   {
     id: 11,
@@ -117,6 +135,7 @@ const defaultData = [
     status: "Inactive",
     balance: -170,
     joined: new Date(2024, 1, 27),
+    catched: false,
   },
   {
     id: 12,
@@ -126,6 +145,7 @@ const defaultData = [
     status: "Active",
     balance: 870,
     joined: new Date(2023, 6, 8),
+    catched: true,
   },
   {
     id: 13,
@@ -135,6 +155,7 @@ const defaultData = [
     status: "Active",
     balance: 1390,
     joined: new Date(2023, 11, 14),
+    catched: true,
   },
   {
     id: 14,
@@ -144,6 +165,7 @@ const defaultData = [
     status: "Inactive",
     balance: 220,
     joined: new Date(2022, 2, 12),
+    catched: false,
   },
   {
     id: 15,
@@ -153,6 +175,7 @@ const defaultData = [
     status: "Active",
     balance: 1580,
     joined: new Date(2023, 8, 30),
+    catched: true,
   },
   {
     id: 16,
@@ -162,6 +185,7 @@ const defaultData = [
     status: "Active",
     balance: 630,
     joined: new Date(2021, 9, 5),
+    catched: true,
   },
   {
     id: 17,
@@ -171,6 +195,7 @@ const defaultData = [
     status: "Inactive",
     balance: -90,
     joined: new Date(2022, 3, 28),
+    catched: false,
   },
   {
     id: 18,
@@ -180,6 +205,7 @@ const defaultData = [
     status: "Active",
     balance: 1200,
     joined: new Date(2023, 10, 20),
+    catched: true,
   },
   {
     id: 19,
@@ -189,6 +215,7 @@ const defaultData = [
     status: "Inactive",
     balance: 410,
     joined: new Date(2023, 7, 15),
+    catched: false,
   },
   {
     id: 20,
@@ -198,6 +225,7 @@ const defaultData = [
     status: "Active",
     balance: 960,
     joined: new Date(2022, 12, 3),
+    catched: true,
   },
   {
     id: 21,
@@ -207,6 +235,7 @@ const defaultData = [
     status: "Inactive",
     balance: -220,
     joined: new Date(2023, 1, 8),
+    catched: false,
   },
   {
     id: 22,
@@ -216,6 +245,7 @@ const defaultData = [
     status: "Active",
     balance: 1540,
     joined: new Date(2024, 2, 18),
+    catched: true,
   },
   {
     id: 23,
@@ -225,6 +255,7 @@ const defaultData = [
     status: "Active",
     balance: 710,
     joined: new Date(2022, 8, 23),
+    catched: true,
   },
   {
     id: 24,
@@ -234,6 +265,7 @@ const defaultData = [
     status: "Inactive",
     balance: 270,
     joined: new Date(2023, 4, 12),
+    catched: false,
   },
   {
     id: 25,
@@ -243,12 +275,15 @@ const defaultData = [
     status: "Active",
     balance: 1100,
     joined: new Date(2021, 11, 29),
+    catched: true,
   },
 ];
 
 export default function FlexiFilterTable() {
   const [data] = useState(defaultData);
   const searchParams = useSearch({ from: Route.id });
+  const isShinyView = searchParams.shinyView;
+  const isCatchedView = searchParams.catchedView;
   const navigate = useNavigate({ from: Route.id });
 
   const filteredData = useMemo(() => {
@@ -281,64 +316,77 @@ export default function FlexiFilterTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredData.map((row) => (
-              <TableRow
-                key={row.id}
-                className="hover:bg-muted/30 cursor-pointer"
-                onClick={() =>
-                  navigate({
-                    to: ".",
-                    search: {
-                      ...searchParams,
-                      activePokemon: row.name,
-                    },
-                  })
-                }
-              >
-                <TableCell className="flex items-center font-semibold text-[16px] gap-2">
-                  <img
-                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${row.id}.png`}
-                    alt=""
-                    className="w-24 h-24"
-                  />
-                  <div className="flex flex-col">
-                    {row.name}
-                    <p className="text-[13px] text-accent-foreground/60 font-normal">
-                      #{row.id.toString().padStart(4, "0")}
-                    </p>
-                  </div>
-                </TableCell>
-                <TableCell>{row.email}</TableCell>
-                <TableCell>{row.location}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant={
-                      row.status === "Active" ? "secondary" : "destructive"
-                    }
-                  >
-                    {row.status}
-                  </Badge>
-                </TableCell>
-                <TableCell>${row.balance.toLocaleString()}</TableCell>
-                <TableCell>{row.joined.toDateString()}</TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()}>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button size="icon" variant="ghost">
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>View</DropdownMenuItem>
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem className="text-red-600">
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </TableCell>
-              </TableRow>
-            ))}
+            {filteredData.map((row) => {
+              return (
+                <TableRow
+                  key={row.id}
+                  className={cn(
+                    "hover:bg-muted/30 cursor-pointer",
+                    isCatchedView && !row.catched && "opacity-50"
+                  )}
+                  onClick={() =>
+                    navigate({
+                      to: ".",
+                      search: {
+                        ...searchParams,
+                        activePokemon: row.name,
+                      },
+                    })
+                  }
+                >
+                  <TableCell className="flex items-center font-semibold text-[16px] gap-2">
+                    <img
+                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                        isShinyView ? "shiny/" + row.id : row.id
+                      }.png`}
+                      alt=""
+                      className="w-24 h-24"
+                    />
+                    <div className="flex flex-col">
+                      {row.name}
+                      <p className="text-[13px] text-accent-foreground/60 font-normal">
+                        #{row.id.toString().padStart(4, "0")}
+                      </p>
+                    </div>
+                  </TableCell>
+                  <TableCell>{row.email}</TableCell>
+                  <TableCell>{row.location}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
+                        row.status === "Active" ? "secondary" : "destructive"
+                      }
+                    >
+                      {row.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Progress max={2000} value={row.balance}>
+                      <ProgressTrack>
+                        <ProgressIndicator className="bg-sidebar-primary" />
+                      </ProgressTrack>
+                    </Progress>
+                  </TableCell>
+                  <TableCell>{row.joined.toDateString()}</TableCell>
+                  <TableCell onClick={(e) => e.stopPropagation()}>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button size="icon" variant="ghost">
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>View</DropdownMenuItem>
+                        <DropdownMenuItem>Edit</DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
           </TableBody>
         </Table>
       </div>
