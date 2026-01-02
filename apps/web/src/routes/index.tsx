@@ -8,17 +8,21 @@ import { z } from "zod";
 export const Route = createFileRoute("/")({
   component: HomeComponent,
   validateSearch: z.object({
-    view: z.enum(["grid", "list"]).default("grid"),
-    search: z.string().optional().default(""),
+    view: z.enum(["grid", "list"]).optional(),
+    search: z.string().optional(),
   }),
 });
 
 function HomeComponent() {
-  const params = useSearch({ from: Route.id });
+  const searchParams = useSearch({ from: Route.id });
   return (
     <div className="flex flex-col h-full">
       <SidebarTop />
-      {params.view === "grid" ? <GridTemplateView /> : <ListTemplateView />}
+      {searchParams.view === "grid" ? (
+        <GridTemplateView />
+      ) : (
+        <ListTemplateView />
+      )}
     </div>
   );
 }
