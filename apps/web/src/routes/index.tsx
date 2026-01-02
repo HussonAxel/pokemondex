@@ -9,6 +9,7 @@ export const Route = createFileRoute("/")({
   component: HomeComponent,
   validateSearch: z.object({
     view: z.enum(["grid", "list"]).default("grid"),
+    search: z.string().optional().default(""),
   }),
 });
 
