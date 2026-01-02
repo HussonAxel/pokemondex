@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SidebarTop } from "@/components/sidebar-top";
+import { SidebarBottom } from "@/components/sidebar-bottom";
 import { GridTemplateView } from "@/components/GridTemplateView";
 import { ListTemplateView } from "@/components/ListTemplateView.tsx";
 import { useSearch } from "@tanstack/react-router";
@@ -23,6 +24,7 @@ function HomeComponent() {
       ) : (
         <ListTemplateView />
       )}
+      <SidebarBottom />
     </div>
   );
 }
