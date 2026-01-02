@@ -3,14 +3,11 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
@@ -18,14 +15,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
 import { MoreVertical } from "lucide-react";
-import { useSearch } from "@tanstack/react-router";
+import { useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 const defaultData = [
   {
@@ -33,9 +24,11 @@ const defaultData = [
     name: "Alex Thompson",
     email: "alex.t@company.com",
     location: "San Francisco",
-    status: "Active",
+    status: ["Fire", "Fly"],
     balance: 1250,
     joined: new Date(2023, 3, 10),
+    sprite:
+      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6.png",
   },
   {
     id: 2,
@@ -257,19 +250,11 @@ const defaultData = [
 
 export default function FlexiFilterTable() {
   const [data] = useState(defaultData);
-  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
   const searchParams = useSearch({ from: Route.id });
-  // Filters
-  const [status, setStatus] = useState("All");
-  const [location, setLocation] = useState("Location");
-  const [minBalance, setMinBalance] = useState("");
-  const [maxBalance, setMaxBalance] = useState("");
-  const [joinedAfter, setJoinedAfter] = useState<Date | undefined>();
+  const navigate = useNavigate({ from: Route.id });
 
   const filteredData = useMemo(() => {
     return data.filter((item) => {
-      if (status !== "All" && item.status !== status) return false;
-      if (location !== "Location" && item.location !== location) return false;
       if (
         searchParams.search &&
         !`${item.name} ${item.email}`
@@ -277,50 +262,21 @@ export default function FlexiFilterTable() {
           .includes(searchParams.search.toLowerCase())
       )
         return false;
-      if (minBalance && item.balance < Number(minBalance)) return false;
-      if (maxBalance && item.balance > Number(maxBalance)) return false;
-      if (joinedAfter && item.joined < joinedAfter) return false;
       return true;
     });
-  }, [
-    data,
-    searchParams.search,
-    status,
-    location,
-    minBalance,
-    maxBalance,
-    joinedAfter,
-  ]);
-
-  const toggleRow = (id: number) => {
-    setSelectedRows((prev) => {
-      const newSet = new Set(prev);
-      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
-      return newSet;
-    });
-  };
+  }, [data, searchParams.search]);
 
   return (
     <div className="bg-background overflow-hidden">
       {/* Table */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide max-h-[calc(100vh-128px)]">
+      <div className="flex-1 overflow-y-auto scrollbar-hide max-h-[calc(100vh-112px)]">
         <Table>
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
-              <TableHead>
-                <Checkbox
-                  checked={selectedRows.size === data.length}
-                  onCheckedChange={(checked) =>
-                    setSelectedRows(
-                      checked ? new Set(data.map((d) => d.id)) : new Set()
-                    )
-                  }
-                />
-              </TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Location</TableHead>
-              <TableHead>Status</TableHead>
+              <TableHead>Type(s)</TableHead>
+              <TableHead>Level</TableHead>
+              <TableHead>Stats</TableHead>
               <TableHead>Balance</TableHead>
               <TableHead>Joined</TableHead>
               <TableHead>Actions</TableHead>
@@ -328,14 +284,30 @@ export default function FlexiFilterTable() {
           </TableHeader>
           <TableBody>
             {filteredData.map((row) => (
-              <TableRow key={row.id} className="hover:bg-muted/30">
-                <TableCell>
-                  <Checkbox
-                    checked={selectedRows.has(row.id)}
-                    onCheckedChange={() => toggleRow(row.id)}
-                  />
+              <TableRow
+                key={row.id}
+                className="hover:bg-muted/30 cursor-pointer"
+                onClick={() =>
+                  navigate({
+                    to: ".",
+                    search: {
+                      ...searchParams,
+                      activePokemon: row.name,
+                    },
+                  })
+                }
+              >
+                <TableCell className="flex items-center font-semibold text-[16px] gap-2">
+                  {row.sprite && (
+                    <img src={row.sprite} alt="" className="w-16 h-16" />
+                  )}
+                  <div className="flex flex-col">
+                    {row.name}
+                    <p className="text-[13px] text-accent-foreground/60 font-normal">
+                      #0006
+                    </p>
+                  </div>
                 </TableCell>
-                <TableCell className="font-medium">{row.name}</TableCell>
                 <TableCell>{row.email}</TableCell>
                 <TableCell>{row.location}</TableCell>
                 <TableCell>
@@ -349,7 +321,7 @@ export default function FlexiFilterTable() {
                 </TableCell>
                 <TableCell>${row.balance.toLocaleString()}</TableCell>
                 <TableCell>{row.joined.toDateString()}</TableCell>
-                <TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button size="icon" variant="ghost">
