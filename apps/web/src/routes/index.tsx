@@ -11,6 +11,7 @@ export const Route = createFileRoute("/")({
   validateSearch: z.object({
     view: z.enum(["grid", "list"]).optional(),
     search: z.string().optional(),
+    activePokemon: z.string().optional(),
   }),
 });
 
