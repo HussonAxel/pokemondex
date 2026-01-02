@@ -27,8 +27,6 @@ const defaultData = [
     status: ["Fire", "Fly"],
     balance: 1250,
     joined: new Date(2023, 3, 10),
-    sprite:
-      "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6.png",
   },
   {
     id: 2,
@@ -298,13 +296,15 @@ export default function FlexiFilterTable() {
                 }
               >
                 <TableCell className="flex items-center font-semibold text-[16px] gap-2">
-                  {row.sprite && (
-                    <img src={row.sprite} alt="" className="w-16 h-16" />
-                  )}
+                  <img
+                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${row.id}.png`}
+                    alt=""
+                    className="w-24 h-24"
+                  />
                   <div className="flex flex-col">
                     {row.name}
                     <p className="text-[13px] text-accent-foreground/60 font-normal">
-                      #0006
+                      #{row.id.toString().padStart(4, "0")}
                     </p>
                   </div>
                 </TableCell>
