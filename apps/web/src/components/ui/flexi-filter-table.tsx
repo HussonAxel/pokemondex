@@ -1,0 +1,195 @@
+import { useState, useMemo } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { MoreVertical } from "lucide-react";
+
+const defaultData = [
+  {
+    id: 1,
+    name: "Alex Thompson",
+    email: "alex.t@company.com",
+    location: "San Francisco",
+    status: "Active",
+    balance: 1250,
+    joined: new Date(2023, 3, 10),
+  },
+  {
+    id: 2,
+    name: "Sarah Chen",
+    email: "sarah.c@company.com",
+    location: "Singapore",
+    status: "Active",
+    balance: 600,
+    joined: new Date(2023, 6, 20),
+  },
+  {
+    id: 3,
+    name: "James Wilson",
+    email: "j.wilson@company.com",
+    location: "London",
+    status: "Inactive",
+    balance: 650,
+    joined: new Date(2022, 11, 5),
+  },
+  {
+    id: 4,
+    name: "Maria Garcia",
+    email: "m.garcia@company.com",
+    location: "Madrid",
+    status: "Active",
+    balance: 0,
+    joined: new Date(2023, 0, 15),
+  },
+  {
+    id: 5,
+    name: "David Kim",
+    email: "d.kim@company.com",
+    location: "Seoul",
+    status: "Active",
+    balance: -1000,
+    joined: new Date(2024, 2, 2),
+  },
+];
+
+export default function FlexiFilterTable() {
+  const [data] = useState(defaultData);
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+
+  // Filters
+  const [search] = useState("");
+  const [status, setStatus] = useState("All");
+  const [location, setLocation] = useState("Location");
+  const [minBalance, setMinBalance] = useState("");
+  const [maxBalance, setMaxBalance] = useState("");
+  const [joinedAfter, setJoinedAfter] = useState<Date | undefined>();
+
+  const filteredData = useMemo(() => {
+    return data.filter((item) => {
+      if (status !== "All" && item.status !== status) return false;
+      if (location !== "Location" && item.location !== location) return false;
+      if (
+        search &&
+        !`${item.name} ${item.email}`
+          .toLowerCase()
+          .includes(search.toLowerCase())
+      )
+        return false;
+      if (minBalance && item.balance < Number(minBalance)) return false;
+      if (maxBalance && item.balance > Number(maxBalance)) return false;
+      if (joinedAfter && item.joined < joinedAfter) return false;
+      return true;
+    });
+  }, [data, search, status, location, minBalance, maxBalance, joinedAfter]);
+
+  const toggleRow = (id: number) => {
+    setSelectedRows((prev) => {
+      const newSet = new Set(prev);
+      newSet.has(id) ? newSet.delete(id) : newSet.add(id);
+      return newSet;
+    });
+  };
+
+  return (
+    <div className="bg-background overflow-hidden">
+      {/* Super Mega Filters */}
+
+      {/* Table */}
+      <div className="max-h-[400px] overflow-y-auto">
+        <Table>
+          <TableHeader className="sticky top-0 bg-background z-10">
+            <TableRow>
+              <TableHead>
+                <Checkbox
+                  checked={selectedRows.size === data.length}
+                  onCheckedChange={(checked) =>
+                    setSelectedRows(
+                      checked ? new Set(data.map((d) => d.id)) : new Set()
+                    )
+                  }
+                />
+              </TableHead>
+              <TableHead>Name</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Location</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Balance</TableHead>
+              <TableHead>Joined</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredData.map((row) => (
+              <TableRow key={row.id} className="hover:bg-muted/30">
+                <TableCell>
+                  <Checkbox
+                    checked={selectedRows.has(row.id)}
+                    onCheckedChange={() => toggleRow(row.id)}
+                  />
+                </TableCell>
+                <TableCell className="font-medium">{row.name}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.location}</TableCell>
+                <TableCell>
+                  <Badge
+                    variant={
+                      row.status === "Active" ? "secondary" : "destructive"
+                    }
+                  >
+                    {row.status}
+                  </Badge>
+                </TableCell>
+                <TableCell>${row.balance.toLocaleString()}</TableCell>
+                <TableCell>{row.joined.toDateString()}</TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="icon" variant="ghost">
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>View</DropdownMenuItem>
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-600">
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter className="sticky bottom-0 bg-background">
+            <TableRow>
+              <TableCell colSpan={7}>Total Users</TableCell>
+              <TableCell>{filteredData.length}</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </div>
+    </div>
+  );
+}
