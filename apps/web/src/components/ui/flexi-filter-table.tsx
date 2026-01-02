@@ -73,6 +73,186 @@ const defaultData = [
     balance: -1000,
     joined: new Date(2024, 2, 2),
   },
+  {
+    id: 6,
+    name: "Emma Hamilton",
+    email: "emma.h@company.com",
+    location: "Berlin",
+    status: "Inactive",
+    balance: 350,
+    joined: new Date(2022, 7, 17),
+  },
+  {
+    id: 7,
+    name: "Lucas Brown",
+    email: "lucas.brown@company.com",
+    location: "Toronto",
+    status: "Active",
+    balance: 900,
+    joined: new Date(2023, 2, 11),
+  },
+  {
+    id: 8,
+    name: "Olivia Lee",
+    email: "olivia.lee@company.com",
+    location: "Singapore",
+    status: "Active",
+    balance: 2100,
+    joined: new Date(2023, 9, 24),
+  },
+  {
+    id: 9,
+    name: "Michael Johnson",
+    email: "m.johnson@company.com",
+    location: "New York",
+    status: "Inactive",
+    balance: 0,
+    joined: new Date(2021, 11, 3),
+  },
+  {
+    id: 10,
+    name: "Chloe Martin",
+    email: "chloe.martin@company.com",
+    location: "Paris",
+    status: "Active",
+    balance: 150,
+    joined: new Date(2022, 4, 19),
+  },
+  {
+    id: 11,
+    name: "Henry Clark",
+    email: "henry.clark@company.com",
+    location: "Los Angeles",
+    status: "Inactive",
+    balance: -170,
+    joined: new Date(2024, 1, 27),
+  },
+  {
+    id: 12,
+    name: "Layla Walker",
+    email: "layla.w@company.com",
+    location: "London",
+    status: "Active",
+    balance: 870,
+    joined: new Date(2023, 6, 8),
+  },
+  {
+    id: 13,
+    name: "Daniel Evans",
+    email: "daniel.evans@company.com",
+    location: "Berlin",
+    status: "Active",
+    balance: 1390,
+    joined: new Date(2023, 11, 14),
+  },
+  {
+    id: 14,
+    name: "Sophia Patel",
+    email: "sophia.p@company.com",
+    location: "Singapore",
+    status: "Inactive",
+    balance: 220,
+    joined: new Date(2022, 2, 12),
+  },
+  {
+    id: 15,
+    name: "Noah Kim",
+    email: "noah.kim@company.com",
+    location: "Seoul",
+    status: "Active",
+    balance: 1580,
+    joined: new Date(2023, 8, 30),
+  },
+  {
+    id: 16,
+    name: "Mia Turner",
+    email: "mia.turner@company.com",
+    location: "Dublin",
+    status: "Active",
+    balance: 630,
+    joined: new Date(2021, 9, 5),
+  },
+  {
+    id: 17,
+    name: "Liam Martinez",
+    email: "liam.martinez@company.com",
+    location: "Toronto",
+    status: "Inactive",
+    balance: -90,
+    joined: new Date(2022, 3, 28),
+  },
+  {
+    id: 18,
+    name: "Chloe Wright",
+    email: "chloe.wright@company.com",
+    location: "Amsterdam",
+    status: "Active",
+    balance: 1200,
+    joined: new Date(2023, 10, 20),
+  },
+  {
+    id: 19,
+    name: "Benjamin Scott",
+    email: "benjamin.scott@company.com",
+    location: "Chicago",
+    status: "Inactive",
+    balance: 410,
+    joined: new Date(2023, 7, 15),
+  },
+  {
+    id: 20,
+    name: "Ava Nelson",
+    email: "ava.nelson@company.com",
+    location: "Sydney",
+    status: "Active",
+    balance: 960,
+    joined: new Date(2022, 12, 3),
+  },
+  {
+    id: 21,
+    name: "Jack Lee",
+    email: "jack.lee@company.com",
+    location: "Hong Kong",
+    status: "Inactive",
+    balance: -220,
+    joined: new Date(2023, 1, 8),
+  },
+  {
+    id: 22,
+    name: "Ella Harris",
+    email: "ella.harris@company.com",
+    location: "Zurich",
+    status: "Active",
+    balance: 1540,
+    joined: new Date(2024, 2, 18),
+  },
+  {
+    id: 23,
+    name: "Harper Lewis",
+    email: "harper.lewis@company.com",
+    location: "Rome",
+    status: "Active",
+    balance: 710,
+    joined: new Date(2022, 8, 23),
+  },
+  {
+    id: 24,
+    name: "Logan Walker",
+    email: "logan.walker@company.com",
+    location: "Barcelona",
+    status: "Inactive",
+    balance: 270,
+    joined: new Date(2023, 4, 12),
+  },
+  {
+    id: 25,
+    name: "Grace Young",
+    email: "grace.young@company.com",
+    location: "Vienna",
+    status: "Active",
+    balance: 1100,
+    joined: new Date(2021, 11, 29),
+  },
 ];
 
 export default function FlexiFilterTable() {
@@ -122,95 +302,10 @@ export default function FlexiFilterTable() {
 
   return (
     <div className="bg-background overflow-hidden">
-      {/* Super Mega Filters */}
-      <div className="p-4 flex flex-col gap-3 md:flex-row md:flex-wrap items-start md:items-center">
-        {/* Status Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="text-foreground bg-sidebar-accent border border-border"
-            >
-              {status}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {["All", "Active", "Inactive"].map((s) => (
-              <DropdownMenuItem key={s} onClick={() => setStatus(s)}>
-                {s}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Location Filter */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="text-foreground bg-sidebar-accent border border-border"
-            >
-              {location}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            {[
-              "Location",
-              "San Francisco",
-              "Singapore",
-              "London",
-              "Madrid",
-              "Seoul",
-            ].map((loc) => (
-              <DropdownMenuItem key={loc} onClick={() => setLocation(loc)}>
-                {loc}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Balance Range */}
-        <div className="flex gap-2">
-          <Input
-            type="number"
-            placeholder="Min $"
-            value={minBalance}
-            onChange={(e) => setMinBalance(e.target.value)}
-            className="w-24"
-          />
-          <Input
-            type="number"
-            placeholder="Max $"
-            value={maxBalance}
-            onChange={(e) => setMaxBalance(e.target.value)}
-            className="w-24"
-          />
-        </div>
-
-        {/* Date Joined */}
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className="text-foreground bg-sidebar-accent border border-border"
-            >
-              {joinedAfter ? joinedAfter.toDateString() : "Joined After"}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="p-0" align="start">
-            <Calendar
-              mode="single"
-              selected={joinedAfter}
-              onSelect={setJoinedAfter}
-            />
-          </PopoverContent>
-        </Popover>
-      </div>
-
       {/* Table */}
-      <div className="max-h-[400px] overflow-y-auto">
+      <div className="flex-1 overflow-y-auto scrollbar-hide max-h-[calc(100vh-128px)]">
         <Table>
-          <TableHeader className="sticky top-0 bg-background z-10">
+          <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
               <TableHead>
                 <Checkbox
@@ -273,12 +368,6 @@ export default function FlexiFilterTable() {
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter className="sticky bottom-0 bg-background">
-            <TableRow>
-              <TableCell colSpan={7}>Total Users</TableCell>
-              <TableCell>{filteredData.length}</TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
       </div>
     </div>
