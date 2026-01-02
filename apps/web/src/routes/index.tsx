@@ -20,10 +20,10 @@ function Grid({ itemCount = 30, columns = 6 }) {
 
   return (
     <div
-      className="grid gap-2 p-2 flex-1 overflow-auto"
-      style={{ 
+      className="grid gap-4 p-6 flex-1 overflow-auto"
+      style={{
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        gridTemplateRows: `repeat(${rows}, 1fr)` 
+        gridTemplateRows: `repeat(${rows}, 1fr)`,
       }}
     >
       {items.map((item) => (
