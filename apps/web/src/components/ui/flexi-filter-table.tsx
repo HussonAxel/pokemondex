@@ -115,6 +115,89 @@ export default function FlexiFilterTable() {
   return (
     <div className="bg-background overflow-hidden">
       {/* Super Mega Filters */}
+      <div className="p-4 flex flex-col gap-3 md:flex-row md:flex-wrap items-start md:items-center">
+        {/* Status Filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="text-foreground bg-sidebar-accent border border-border"
+            >
+              {status}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {["All", "Active", "Inactive"].map((s) => (
+              <DropdownMenuItem key={s} onClick={() => setStatus(s)}>
+                {s}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Location Filter */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="text-foreground bg-sidebar-accent border border-border"
+            >
+              {location}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            {[
+              "Location",
+              "San Francisco",
+              "Singapore",
+              "London",
+              "Madrid",
+              "Seoul",
+            ].map((loc) => (
+              <DropdownMenuItem key={loc} onClick={() => setLocation(loc)}>
+                {loc}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Balance Range */}
+        <div className="flex gap-2">
+          <Input
+            type="number"
+            placeholder="Min $"
+            value={minBalance}
+            onChange={(e) => setMinBalance(e.target.value)}
+            className="w-24"
+          />
+          <Input
+            type="number"
+            placeholder="Max $"
+            value={maxBalance}
+            onChange={(e) => setMaxBalance(e.target.value)}
+            className="w-24"
+          />
+        </div>
+
+        {/* Date Joined */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className="text-foreground bg-sidebar-accent border border-border"
+            >
+              {joinedAfter ? joinedAfter.toDateString() : "Joined After"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={joinedAfter}
+              onSelect={setJoinedAfter}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
 
       {/* Table */}
       <div className="max-h-[400px] overflow-y-auto">
