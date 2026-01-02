@@ -18,7 +18,6 @@ import {
 
 export const SidebarTop = () => {
   const searchParams = useSearch({ from: Route.id });
-  console.log(searchParams);
   const navigate = useNavigate({ from: Route.id });
   return (
     <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-8 flex flex-row gap-2">
@@ -55,7 +54,6 @@ export const SidebarTop = () => {
       <InputGroup className="flex-1 rounded-lg bg-sidebar-accent">
         <InputGroupInput
           placeholder="Search..."
-          value={searchParams.search || ""}
           onChange={(e) => {
             const value = e.target.value;
             navigate({
