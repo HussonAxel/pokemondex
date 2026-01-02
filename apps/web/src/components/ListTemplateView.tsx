@@ -1,3 +1,4 @@
+import FlexiFilterTable from "@/components/ui/flexi-filter-table";
 export function ListTemplateView() {
-  return <div>ListTemplateView</div>;
+  return <FlexiFilterTable />;
 }
