@@ -26,7 +26,7 @@ export const SidebarTop = () => {
       <div className="flex flex-row gap-1 rounded-lg bg-sidebar-accent p-1 items-center justify text-center">
         <Link
           to="/"
-          search={{ view: "grid", search: searchParams.search || "" }}
+          search={{ ...searchParams, view: "grid" }}
           className="p-1 rounded-md transition-all duration-300 opacity-40 hover:opacity-80"
           activeProps={{
             className:
@@ -41,7 +41,7 @@ export const SidebarTop = () => {
         />
         <Link
           to="/"
-          search={{ view: "list", search: searchParams.search || "" }}
+          search={{ ...searchParams, view: "list" }}
           className="p-1 rounded-md transition-all duration-300 opacity-40 hover:opacity-80"
           activeProps={{
             className:
