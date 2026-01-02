@@ -25,7 +25,8 @@ import {
   PopoverContent,
 } from "@/components/ui/popover";
 import { MoreVertical } from "lucide-react";
-
+import { useSearch } from "@tanstack/react-router";
+import { Route } from "@/routes/index";
 const defaultData = [
   {
     id: 1,
@@ -77,9 +78,8 @@ const defaultData = [
 export default function FlexiFilterTable() {
   const [data] = useState(defaultData);
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
-
+  const searchParams = useSearch({ from: Route.id });
   // Filters
-  const [search] = useState("");
   const [status, setStatus] = useState("All");
   const [location, setLocation] = useState("Location");
   const [minBalance, setMinBalance] = useState("");
@@ -91,10 +91,10 @@ export default function FlexiFilterTable() {
       if (status !== "All" && item.status !== status) return false;
       if (location !== "Location" && item.location !== location) return false;
       if (
-        search &&
+        searchParams.search &&
         !`${item.name} ${item.email}`
           .toLowerCase()
-          .includes(search.toLowerCase())
+          .includes(searchParams.search.toLowerCase())
       )
         return false;
       if (minBalance && item.balance < Number(minBalance)) return false;
@@ -102,7 +102,15 @@ export default function FlexiFilterTable() {
       if (joinedAfter && item.joined < joinedAfter) return false;
       return true;
     });
-  }, [data, search, status, location, minBalance, maxBalance, joinedAfter]);
+  }, [
+    data,
+    searchParams.search,
+    status,
+    location,
+    minBalance,
+    maxBalance,
+    joinedAfter,
+  ]);
 
   const toggleRow = (id: number) => {
     setSelectedRows((prev) => {
