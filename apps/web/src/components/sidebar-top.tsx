@@ -53,7 +53,7 @@ export const SidebarTop = () => {
       </div>
       <InputGroup className="flex-1 rounded-lg bg-sidebar-accent">
         <InputGroupInput
-          placeholder="Search..."
+          placeholder={searchParams.search || "Search..."}
           onChange={(e) => {
             const value = e.target.value;
             navigate({
