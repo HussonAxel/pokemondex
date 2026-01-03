@@ -68,16 +68,12 @@ function RootDocument() {
       </head>
       <body>
         <div className="grid grid-cols-[auto_1fr_auto] h-full">
-          <SidebarLeft />
+          {/* <SidebarLeft /> */}
           <div className="h-full overflow-hidden">
             <Outlet />
           </div>
-          <div className="hidden xl:block">
-            <SidebarRight />
-          </div>
-          <div className="block xl:hidden">
-            <SidebarMobile />
-          </div>
+          <div className="hidden xl:block">{/* <SidebarRight /> */}</div>
+          <div className="block xl:hidden">{/* <SidebarMobile /> */}</div>
         </div>
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />
