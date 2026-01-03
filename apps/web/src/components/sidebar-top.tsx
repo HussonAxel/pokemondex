@@ -1,4 +1,10 @@
-import { LayoutGrid, List, SearchIcon } from "lucide-react";
+import {
+  LayoutGrid,
+  List,
+  SearchIcon,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Link, useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
@@ -9,11 +15,21 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 export const SidebarTop = () => {
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
   return (
-    <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-4 flex flex-row gap-8">
+    <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-4 flex flex-row gap-4">
       <div className="flex flex-row gap-1 rounded-lg bg-sidebar-accent/30 p-1 items-center justify text-center">
         <Link
           to="/"
@@ -42,7 +58,11 @@ export const SidebarTop = () => {
           <List className="w-4 h-4" />
         </Link>
       </div>
-      <InputGroup className="flex-1 rounded-lg bg-sidebar-accent">
+      <Separator
+        className="w-px h-4 bg-border self-center!"
+        orientation="vertical"
+      />
+      <InputGroup className="flex-1 rounded-lg bg-sidebar-accent max-w-[500px]">
         <InputGroupInput
           placeholder={searchParams.search || "Search..."}
           value={searchParams.search || ""}
@@ -61,6 +81,32 @@ export const SidebarTop = () => {
           <SearchIcon />
         </InputGroupAddon>
       </InputGroup>
+      <div className="flex flex-row gap-2 ml-auto">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
     </div>
   );
 };
