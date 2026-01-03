@@ -14,18 +14,7 @@ export default function SidebarMobile() {
   const activePokemon = searchParams.activePokemon;
   const navigate = useNavigate({ from: Route.id });
   return (
-    <Popover
-      open={!!activePokemon}
-      onOpenChange={() => {
-        navigate({
-          to: ".",
-          search: {
-            ...searchParams,
-            activePokemon: undefined,
-          },
-        });
-      }}
-    >
+    <Popover open={!!activePokemon}>
       <PopoverPopup
         className="xl:hidden w-3/4 max-h-[80vh] overflow-y-auto fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 scrollbar-hide"
         side="bottom"
@@ -35,6 +24,15 @@ export default function SidebarMobile() {
           aria-label="Close"
           className="absolute end-2 top-2"
           render={<Button size="icon" variant="ghost" />}
+          onClick={() => {
+            navigate({
+              to: ".",
+              search: {
+                ...searchParams,
+                activePokemon: undefined,
+              },
+            });
+          }}
         >
           <XIcon />
         </PopoverClose>
