@@ -14,7 +14,7 @@ import type { orpc } from "@/utils/orpc";
 import { Toaster } from "@/components/ui/sonner";
 
 import { SidebarLeft } from "@/components/sidebar-left";
-import { SidebarRight } from "@/components/sidebar-right";
+import { SidebarRight } from "@/components/sidebar--right";
 import appCss from "../index.css?url";
 export interface RouterAppContext {
   orpc: typeof orpc;
