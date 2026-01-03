@@ -12,7 +12,12 @@ export const Route = createFileRoute("/")({
   validateSearch: z.object({
     view: z.enum(["grid", "list"]).optional(),
     search: z.string().optional(),
-    activePokemon: z.string().optional(),
+    activePokemon: z
+      .string()
+      .optional()
+      .transform((val) =>
+        val ? decodeURIComponent(val.replace(/\+/g, " ")) : undefined
+      ),
     shinyView: z.boolean().optional(),
     catchedView: z.boolean().optional(),
     page: z.number().optional(),
