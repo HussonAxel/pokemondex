@@ -16,7 +16,7 @@ export const queryClient = new QueryClient({
       toast.error(`Error: ${error.message}`, {
         action: {
           label: "retry",
-          onClick: query.invalidate,
+          onClick: () => query.invalidate(),
         },
       });
     },
@@ -26,10 +26,10 @@ export const queryClient = new QueryClient({
 const getORPCClient = createIsomorphicFn()
   .server(() =>
     createRouterClient(appRouter, {
-      context: async ({ req }) => {
-        return createContext({ req });
+      context: async (opts) => {
+        return createContext({ req: opts?.req });
       },
-    }),
+    })
   )
   .client((): RouterClient<typeof appRouter> => {
     const link = new RPCLink({
