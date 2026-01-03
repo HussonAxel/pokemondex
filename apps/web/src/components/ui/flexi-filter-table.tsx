@@ -83,7 +83,7 @@ export default function FlexiFilterTable() {
                     })
                   }
                 >
-                  <TableCell className="flex items-center font-semibold text-[16px] gap-2">
+                  <TableCell className="flex items-center font-semibold text-[16px] gap-4">
                     <img
                       src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
                         isShinyView ? "shiny/" + row.id : row.id

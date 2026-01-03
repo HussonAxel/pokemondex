@@ -11,7 +11,7 @@ import {
 
 export const SidebarTop = () => {
   const searchParams = useSearch({ from: Route.id });
-  const page = searchParams.page || 1;
+  // const page = searchParams.page || 1;
   const navigate = useNavigate({ from: Route.id });
   return (
     <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-4 flex flex-row gap-4">
