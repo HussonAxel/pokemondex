@@ -3,18 +3,7 @@
 import * as React from "react";
 
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
   SidebarProvider,
-  SidebarInset,
-  SidebarTrigger,
   Sidebar,
   SidebarHeader,
   SidebarContent,
@@ -49,7 +38,6 @@ import {
   AudioWaveform,
   BadgeCheck,
   Bell,
-  BookOpen,
   Bot,
   ChevronRight,
   ChevronsUpDown,
@@ -64,7 +52,6 @@ import {
   MoreHorizontal,
   PieChart,
   Plus,
-  Settings2,
   Sparkles,
   SquareTerminal,
   Trash2,
@@ -140,89 +127,6 @@ const DATA = {
         },
         {
           title: "Breeding Pokémons",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Type Filters",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Water",
-          url: "#",
-        },
-        {
-          title: "Fire",
-          url: "#",
-        },
-        {
-          title: "Grass",
-          url: "#",
-        },
-        {
-          title: "Electric",
-          url: "#",
-        },
-        {
-          title: "Psychic",
-          url: "#",
-        },
-        {
-          title: "Ice",
-          url: "#",
-        },
-        {
-          title: "Dragon",
-          url: "#",
-        },
-        {
-          title: "Dark",
-          url: "#",
-        },
-        {
-          title: "Fairy",
-          url: "#",
-        },
-        {
-          title: "Fighting",
-          url: "#",
-        },
-        {
-          title: "Flying",
-          url: "#",
-        },
-        {
-          title: "Poison",
-          url: "#",
-        },
-        {
-          title: "Ground",
-          url: "#",
-        },
-        {
-          title: "Rock",
-          url: "#",
-        },
-        {
-          title: "Steel",
-          url: "#",
-        },
-        {
-          title: "Bug",
-          url: "#",
-        },
-        {
-          title: "Ghost",
-          url: "#",
-        },
-        {
-          title: "Steel",
-          url: "#",
-        },
-        {
-          title: "Fairy",
           url: "#",
         },
       ],
