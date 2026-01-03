@@ -50,8 +50,9 @@ export default function FlexiFilterTable() {
 
     return data.filter((item: (typeof defaultData)[0]) => {
       // Stringify relevant fields into a single searchable string
-      const searchable =
-        `${item.name} ${item.generation} ${item.firstType} ${item.secondType} ${item.balance}`.toLowerCase();
+      const searchable = `${
+        item.name
+      } ${`GEN ${item.generation}`} ${`TYPE ${item.firstType} ${item.secondType}`} ${`BALANCE ${item.balance}`}`.toLowerCase();
 
       // Must match ALL search terms (AND logic)
       return searchTerms.every((term) => searchable.includes(term));
