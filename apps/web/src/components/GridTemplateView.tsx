@@ -1,3 +1,4 @@
+import { useState, useMemo } from "react";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 
@@ -9,13 +10,29 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreVertical } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { data as defaultData } from "@/data/data";
 
-export function GridTemplateView({ itemCount = 30, columns = 6 }) {
-  const items = Array.from({ length: itemCount }, (_, i) => i + 1);
-
+export function GridTemplateView({ columns = 6 }) {
+  const [data] = useState<typeof defaultData>(defaultData);
   const searchParams = useSearch({ from: Route.id });
   const isShinyView = searchParams.shinyView;
+  const isCatchedView = searchParams.catchedView;
   const navigate = useNavigate({ from: Route.id });
+
+  const filteredData = useMemo(() => {
+    return data.filter((item: (typeof defaultData)[0]) => {
+      if (
+        searchParams.search &&
+        !`${item.name} ${item.generation} ${item.firstType} ${item.secondType}, ${item.balance}`
+          .toLowerCase()
+          .includes(searchParams.search.toLowerCase())
+      )
+        return false;
+      return true;
+    });
+  }, [data, searchParams.search]);
+
   return (
     <div
       className="grid gap-4 h-full overflow-auto p-4"
@@ -23,31 +40,37 @@ export function GridTemplateView({ itemCount = 30, columns = 6 }) {
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
       }}
     >
-      {items.map((item) => (
+      {filteredData.map((row: (typeof defaultData)[0]) => (
         <div
-          key={item}
-          className="bg-sidebar-border  flex items-center justify-center rounded-lg ring-1 ring-accent text-white hover:scale-[1.02] hover:bg-sidebar/40 active:scale-[0.98] transition-all duration-300 ease-in-out cursor-pointer group"
+          key={row.id}
+          className={cn(
+            "bg-sidebar-border flex flex-col items-center justify-center rounded-lg ring-1 ring-accent text-white hover:scale-[1.02] hover:bg-sidebar/40 active:scale-[0.98] transition-all duration-300 ease-in-out cursor-pointer group relative p-4 max-h-[150px]",
+            isCatchedView && !row.catched && "opacity-30"
+          )}
           onClick={() =>
             navigate({
               to: ".",
               search: {
                 ...searchParams,
-                activePokemon: item.toString(),
+                activePokemon: row.name,
               },
             })
           }
         >
           <img
             src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-              isShinyView ? "shiny/" + item : item
+              isShinyView ? "shiny/" + row.id : row.id
             }.png`}
-            alt=""
-            className="w-24 h-24 group-hover:scale-120 transition-all duration-300 ease-in-out"
+            alt={row.name}
+            className="w-24 h-24 group-hover:scale-110 transition-all duration-300 ease-in-out"
           />
-          <div className="relative top-0 right-0">
+          <div
+            className="absolute top-2 right-2"
+            onClick={(e) => e.stopPropagation()}
+          >
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button size="icon" variant="ghost">
+                <Button size="icon" variant="ghost" className="h-8 w-8">
                   <MoreVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
