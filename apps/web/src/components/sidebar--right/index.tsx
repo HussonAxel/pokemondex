@@ -15,7 +15,6 @@ import { Route } from "@/routes/index";
 export const SidebarRight = () => {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
-
   return (
     <SidebarProvider
       open={!!activePokemon}
@@ -27,7 +26,13 @@ export const SidebarRight = () => {
     >
       <Sidebar collapsible="icon" side="right">
         <SidebarContent>
-          <SidebarMainTab />
+          <div
+            className={`transition-opacity duration-300 ease-in-out ${
+              activePokemon ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          >
+            <SidebarMainTab />
+          </div>
         </SidebarContent>
         <SidebarRail />
       </Sidebar>
