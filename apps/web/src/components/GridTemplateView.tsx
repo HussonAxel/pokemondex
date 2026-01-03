@@ -12,17 +12,15 @@ import { MoreVertical } from "lucide-react";
 
 export function GridTemplateView({ itemCount = 30, columns = 6 }) {
   const items = Array.from({ length: itemCount }, (_, i) => i + 1);
-  const rows = Math.ceil(itemCount / columns);
 
   const searchParams = useSearch({ from: Route.id });
   const isShinyView = searchParams.shinyView;
   const navigate = useNavigate({ from: Route.id });
   return (
     <div
-      className="grid gap-4 p-4 flex-1 overflow-auto"
+      className="grid gap-4 h-full overflow-auto p-4"
       style={{
         gridTemplateColumns: `repeat(${columns}, 1fr)`,
-        gridTemplateRows: `repeat(${rows}, 1fr)`,
       }}
     >
       {items.map((item) => (

@@ -1,7 +1,12 @@
 import type { QueryClient } from "@tanstack/react-query";
 
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { HeadContent, Outlet, Scripts, createRootRouteWithContext } from "@tanstack/react-router";
+import {
+  HeadContent,
+  Outlet,
+  Scripts,
+  createRootRouteWithContext,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import type { orpc } from "@/utils/orpc";
@@ -10,7 +15,6 @@ import { Toaster } from "@/components/ui/sonner";
 
 import { SidebarLeft } from "@/components/sidebar-left";
 import { SidebarRight } from "@/components/sidebar-right";
-import { SidebarTop } from "@/components/sidebar-top";
 import appCss from "../index.css?url";
 export interface RouterAppContext {
   orpc: typeof orpc;
@@ -36,6 +40,19 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         rel: "stylesheet",
         href: appCss,
       },
+      {
+        rel: "preconnect",
+        href: "https://fonts.googleapis.com",
+      },
+      {
+        rel: "preconnect",
+        href: "https://fonts.gstatic.com",
+        crossOrigin: "anonymous",
+      },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap",
+      },
     ],
   }),
 
@@ -51,7 +68,9 @@ function RootDocument() {
       <body>
         <div className="grid grid-cols-[auto_1fr_auto] h-full">
           <SidebarLeft />
-          <Outlet />
+          <div className="h-full overflow-hidden">
+            <Outlet />
+          </div>
           <SidebarRight />
         </div>
         <Toaster richColors />
