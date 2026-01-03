@@ -6,8 +6,8 @@ export const SidebarBottom = () => {
   const navigate = useNavigate({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
   return (
-    <div className="w-full h-[48px] bg-sidebar border-t border-border items-center px-4 flex flex-row gap-2 justify-between">
-      <p className="text-sm text-accent-foreground/60 font-normal">
+    <div className="w-full mx-auto h-[48px] border-t border-border items-center px-4 flex flex-row gap-2 justify-between">
+      <p className="text-sm text-accent-foreground/80 font-normal">
         1025 Pokémons
       </p>
       <div className="flex flex-row gap-4">
@@ -16,7 +16,7 @@ export const SidebarBottom = () => {
             className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
               searchParams.shinyView
                 ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-                : "text-yellow-500/20"
+                : "text-yellow-500/50"
             }`}
             onClick={() => {
               navigate({
@@ -33,7 +33,7 @@ export const SidebarBottom = () => {
             className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
               searchParams.catchedView
                 ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-                : "text-red-500/20"
+                : "text-red-500/50"
             }`}
             onClick={() => {
               navigate({
