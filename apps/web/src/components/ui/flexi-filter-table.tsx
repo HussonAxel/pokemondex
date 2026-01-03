@@ -315,6 +315,18 @@ const defaultData = [
     joined: new Date(2021, 11, 29),
     catched: true,
   },
+  {
+    id: 26,
+    name: "Fire Chen",
+    generation: "26",
+    location: "Shanghai",
+    firstType: "Flying",
+    secondType: "Fairy",
+    status: "Active",
+    balance: 1200,
+    joined: new Date(2023, 10, 20),
+    catched: true,
+  },
 ];
 
 export default function FlexiFilterTable() {
@@ -328,7 +340,7 @@ export default function FlexiFilterTable() {
     return data.filter((item) => {
       if (
         searchParams.search &&
-        !`${item.name} ${item.generation}`
+        !`${item.name} ${item.generation} ${item.firstType} ${item.secondType}, ${item.balance}`
           .toLowerCase()
           .includes(searchParams.search.toLowerCase())
       )
@@ -338,19 +350,19 @@ export default function FlexiFilterTable() {
   }, [data, searchParams.search]);
 
   return (
-    <div className="bg-background overflow-hidden">
+    <div className="bg-background overflow-hidden p-4 h-full flex flex-col">
       {/* Table */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide max-h-[calc(100vh-112px)]">
+      <div className="flex-1 overflow-y-auto scrollbar-hide rounded-xl border border-border">
         <Table>
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Type(s)</TableHead>
-              <TableHead>Level</TableHead>
-              <TableHead>Stats</TableHead>
-              <TableHead>Balance</TableHead>
-              <TableHead>Joined</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead>NAME</TableHead>
+              <TableHead>TYPE(S)</TableHead>
+              <TableHead>LEVEL</TableHead>
+              <TableHead>STATS</TableHead>
+              <TableHead>BALANCE</TableHead>
+              <TableHead>JOINED</TableHead>
+              <TableHead>ACTIONS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -378,7 +390,7 @@ export default function FlexiFilterTable() {
                         isShinyView ? "shiny/" + row.id : row.id
                       }.png`}
                       alt=""
-                      className="w-24 h-24"
+                      className="w-12 h-12 bg-sidebar-border rounded-sm p-1"
                     />
                     <div className="flex flex-col">
                       {row.name}
@@ -410,7 +422,7 @@ export default function FlexiFilterTable() {
                       </ProgressTrack>
                     </Progress>
                   </TableCell>
-                  <TableCell>{row.joined.toDateString()}</TableCell>b
+                  <TableCell>{row.joined.toDateString()}</TableCell>
                   <TableCell onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
