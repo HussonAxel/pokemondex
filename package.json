@@ -31,9 +31,10 @@
     "db:migrate": "turbo -F @my-better-t-app/db db:migrate"
   },
   "dependencies": {
+    "@my-better-t-app/env": "workspace:*",
     "dotenv": "catalog:",
-    "zod": "catalog:",
-    "@my-better-t-app/env": "workspace:*"
+    "nitro": "^3.0.1-alpha.1",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "turbo": "^2.6.3",
