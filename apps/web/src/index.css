@@ -4,7 +4,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-
 :root {
   --background: oklch(1.0000 0 0);
   --foreground: oklch(0.2101 0.0318 264.6645);
@@ -38,7 +37,7 @@
   --sidebar-accent-foreground: oklch(0.2101 0.0318 264.6645);
   --sidebar-border: oklch(0.9276 0.0058 264.5313);
   --sidebar-ring: oklch(0.6716 0.1368 48.5130);
-  --font-sans: Geist Mono, ui-monospace, monospace;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --font-serif: serif;
   --font-mono: JetBrains Mono, monospace;
   --radius: 0.75rem;
@@ -93,7 +92,7 @@
   --sidebar-accent-foreground: oklch(0.8109 0 0);
   --sidebar-border: oklch(0.2520 0 0);
   --sidebar-ring: oklch(0.7214 0.1337 49.9802);
-  --font-sans: Geist Mono, ui-monospace, monospace;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --font-serif: serif;
   --font-mono: JetBrains Mono, monospace;
   --radius: 0.75rem;
@@ -198,7 +197,7 @@ body {
 }
 
 @theme inline {
-  --font-sans: "Inter Variable", sans-serif;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -648,4 +647,104 @@ body {
 
 .bg-water path {
   fill: #539ddf
+}
+
+/* Badge types avec dégradés */
+.badge-type-fire {
+  background: linear-gradient(to right, #C85A2A 0%, #EE8130 50%, #F5A85A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-flying {
+  background: linear-gradient(to right, #5A6B8A 0%, #7A8FB3 50%, #A1BBEC 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-normal {
+  background: linear-gradient(to right, #8B8A6F 0%, #A8A77A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-water {
+  background: linear-gradient(to right, #4A7BC8 0%, #6390F0 50%, #7BA3F8 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-electric {
+  background: linear-gradient(to right, #D4B91F 0%, #F7D02C 50%, #FFE066 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-grass {
+  background: linear-gradient(to right, #5FA83D 0%, #7AC74C 50%, #9AE06A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-ice {
+  background: linear-gradient(to right, #6BB5A8 0%, #96D9D6 50%, #B8E8E3 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-fighting {
+  background: linear-gradient(to right, #9A1F1A 0%, #C22E28 50%, #E04A44 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-poison {
+  background: linear-gradient(to right, #7A2D78 0%, #A33EA1 50%, #C85FC6 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-ground {
+  background: linear-gradient(to right, #B8943A 0%, #E2BF65 50%, #F5D48A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-psychic {
+  background: linear-gradient(to right, #C73A5A 0%, #F95587 50%, #FF7BA3 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-bug {
+  background: linear-gradient(to right, #7A8F0F 0%, #A6B91A 50%, #C9D82A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-rock {
+  background: linear-gradient(to right, #8B7A2A 0%, #B6A136 50%, #D4C05A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-ghost {
+  background: linear-gradient(to right, #4F3D6A 0%, #735797 50%, #9A7BB8 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-dragon {
+  background: linear-gradient(to right, #4F1FC4 0%, #6F35FC 50%, #8F55FF 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-dark {
+  background: linear-gradient(to right, #4A3A2F 0%, #705746 50%, #8B6F5A 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-steel {
+  background: linear-gradient(to right, #8B8B9E 0%, #B7B7CE 50%, #D3D3E6 100%);
+  color: #FFFFFF;
+}
+
+.badge-type-fairy {
+  background: linear-gradient(to right, #A85A8A 0%, #D685AD 50%, #F5A5CD 100%);
+  color: #FFFFFF;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
