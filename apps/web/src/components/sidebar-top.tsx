@@ -1,10 +1,4 @@
-import {
-  LayoutGrid,
-  List,
-  SearchIcon,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { LayoutGrid, List, SearchIcon } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Link, useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
@@ -15,18 +9,9 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-
 export const SidebarTop = () => {
   const searchParams = useSearch({ from: Route.id });
+  const page = searchParams.page || 1;
   const navigate = useNavigate({ from: Route.id });
   return (
     <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-4 flex flex-row gap-4">
@@ -81,32 +66,7 @@ export const SidebarTop = () => {
           <SearchIcon />
         </InputGroupAddon>
       </InputGroup>
-      <div className="flex flex-row gap-2 ml-auto">
-        <Pagination>
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious href="#" />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">1</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#" isActive>
-                2
-              </PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationLink href="#">3</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationNext href="#" />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      </div>
+      <div className="flex flex-row gap-2 ml-auto"></div>
     </div>
   );
 };

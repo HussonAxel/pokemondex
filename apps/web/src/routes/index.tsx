@@ -14,6 +14,7 @@ export const Route = createFileRoute("/")({
     activePokemon: z.string().optional(),
     shinyView: z.boolean().optional(),
     catchedView: z.boolean().optional(),
+    page: z.number().optional(),
   }),
 });
 
