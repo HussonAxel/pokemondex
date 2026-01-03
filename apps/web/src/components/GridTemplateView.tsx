@@ -19,17 +19,27 @@ export function GridTemplateView({ columns = 6 }) {
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
   const navigate = useNavigate({ from: Route.id });
-
   const filteredData = useMemo(() => {
+    if (!searchParams.search) {
+      return data;
+    }
+
+    // Split by comma, trim to remove stray spaces
+    const searchTerms = searchParams.search
+      .split(",")
+      .map((term) => term.trim().toLowerCase())
+      .filter((term) => term.length > 0);
+
+    console.log(searchTerms);
+
     return data.filter((item: (typeof defaultData)[0]) => {
-      if (
-        searchParams.search &&
-        !`${item.name} ${item.generation} ${item.firstType} ${item.secondType}, ${item.balance}`
-          .toLowerCase()
-          .includes(searchParams.search.toLowerCase())
-      )
-        return false;
-      return true;
+      // Stringify relevant fields into a single searchable string
+      const searchable = `${
+        item.name
+      } ${`GEN ${item.generation}`} ${`TYPE ${item.firstType} ${item.secondType}`} ${`BALANCE ${item.balance}`}`.toLowerCase();
+
+      // Must match ALL search terms (AND logic)
+      return searchTerms.every((term) => searchable.includes(term));
     });
   }, [data, searchParams.search]);
 
