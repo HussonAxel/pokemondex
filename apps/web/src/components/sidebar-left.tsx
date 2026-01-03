@@ -498,7 +498,7 @@ export const SidebarLeft = () => {
       className="contents"
       style={
         {
-          "--sidebar-width": "16rem",
+          "--sidebar-width": "12rem",
         } as React.CSSProperties
       }
     >

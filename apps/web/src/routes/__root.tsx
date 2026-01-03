@@ -14,8 +14,9 @@ import type { orpc } from "@/utils/orpc";
 import { Toaster } from "@/components/ui/sonner";
 
 import { SidebarLeft } from "@/components/sidebar-left";
-import { SidebarRight } from "@/components/sidebar--right";
+import { SidebarRight } from "@/components/sidebarRight/SidebarRight";
 import appCss from "../index.css?url";
+import SidebarMobile from "@/components/sidebarRight/SidebarMobile";
 export interface RouterAppContext {
   orpc: typeof orpc;
   queryClient: QueryClient;
@@ -71,7 +72,12 @@ function RootDocument() {
           <div className="h-full overflow-hidden">
             <Outlet />
           </div>
-          <SidebarRight />
+          <div className="hidden xl:block">
+            <SidebarRight />
+          </div>
+          <div className="block xl:hidden">
+            <SidebarMobile />
+          </div>
         </div>
         <Toaster richColors />
         <TanStackRouterDevtools position="bottom-left" />

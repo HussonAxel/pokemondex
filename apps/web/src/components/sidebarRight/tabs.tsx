@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
-import InfosComponent from "@/components/sidebar--right/infos";
+import InfosComponent from "@/components/sidebarRight/infos";
 
 export default function TabsComponent() {
   return (

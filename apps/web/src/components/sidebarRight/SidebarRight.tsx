@@ -7,7 +7,7 @@ import {
   SidebarRail,
 } from "@/components/animate-ui/components/radix/sidebar";
 
-import SidebarMainTab from "@/components/sidebar--right/mainTab";
+import SidebarMainTab from "@/components/sidebarRight/mainTab";
 
 import { useSearch } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
@@ -20,7 +20,7 @@ export const SidebarRight = () => {
       open={!!activePokemon}
       style={
         {
-          "--sidebar-width": "24rem",
+          "--sidebar-width": "22rem",
         } as React.CSSProperties
       }
     >

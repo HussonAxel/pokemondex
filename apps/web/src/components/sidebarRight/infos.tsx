@@ -84,7 +84,10 @@ export default function InfosComponent() {
                   Overgrow
                 </p>
               </TooltipTrigger>
-              <TooltipPopup className="max-w-[300px]">
+              <TooltipPopup
+                className="max-w-3/4 w-fit mx-auto text-center"
+                align="center"
+              >
                 Augmente la puissance des capacités Plante de 50% lorsque le
                 Pokémon a moins d'un tiers de ses PV.
               </TooltipPopup>
@@ -98,7 +101,10 @@ export default function InfosComponent() {
                   Chlorophyll
                 </p>
               </TooltipTrigger>
-              <TooltipPopup className="max-w-[300px]">
+              <TooltipPopup
+                className="max-w-3/4 w-fit mx-auto text-center"
+                align="center"
+              >
                 Double la Vitesse du Pokémon lorsque le soleil brille.
               </TooltipPopup>
             </Tooltip>
@@ -111,7 +117,10 @@ export default function InfosComponent() {
                   Solar Power
                 </p>
               </TooltipTrigger>
-              <TooltipPopup className="max-w-[300px] w-fit text-center">
+              <TooltipPopup
+                className="max-w-3/4 w-fit mx-auto text-center"
+                align="center"
+              >
                 Les capacités de type Plante reçoivent un bonus de 50% lorsque
                 le soleil brille.
               </TooltipPopup>

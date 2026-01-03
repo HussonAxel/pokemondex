@@ -2,7 +2,7 @@ import { data } from "@/data/data";
 import { useSearch } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 import BadgeTypes from "@/components/ui/badge-type";
-import TabsComponent from "@/components/sidebar--right/tabs";
+import TabsComponent from "@/components/sidebarRight/tabs";
 
 export default function MainTab() {
   const searchParams = useSearch({ from: Route.id });
