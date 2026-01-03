@@ -6,7 +6,9 @@ import TabsComponent from "@/components/sidebar--right/tabs";
 
 export default function MainTab() {
   const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
+  const activePokemon = searchParams.activePokemon
+    ? decodeURIComponent(searchParams.activePokemon.replace(/\+/g, " "))
+    : undefined;
   const pokemon = data.find((pokemon) => pokemon.name === activePokemon);
 
   return (
