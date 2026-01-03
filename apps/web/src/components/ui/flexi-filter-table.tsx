@@ -8,7 +8,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -26,13 +25,16 @@ import { MoreVertical } from "lucide-react";
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 import { cn } from "@/lib/utils";
+import BadgeTypes from "./badge-type";
+
 const defaultData = [
   {
     id: 1,
     name: "Alex Thompson",
-    email: "alex.t@company.com",
+    generation: "1",
     location: "San Francisco",
-    status: ["Fire", "Fly"],
+    firstType: "Fire",
+    secondType: "Flying",
     balance: 1250,
     joined: new Date(2023, 3, 10),
     catched: true,
@@ -40,8 +42,10 @@ const defaultData = [
   {
     id: 2,
     name: "Sarah Chen",
-    email: "sarah.c@company.com",
+    generation: "2",
     location: "Singapore",
+    firstType: "Water",
+    secondType: "Ice",
     status: "Active",
     balance: 600,
     joined: new Date(2023, 6, 20),
@@ -50,8 +54,9 @@ const defaultData = [
   {
     id: 3,
     name: "James Wilson",
-    email: "j.wilson@company.com",
+    generation: "3",
     location: "London",
+    firstType: "Grass",
     status: "Inactive",
     balance: 650,
     joined: new Date(2022, 11, 5),
@@ -60,8 +65,10 @@ const defaultData = [
   {
     id: 4,
     name: "Maria Garcia",
-    email: "m.garcia@company.com",
+    generation: "4",
     location: "Madrid",
+    firstType: "Electric",
+    secondType: "Steel",
     status: "Active",
     balance: 0,
     joined: new Date(2023, 0, 15),
@@ -70,8 +77,9 @@ const defaultData = [
   {
     id: 5,
     name: "David Kim",
-    email: "d.kim@company.com",
+    generation: "5",
     location: "Seoul",
+    firstType: "Psychic",
     status: "Active",
     balance: -1000,
     joined: new Date(2024, 2, 2),
@@ -80,8 +88,10 @@ const defaultData = [
   {
     id: 6,
     name: "Emma Hamilton",
-    email: "emma.h@company.com",
+    generation: "6",
     location: "Berlin",
+    firstType: "Dragon",
+    secondType: "Flying",
     status: "Inactive",
     balance: 350,
     joined: new Date(2022, 7, 17),
@@ -90,8 +100,9 @@ const defaultData = [
   {
     id: 7,
     name: "Lucas Brown",
-    email: "lucas.brown@company.com",
+    generation: "7",
     location: "Toronto",
+    firstType: "Dark",
     status: "Active",
     balance: 900,
     joined: new Date(2023, 2, 11),
@@ -100,8 +111,10 @@ const defaultData = [
   {
     id: 8,
     name: "Olivia Lee",
-    email: "olivia.lee@company.com",
+    generation: "8",
     location: "Singapore",
+    firstType: "Fairy",
+    secondType: "Normal",
     status: "Active",
     balance: 2100,
     joined: new Date(2023, 9, 24),
@@ -110,8 +123,9 @@ const defaultData = [
   {
     id: 9,
     name: "Michael Johnson",
-    email: "m.johnson@company.com",
+    generation: "9",
     location: "New York",
+    firstType: "Fighting",
     status: "Inactive",
     balance: 0,
     joined: new Date(2021, 11, 3),
@@ -120,8 +134,10 @@ const defaultData = [
   {
     id: 10,
     name: "Chloe Martin",
-    email: "chloe.martin@company.com",
+    generation: "10",
     location: "Paris",
+    firstType: "Poison",
+    secondType: "Ground",
     status: "Active",
     balance: 150,
     joined: new Date(2022, 4, 19),
@@ -130,8 +146,9 @@ const defaultData = [
   {
     id: 11,
     name: "Henry Clark",
-    email: "henry.clark@company.com",
+    generation: "11",
     location: "Los Angeles",
+    firstType: "Rock",
     status: "Inactive",
     balance: -170,
     joined: new Date(2024, 1, 27),
@@ -140,8 +157,10 @@ const defaultData = [
   {
     id: 12,
     name: "Layla Walker",
-    email: "layla.w@company.com",
+    generation: "12",
     location: "London",
+    firstType: "Bug",
+    secondType: "Flying",
     status: "Active",
     balance: 870,
     joined: new Date(2023, 6, 8),
@@ -150,8 +169,9 @@ const defaultData = [
   {
     id: 13,
     name: "Daniel Evans",
-    email: "daniel.evans@company.com",
+    generation: "13",
     location: "Berlin",
+    firstType: "Ghost",
     status: "Active",
     balance: 1390,
     joined: new Date(2023, 11, 14),
@@ -160,8 +180,10 @@ const defaultData = [
   {
     id: 14,
     name: "Sophia Patel",
-    email: "sophia.p@company.com",
+    generation: "14",
     location: "Singapore",
+    firstType: "Steel",
+    secondType: "Psychic",
     status: "Inactive",
     balance: 220,
     joined: new Date(2022, 2, 12),
@@ -170,8 +192,9 @@ const defaultData = [
   {
     id: 15,
     name: "Noah Kim",
-    email: "noah.kim@company.com",
+    generation: "15",
     location: "Seoul",
+    firstType: "Ice",
     status: "Active",
     balance: 1580,
     joined: new Date(2023, 8, 30),
@@ -180,8 +203,10 @@ const defaultData = [
   {
     id: 16,
     name: "Mia Turner",
-    email: "mia.turner@company.com",
+    generation: "16",
     location: "Dublin",
+    firstType: "Normal",
+    secondType: "Flying",
     status: "Active",
     balance: 630,
     joined: new Date(2021, 9, 5),
@@ -190,8 +215,9 @@ const defaultData = [
   {
     id: 17,
     name: "Liam Martinez",
-    email: "liam.martinez@company.com",
+    generation: "17",
     location: "Toronto",
+    firstType: "Ground",
     status: "Inactive",
     balance: -90,
     joined: new Date(2022, 3, 28),
@@ -200,8 +226,10 @@ const defaultData = [
   {
     id: 18,
     name: "Chloe Wright",
-    email: "chloe.wright@company.com",
+    generation: "18",
     location: "Amsterdam",
+    firstType: "Fire",
+    secondType: "Fighting",
     status: "Active",
     balance: 1200,
     joined: new Date(2023, 10, 20),
@@ -210,8 +238,9 @@ const defaultData = [
   {
     id: 19,
     name: "Benjamin Scott",
-    email: "benjamin.scott@company.com",
+    generation: "19",
     location: "Chicago",
+    firstType: "Water",
     status: "Inactive",
     balance: 410,
     joined: new Date(2023, 7, 15),
@@ -220,8 +249,10 @@ const defaultData = [
   {
     id: 20,
     name: "Ava Nelson",
-    email: "ava.nelson@company.com",
+    generation: "20",
     location: "Sydney",
+    firstType: "Grass",
+    secondType: "Poison",
     status: "Active",
     balance: 960,
     joined: new Date(2022, 12, 3),
@@ -230,8 +261,9 @@ const defaultData = [
   {
     id: 21,
     name: "Jack Lee",
-    email: "jack.lee@company.com",
+    generation: "21",
     location: "Hong Kong",
+    firstType: "Electric",
     status: "Inactive",
     balance: -220,
     joined: new Date(2023, 1, 8),
@@ -240,8 +272,10 @@ const defaultData = [
   {
     id: 22,
     name: "Ella Harris",
-    email: "ella.harris@company.com",
+    generation: "22",
     location: "Zurich",
+    firstType: "Psychic",
+    secondType: "Fairy",
     status: "Active",
     balance: 1540,
     joined: new Date(2024, 2, 18),
@@ -250,8 +284,9 @@ const defaultData = [
   {
     id: 23,
     name: "Harper Lewis",
-    email: "harper.lewis@company.com",
+    generation: "23",
     location: "Rome",
+    firstType: "Dragon",
     status: "Active",
     balance: 710,
     joined: new Date(2022, 8, 23),
@@ -260,8 +295,10 @@ const defaultData = [
   {
     id: 24,
     name: "Logan Walker",
-    email: "logan.walker@company.com",
+    generation: "24",
     location: "Barcelona",
+    firstType: "Dark",
+    secondType: "Ghost",
     status: "Inactive",
     balance: 270,
     joined: new Date(2023, 4, 12),
@@ -270,8 +307,9 @@ const defaultData = [
   {
     id: 25,
     name: "Grace Young",
-    email: "grace.young@company.com",
+    generation: "25",
     location: "Vienna",
+    firstType: "Fairy",
     status: "Active",
     balance: 1100,
     joined: new Date(2021, 11, 29),
@@ -290,7 +328,7 @@ export default function FlexiFilterTable() {
     return data.filter((item) => {
       if (
         searchParams.search &&
-        !`${item.name} ${item.email}`
+        !`${item.name} ${item.generation}`
           .toLowerCase()
           .includes(searchParams.search.toLowerCase())
       )
@@ -349,16 +387,21 @@ export default function FlexiFilterTable() {
                       </p>
                     </div>
                   </TableCell>
-                  <TableCell>{row.email}</TableCell>
+                  <TableCell>GEN {row.generation}</TableCell>
                   <TableCell>{row.location}</TableCell>
                   <TableCell>
-                    <Badge
-                      variant={
-                        row.status === "Active" ? "secondary" : "destructive"
-                      }
-                    >
-                      {row.status}
-                    </Badge>
+                    <div className="flex items-center gap-2">
+                      <BadgeTypes
+                        pokemonTypes={
+                          row.secondType
+                            ? [
+                                row.firstType.toLowerCase(),
+                                row.secondType.toLowerCase(),
+                              ]
+                            : [row.firstType.toLowerCase()]
+                        }
+                      />
+                    </div>
                   </TableCell>
                   <TableCell>
                     <Progress max={2000} value={row.balance}>
@@ -367,7 +410,7 @@ export default function FlexiFilterTable() {
                       </ProgressTrack>
                     </Progress>
                   </TableCell>
-                  <TableCell>{row.joined.toDateString()}</TableCell>
+                  <TableCell>{row.joined.toDateString()}</TableCell>b
                   <TableCell onClick={(e) => e.stopPropagation()}>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
