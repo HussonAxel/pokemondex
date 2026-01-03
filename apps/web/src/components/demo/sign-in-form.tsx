@@ -6,11 +6,15 @@ import z from "zod";
 import { authClient } from "@/lib/auth-client";
 
 import Loader from "./loader";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
-export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () => void }) {
+export default function SignInForm({
+  onSwitchToSignUp,
+}: {
+  onSwitchToSignUp: () => void;
+}) {
   const navigate = useNavigate({
     from: "/",
   });
@@ -37,7 +41,7 @@ export default function SignInForm({ onSwitchToSignUp }: { onSwitchToSignUp: () 
           onError: (error) => {
             toast.error(error.error.message || error.error.statusText);
           },
-        },
+        }
       );
     },
     validators: {
