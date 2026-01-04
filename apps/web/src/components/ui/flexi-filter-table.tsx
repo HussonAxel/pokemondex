@@ -105,172 +105,184 @@ export default function FlexiFilterTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {PokemonsPaginated.map((pokemon) => {
-              return (
-                <TableRow
-                  key={pokemon.id}
-                  className={cn(
-                    "hover:bg-muted/30 cursor-pointer",
-                    isCatchedView && "opacity-30"
-                  )}
-                  onClick={() =>
-                    navigate({
-                      to: ".",
-                      search: {
-                        ...searchParams,
-                        activePokemon: pokemon.name,
-                      },
-                    })
-                  }
+            {PokemonsPaginated && PokemonsPaginated.length > 0 ? (
+              PokemonsPaginated.map((pokemon) => {
+                return (
+                  <TableRow
+                    key={pokemon.id}
+                    className={cn(
+                      "hover:bg-muted/30 cursor-pointer",
+                      isCatchedView && "opacity-30"
+                    )}
+                    onClick={() =>
+                      navigate({
+                        to: ".",
+                        search: {
+                          ...searchParams,
+                          activePokemon: pokemon.name,
+                        },
+                      })
+                    }
+                  >
+                    <TableCell className="flex items-center font-semibold text-[16px] gap-4">
+                      <img
+                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
+                          isShinyView ? "shiny/" + pokemon.id : pokemon.id
+                        }.png`}
+                        alt=""
+                        className="w-16 h-16 bg-sidebar-border rounded-sm p-1"
+                      />
+                      <div className="flex flex-col max-w-[150px] capitalize font-semibold">
+                        {pokemon.name.charAt(0).toUpperCase() +
+                          pokemon.name.slice(1)}
+                        <p className="text-[13px] text-accent-foreground/60 font-normal">
+                          #{pokemon.id.toString().padStart(4, "0")}
+                        </p>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <BadgeTypes
+                          pokemonTypes={pokemon.types}
+                          onClick={(e, type) => {
+                            e.stopPropagation();
+
+                            const currentTypes =
+                              searchParams.search?.split(",").filter(Boolean) ??
+                              [];
+                            const hasType = currentTypes.includes(type);
+
+                            const newTypes = hasType
+                              ? currentTypes.filter((t) => t !== type)
+                              : [...currentTypes, type];
+
+                            navigate({
+                              to: ".",
+                              search: {
+                                ...searchParams,
+                                search: newTypes.join(",") || undefined,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-2 max-w-32 min-w-32">
+                        <BadgeTypes
+                          onClick={(e, type) => {
+                            e.stopPropagation();
+
+                            const currentAbilities =
+                              searchParams.search?.split(",").filter(Boolean) ??
+                              [];
+                            const hasAbility = currentAbilities.includes(type);
+
+                            const newAbilities = hasAbility
+                              ? currentAbilities.filter((t) => t !== type)
+                              : [...currentAbilities, type];
+
+                            navigate({
+                              to: ".",
+                              search: {
+                                ...searchParams,
+                                search: newAbilities.join(",") || undefined,
+                              },
+                            });
+                          }}
+                          className="flex flex-col"
+                          classNameBadge="w-full text-center border-accent items-center justify-center flex flex-row font-bold text-white"
+                          pokemonTypes={
+                            pokemon.abilities
+                              ?.filter(
+                                (ability) =>
+                                  ability.ability.name &&
+                                  ability.is_hidden === false
+                              )
+                              .map((ability) => ability.ability.name) || []
+                          }
+                        />
+                        <BadgeTypes
+                          className="flex flex-col"
+                          classNameBadge="!border-primary/60 !bg-primary/10 w-full text-center border-accent items-center justify-center font-bold text-white"
+                          pokemonTypes={
+                            pokemon.abilities
+                              ?.filter(
+                                (ability) =>
+                                  ability.ability.name &&
+                                  ability.is_hidden === true
+                              )
+                              .map((ability) => ability.ability.name) || []
+                          }
+                          onClick={(e, type) => {
+                            e.stopPropagation();
+
+                            const currentAbilities =
+                              searchParams.search?.split(",").filter(Boolean) ??
+                              [];
+                            const hasAbility = currentAbilities.includes(type);
+
+                            const newAbilities = hasAbility
+                              ? currentAbilities.filter((t) => t !== type)
+                              : [...currentAbilities, type];
+
+                            navigate({
+                              to: ".",
+                              search: {
+                                ...searchParams,
+                                search: newAbilities.join(",") || undefined,
+                              },
+                            });
+                          }}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Progress
+                        max={800}
+                        value={Object.values(pokemon?.stats || {}).reduce(
+                          (sum: number, stat: unknown) =>
+                            sum + (stat as number),
+                          0
+                        )}
+                      >
+                        <ProgressTrack>
+                          <ProgressIndicator className="bg-sidebar-primary" />
+                        </ProgressTrack>
+                      </Progress>
+                    </TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <p>catched</p>
+                    </TableCell>
+                    <TableCell onClick={(e) => e.stopPropagation()}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button size="icon" variant="ghost">
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>View</DropdownMenuItem>
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-600">
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={12}
+                  className="text-center text-accent-foreground/60 font-normal"
                 >
-                  <TableCell className="flex items-center font-semibold text-[16px] gap-4">
-                    <img
-                      src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                        isShinyView ? "shiny/" + pokemon.id : pokemon.id
-                      }.png`}
-                      alt=""
-                      className="w-16 h-16 bg-sidebar-border rounded-sm p-1"
-                    />
-                    <div className="flex flex-col max-w-[150px] capitalize font-semibold">
-                      {pokemon.name.charAt(0).toUpperCase() +
-                        pokemon.name.slice(1)}
-                      <p className="text-[13px] text-accent-foreground/60 font-normal">
-                        #{pokemon.id.toString().padStart(4, "0")}
-                      </p>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <BadgeTypes
-                        pokemonTypes={pokemon.types}
-                        onClick={(e, type) => {
-                          e.stopPropagation();
-
-                          const currentTypes =
-                            searchParams.search?.split(",").filter(Boolean) ??
-                            [];
-                          const hasType = currentTypes.includes(type);
-
-                          const newTypes = hasType
-                            ? currentTypes.filter((t) => t !== type)
-                            : [...currentTypes, type];
-
-                          navigate({
-                            to: ".",
-                            search: {
-                              ...searchParams,
-                              search: newTypes.join(",") || undefined,
-                            },
-                          });
-                        }}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-col gap-2 max-w-32 min-w-32">
-                      <BadgeTypes
-                        onClick={(e, type) => {
-                          e.stopPropagation();
-
-                          const currentAbilities =
-                            searchParams.search?.split(",").filter(Boolean) ??
-                            [];
-                          const hasAbility = currentAbilities.includes(type);
-
-                          const newAbilities = hasAbility
-                            ? currentAbilities.filter((t) => t !== type)
-                            : [...currentAbilities, type];
-
-                          navigate({
-                            to: ".",
-                            search: {
-                              ...searchParams,
-                              search: newAbilities.join(",") || undefined,
-                            },
-                          });
-                        }}
-                        className="flex flex-col"
-                        classNameBadge="w-full text-center border-accent items-center justify-center flex flex-row font-bold text-white"
-                        pokemonTypes={
-                          pokemon.abilities
-                            ?.filter(
-                              (ability) =>
-                                ability.ability.name &&
-                                ability.is_hidden === false
-                            )
-                            .map((ability) => ability.ability.name) || []
-                        }
-                      />
-                      <BadgeTypes
-                        className="flex flex-col"
-                        classNameBadge="!border-primary/60 !bg-primary/10 w-full text-center border-accent items-center justify-center font-bold text-white"
-                        pokemonTypes={
-                          pokemon.abilities
-                            ?.filter(
-                              (ability) =>
-                                ability.ability.name &&
-                                ability.is_hidden === true
-                            )
-                            .map((ability) => ability.ability.name) || []
-                        }
-                        onClick={(e, type) => {
-                          e.stopPropagation();
-
-                          const currentAbilities =
-                            searchParams.search?.split(",").filter(Boolean) ??
-                            [];
-                          const hasAbility = currentAbilities.includes(type);
-
-                          const newAbilities = hasAbility
-                            ? currentAbilities.filter((t) => t !== type)
-                            : [...currentAbilities, type];
-
-                          navigate({
-                            to: ".",
-                            search: {
-                              ...searchParams,
-                              search: newAbilities.join(",") || undefined,
-                            },
-                          });
-                        }}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Progress
-                      max={800}
-                      value={Object.values(pokemon?.stats || {}).reduce(
-                        (sum: number, stat: unknown) => sum + (stat as number),
-                        0
-                      )}
-                    >
-                      <ProgressTrack>
-                        <ProgressIndicator className="bg-sidebar-primary" />
-                      </ProgressTrack>
-                    </Progress>
-                  </TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <p>catched</p>
-                  </TableCell>
-                  <TableCell onClick={(e) => e.stopPropagation()}>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button size="icon" variant="ghost">
-                          <MoreVertical className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>View</DropdownMenuItem>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                  No data found
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
