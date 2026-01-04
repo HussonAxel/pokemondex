@@ -29,6 +29,7 @@ export const SidebarTop = () => {
               search: (prev) => ({
                 ...prev,
                 search: value || undefined,
+                page: 1,
               }),
               replace: true,
             });
