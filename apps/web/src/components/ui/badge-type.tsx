@@ -5,6 +5,7 @@ interface BadgeTypesProps {
   pokemonTypes: string[];
   className?: string;
   classNameBadge?: string;
+  onClick?: (e: React.MouseEvent, type: string) => void;
 }
 
 // Mapping des types vers les classes Tailwind
@@ -138,6 +139,7 @@ export default function BadgeTypes({
   pokemonTypes,
   className,
   classNameBadge,
+  onClick,
 }: BadgeTypesProps) {
   return (
     <div className={cn("flex items-center gap-1.5 flex-wrap", className)}>
@@ -162,6 +164,7 @@ export default function BadgeTypes({
               typeClasses.hover,
               classNameBadge
             )}
+            onClick={onClick ? (e) => onClick(e, type) : undefined}
           >
             {type}
           </Badge>

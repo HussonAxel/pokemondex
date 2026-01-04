@@ -110,12 +110,54 @@ export default function FlexiFilterTable() {
                   <TableCell>GEN {pokemon.generation}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <BadgeTypes pokemonTypes={pokemon.types} />
+                      <BadgeTypes
+                        pokemonTypes={pokemon.types}
+                        onClick={(e, type) => {
+                          e.stopPropagation();
+
+                          const currentTypes =
+                            searchParams.search?.split(",").filter(Boolean) ??
+                            [];
+                          const hasType = currentTypes.includes(type);
+
+                          const newTypes = hasType
+                            ? currentTypes.filter((t) => t !== type)
+                            : [...currentTypes, type];
+
+                          navigate({
+                            to: ".",
+                            search: {
+                              ...searchParams,
+                              search: newTypes.join(",") || undefined,
+                            },
+                          });
+                        }}
+                      />
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-col gap-2 max-w-32 min-w-32">
                       <BadgeTypes
+                        onClick={(e, type) => {
+                          e.stopPropagation();
+
+                          const currentAbilities =
+                            searchParams.search?.split(",").filter(Boolean) ??
+                            [];
+                          const hasAbility = currentAbilities.includes(type);
+
+                          const newAbilities = hasAbility
+                            ? currentAbilities.filter((t) => t !== type)
+                            : [...currentAbilities, type];
+
+                          navigate({
+                            to: ".",
+                            search: {
+                              ...searchParams,
+                              search: newAbilities.join(",") || undefined,
+                            },
+                          });
+                        }}
                         className="flex flex-col"
                         classNameBadge="w-full text-center border-accent items-center justify-center flex flex-row font-bold text-white"
                         pokemonTypes={
@@ -140,6 +182,26 @@ export default function FlexiFilterTable() {
                             )
                             .map((ability) => ability.ability.name) || []
                         }
+                        onClick={(e, type) => {
+                          e.stopPropagation();
+
+                          const currentAbilities =
+                            searchParams.search?.split(",").filter(Boolean) ??
+                            [];
+                          const hasAbility = currentAbilities.includes(type);
+
+                          const newAbilities = hasAbility
+                            ? currentAbilities.filter((t) => t !== type)
+                            : [...currentAbilities, type];
+
+                          navigate({
+                            to: ".",
+                            search: {
+                              ...searchParams,
+                              search: newAbilities.join(",") || undefined,
+                            },
+                          });
+                        }}
                       />
                     </div>
                   </TableCell>
