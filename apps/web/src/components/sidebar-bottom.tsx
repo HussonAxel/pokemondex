@@ -1,11 +1,3 @@
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { Sparkles, LucideBalloon } from "lucide-react";
 import { Route } from "@/routes/index";
@@ -19,79 +11,7 @@ export const SidebarBottom = () => {
       <p className="text-sm text-accent-foreground/80 font-normal">
         1025 Pokémons
       </p>
-      <Pagination>
-        <PaginationContent>
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() =>
-                navigate({
-                  search: {
-                    ...searchParams,
-                    page: page - 1,
-                  },
-                })
-              }
-            />
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              className="opacity-80 hover:opacity-100"
-              onClick={() =>
-                navigate({
-                  search: {
-                    ...searchParams,
-                    page: page - 1,
-                  },
-                })
-              }
-            >
-              {page - 1}
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              className="font-semibold text-accent-foreground/80"
-              onClick={() =>
-                navigate({
-                  search: {
-                    ...searchParams,
-                    page: page,
-                  },
-                })
-              }
-            >
-              {page}
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationLink
-              className="opacity-80 hover:opacity-100"
-              onClick={() =>
-                navigate({
-                  search: {
-                    ...searchParams,
-                    page: page + 1,
-                  },
-                })
-              }
-            >
-              {page + 1}
-            </PaginationLink>
-          </PaginationItem>
-          <PaginationItem>
-            <PaginationNext
-              onClick={() =>
-                navigate({
-                  search: {
-                    ...searchParams,
-                    page: page + 1,
-                  },
-                })
-              }
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
+
       <div className="flex flex-row gap-4">
         <span className="inline-flex items-center justify-center">
           <Sparkles

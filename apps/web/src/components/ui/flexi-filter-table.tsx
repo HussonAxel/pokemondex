@@ -21,11 +21,23 @@ import {
   ProgressTrack,
 } from "@/components/ui/progress";
 
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+
 import { MoreVertical } from "lucide-react";
 import { useSearch, useNavigate, useLoaderData } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 import { cn } from "@/lib/utils";
 import BadgeTypes from "./badge-type";
+
+const ITEMS_PER_PAGE = 50;
 
 export default function FlexiFilterTable() {
   const { Pokemons } = useLoaderData({ from: Route.id });
@@ -34,6 +46,7 @@ export default function FlexiFilterTable() {
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
   const navigate = useNavigate({ from: Route.id });
+  const currentPage = searchParams.page || 1;
 
   const PokemonsFiltered = useMemo(() => {
     if (!searchParams.search) {
@@ -57,6 +70,25 @@ export default function FlexiFilterTable() {
     });
   }, [Pokemons.results, searchParams.search]);
 
+  const totalPages = Math.ceil(PokemonsFiltered.length / ITEMS_PER_PAGE);
+
+  const PokemonsPaginated = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return PokemonsFiltered.slice(startIndex, endIndex);
+  }, [PokemonsFiltered, currentPage]);
+
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    navigate({
+      to: ".",
+      search: {
+        ...searchParams,
+        page: page > 1 ? page : undefined,
+      },
+    });
+  };
+
   return (
     <div className="bg-background overflow-hidden p-4 h-full flex flex-col">
       {/* Table */}
@@ -74,7 +106,7 @@ export default function FlexiFilterTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {PokemonsFiltered.map((pokemon) => {
+            {PokemonsPaginated.map((pokemon) => {
               return (
                 <TableRow
                   key={pokemon.id}
@@ -243,6 +275,74 @@ export default function FlexiFilterTable() {
           </TableBody>
         </Table>
       </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="mt-4 flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(currentPage - 1);
+                  }}
+                  className={cn(
+                    currentPage === 1 && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => {
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 2 && page <= currentPage + 2)
+                  ) {
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(page);
+                          }}
+                          isActive={page === currentPage}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  } else if (
+                    page === currentPage - 3 ||
+                    page === currentPage + 3
+                  ) {
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                }
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(currentPage + 1);
+                  }}
+                  className={cn(
+                    currentPage === totalPages &&
+                      "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
     </div>
   );
 }
