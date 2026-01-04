@@ -37,7 +37,7 @@ import { Route } from "@/routes/index";
 import { cn } from "@/lib/utils";
 import BadgeTypes from "./badge-type";
 
-const ITEMS_PER_PAGE = 50;
+const ITEMS_PER_PAGE = 30;
 
 export default function FlexiFilterTable() {
   const { Pokemons } = useLoaderData({ from: Route.id });
@@ -64,7 +64,7 @@ export default function FlexiFilterTable() {
       const searchable = `${`${item.id} - `}
         ${item.name} ${item.abilities
         ?.map((ability) => ability.ability.name)
-        .join(", ")} ${`GEN ${item.generation}`} ${`${item.types.join(", ")}`}`;
+        .join(", ")} ${`${item.types.join(", ")}`}`;
 
       return searchTerms.every((term) => searchable.includes(term));
     });
@@ -97,7 +97,6 @@ export default function FlexiFilterTable() {
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
               <TableHead>NAME</TableHead>
-              <TableHead>GENERATION</TableHead>
               <TableHead>TYPE(S)</TableHead>
               <TableHead>ABILITIES</TableHead>
               <TableHead>STATS</TableHead>
@@ -132,14 +131,14 @@ export default function FlexiFilterTable() {
                       alt=""
                       className="w-16 h-16 bg-sidebar-border rounded-sm p-1"
                     />
-                    <div className="flex flex-col max-w-[150px]">
-                      {pokemon.name}
+                    <div className="flex flex-col max-w-[150px] capitalize font-semibold">
+                      {pokemon.name.charAt(0).toUpperCase() +
+                        pokemon.name.slice(1)}
                       <p className="text-[13px] text-accent-foreground/60 font-normal">
                         #{pokemon.id.toString().padStart(4, "0")}
                       </p>
                     </div>
                   </TableCell>
-                  <TableCell>GEN {pokemon.generation}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <BadgeTypes
