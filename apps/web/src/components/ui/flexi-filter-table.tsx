@@ -36,6 +36,7 @@ import { useSearch, useNavigate, useLoaderData } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 import { cn } from "@/lib/utils";
 import BadgeTypes from "./badge-type";
+import Pokeball from "./svg/pokeball";
 
 const ITEMS_PER_PAGE = 30;
 
@@ -252,7 +253,7 @@ export default function FlexiFilterTable() {
                       </Progress>
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
-                      <p>catched</p>
+                      <Pokeball stroke="red" />
                     </TableCell>
                     <TableCell onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
