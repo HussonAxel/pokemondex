@@ -38,9 +38,19 @@ import { cn } from "@/lib/utils";
 import BadgeTypes from "./badge-type";
 import Pokeball from "./svg/pokeball";
 
+import { useHotkeys } from "react-hotkeys-hook";
+
 const ITEMS_PER_PAGE = 30;
 
 export default function FlexiFilterTable() {
+  useHotkeys("arrowleft", () => {
+    handlePageChange(currentPage - 1);
+  });
+
+  useHotkeys("arrowright", () => {
+    handlePageChange(currentPage + 1);
+  });
+
   const { Pokemons } = useLoaderData({ from: Route.id });
   console.log(Pokemons, "Pokemons");
   const searchParams = useSearch({ from: Route.id });
