@@ -15,7 +15,7 @@ export const SidebarTop = () => {
   const navigate = useNavigate({ from: Route.id });
   return (
     <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-4 flex flex-row gap-4">
-      <InputGroup className="flex-1 rounded-lg bg-sidebar-accent max-w-[500px] mx-auto">
+      <InputGroup className="flex-1 rounded-lg bg-sidebar-accent max-w-[500px]">
         <InputGroupInput
           placeholder={
             searchParams.search !== undefined && searchParams.search !== ""
