@@ -23,27 +23,24 @@ export const Route = createFileRoute("/")({
     page: z.number().optional(),
   }),
   loader: async ({ context }) => {
-    const pokemons = await context.queryClient.ensureQueryData(
-      orpc.getPokemons.queryOptions({
-        staleTime: 1000 * 60 * 60 * 24 * 30, // 30 days
-        gcTime: 1000 * 60 * 60 * 24 * 30, // 30 days
-      })
+    const Pokemons = await context.queryClient.ensureQueryData(
+      orpc.getPokemonsMainData.queryOptions()
     );
-    return { pokemons };
+    return { Pokemons } as const;
   },
 });
 
 function HomeComponent() {
   const searchParams = useSearch({ from: Route.id });
-  const { pokemons } = useLoaderData({ from: Route.id });
-  console.log(pokemons);
-  const isGrid = searchParams.view === "grid" || !searchParams.view;
+  const { Pokemons } = useLoaderData({ from: Route.id });
+  console.log(Pokemons);
+  const isList = searchParams.view === "list" || !searchParams.view;
 
   return (
     <div className="flex flex-col h-full">
       <SidebarTop />
       <div className="relative flex-1 min-h-0 overflow-hidden">
-        {isGrid ? <GridTemplateView /> : <ListTemplateView />}
+        {isList ? <ListTemplateView /> : <GridTemplateView />}
       </div>
       <SidebarBottom />
     </div>
