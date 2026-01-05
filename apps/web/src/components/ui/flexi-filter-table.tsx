@@ -172,6 +172,7 @@ export default function FlexiFilterTable() {
                               search: {
                                 ...searchParams,
                                 search: newTypes.join(",") || undefined,
+                                page: 1,
                               },
                             });
                           }}
@@ -198,6 +199,7 @@ export default function FlexiFilterTable() {
                               search: {
                                 ...searchParams,
                                 search: newAbilities.join(",") || undefined,
+                                page: 1,
                               },
                             });
                           }}
@@ -242,6 +244,7 @@ export default function FlexiFilterTable() {
                               search: {
                                 ...searchParams,
                                 search: newAbilities.join(",") || undefined,
+                                page: 1,
                               },
                             });
                           }}
