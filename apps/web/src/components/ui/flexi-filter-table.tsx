@@ -39,6 +39,8 @@ import BadgeTypes from "./badge-type";
 import Pokeball from "./svg/pokeball";
 
 import { useHotkeys } from "react-hotkeys-hook";
+import { useQueryClient } from "@tanstack/react-query";
+import { orpc } from "@/utils/orpc";
 
 const ITEMS_PER_PAGE = 30;
 
@@ -51,8 +53,13 @@ export default function FlexiFilterTable() {
     handlePageChange(currentPage + 1);
   });
 
+  const queryClient = useQueryClient();
+
+  const prefetchPokemon = (name: string) => {
+    queryClient.prefetchQuery(orpc.getPokemonOverview.queryOptions({ input: { name } }));
+  };
+
   const { Pokemons } = useLoaderData({ from: Route.id });
-  console.log(Pokemons, "Pokemons");
   const searchParams = useSearch({ from: Route.id });
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
@@ -125,6 +132,10 @@ export default function FlexiFilterTable() {
                       "hover:bg-muted/30 cursor-pointer",
                       isCatchedView && "opacity-30"
                     )}
+                    onMouseEnter={
+                      () => {
+                        prefetchPokemon(pokemon.name);
+                      }}
                     onClick={() =>
                       navigate({
                         to: ".",

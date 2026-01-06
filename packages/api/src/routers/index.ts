@@ -1,7 +1,9 @@
 import type { RouterClient } from "@orpc/server";
+import { eq } from "drizzle-orm";
 
 import { protectedProcedure, publicProcedure } from "../index";
 import { db, pokemon } from "@my-better-t-app/db";
+import z from "zod";
 
 const DEFAULT_POKEAPI_URL = "https://pokeapi.co/api/v2";
 const DEFAULT_POKEAPI_LIMIT = "pokemon?limit=-1&offset=0";
@@ -50,6 +52,58 @@ export const appRouter = {
 
     return { results };
   }),
+  getPokemonOverview: publicProcedure
+    .input(
+      z.object({
+        name: z.string().optional(),
+      }).refine((data) => data.name !== undefined, {
+        message: "Name must be provided",
+      })
+    )
+    .handler(async ({ input }) => {
+      let pokemonData;
+
+      pokemonData = await db
+        .select()
+        .from(pokemon)
+        .where(eq(pokemon.name, input.name?.toLowerCase() || ""))
+        .limit(1);
+
+      if (!pokemonData || pokemonData.length === 0) {
+        throw new Error(
+          `Pokémon not found with ${`name: ${input.name}`}`
+        );
+      }
+
+      const p = pokemonData[0]!;
+
+      return {
+        id: p.id,
+        name: p.name,
+        spriteUrl: p.spriteUrl,
+        officialArtworkUrl: p.officialArtworkUrl,
+        height: p.height,
+        weight: p.weight,
+        baseExperience: p.baseExperience,
+        order: p.order,
+        isDefault: p.isDefault,
+        types: p.types || [],
+        pastTypes: p.pastTypes || [],
+        stats: p.stats,
+        generation: p.generation,
+        abilities: p.abilities || [],
+        pastAbilities: p.pastAbilities || [],
+        moves: p.moves || [],
+        forms: p.forms || [],
+        gameIndices: p.gameIndices || [],
+        heldItems: p.heldItems || [],
+        species: p.species,
+        locationAreaEncounters: p.locationAreaEncounters,
+        sprites: p.sprites,
+        cries: p.cries,
+      };
+    }),
+
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;
