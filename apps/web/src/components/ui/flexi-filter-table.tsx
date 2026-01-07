@@ -56,7 +56,9 @@ export default function FlexiFilterTable() {
   const queryClient = useQueryClient();
 
   const prefetchPokemon = (name: string) => {
-    queryClient.prefetchQuery(orpc.getPokemonOverview.queryOptions({ input: { name } }));
+    queryClient.prefetchQuery(
+      orpc.getPokemonOverview.queryOptions({ input: { name } })
+    );
   };
 
   const { Pokemons } = useLoaderData({ from: Route.id });
@@ -132,10 +134,9 @@ export default function FlexiFilterTable() {
                       "hover:bg-muted/30 cursor-pointer",
                       isCatchedView && "opacity-30"
                     )}
-                    onMouseEnter={
-                      () => {
-                        prefetchPokemon(pokemon.name);
-                      }}
+                    onMouseEnter={() => {
+                      prefetchPokemon(pokemon.name);
+                    }}
                     onClick={() =>
                       navigate({
                         to: ".",
