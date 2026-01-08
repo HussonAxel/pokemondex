@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@my-better-t-app/env": "workspace:*",
+    "babel-plugin-react-compiler": "^1.0.0",
     "dotenv": "catalog:",
     "get-db": "^0.11.0",
     "nitro": "^3.0.1-alpha.1",
