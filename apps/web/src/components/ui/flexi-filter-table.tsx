@@ -90,7 +90,7 @@ export default function FlexiFilterTable() {
       .filter((term) => term.length > 0);
 
 
-    PokemonsFiltered = Pokemons.results.filter((item) => {
+    PokemonsFiltered = PokemonsFiltered.filter((item) => {
       const searchable = `${`${item.id} - `}
         ${item.name} ${item.abilities
         ?.map((ability) => ability.ability.name)
