@@ -153,11 +153,9 @@ export default function FlexiFilterTable() {
                       })
                     }
                   >
-                    <TableCell className="flex items-center font-semibold text-[16px] gap-4">
+                    <TableCell className=" flex flex-col lg:flex-row items-center font-semibold text-[16px] gap-4 py-[6px]">
                       <img
-                        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
-                          isShinyView ? "shiny/" + pokemon.id : pokemon.id
-                        }.png`}
+                        src={`sprites/${isShinyView ? "shiny/" + pokemon.id + ".webp" : "base/" + pokemon.id + ".webp"}`}
                         onError={(e) => {
                           const img = e.target as HTMLImageElement;
                           if (img.src !== fallBackImage) {
@@ -167,7 +165,7 @@ export default function FlexiFilterTable() {
                         alt={pokemon.name}
                         className="w-16 h-16 bg-sidebar-border rounded-sm p-1"
                       />
-                      <div className="flex flex-col max-w-[150px] capitalize font-semibold">
+                      <div className="flex flex-col max-w-[150px] capitalize font-semibold text-center lg:text-left">
                         {pokemon.name.charAt(0).toUpperCase() +
                           pokemon.name.slice(1)}
                         <p className="text-[13px] text-accent-foreground/60 font-normal">
@@ -176,7 +174,7 @@ export default function FlexiFilterTable() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap lg:flex-nowrap">
                         <BadgeTypes
                           pokemonTypes={pokemon.types}
                           onClick={(e, type) => {
@@ -204,8 +202,10 @@ export default function FlexiFilterTable() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col gap-2 max-w-32 min-w-32">
+                      <div className="flex flex-row gap-2 flex-wrap lg:flex-nowrap">
                         <BadgeTypes
+                        className="!flex-nowrap"
+                          classNameBadge="font-semibold text-white "
                           onClick={(e, type) => {
                             e.stopPropagation();
 
@@ -227,8 +227,6 @@ export default function FlexiFilterTable() {
                               },
                             });
                           }}
-                          className="flex flex-col"
-                          classNameBadge="w-full text-center border-accent items-center justify-center flex flex-row font-bold text-white"
                           pokemonTypes={
                             pokemon.abilities
                               ?.filter(
@@ -240,8 +238,7 @@ export default function FlexiFilterTable() {
                           }
                         />
                         <BadgeTypes
-                          className="flex flex-col"
-                          classNameBadge="!border-primary/60 !bg-primary/10 w-full text-center border-accent items-center justify-center font-bold text-white"
+                          classNameBadge="!border-primary/60 !bg-primary/10 font-bold text-white flex-nowrap"
                           pokemonTypes={
                             pokemon.abilities
                               ?.filter(

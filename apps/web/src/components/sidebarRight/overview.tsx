@@ -53,7 +53,7 @@ export default function OverviewComponent() {
           </h2>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="group relative flex flex-col items-center justify-center">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Introduced
             </p>
@@ -61,7 +61,7 @@ export default function OverviewComponent() {
               {generationText}
             </p>
           </div>
-          <div className="group relative flex flex-col items-center justify-center">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Category
             </p>
@@ -71,7 +71,7 @@ export default function OverviewComponent() {
                 : "Unknown"}
             </p>
           </div>
-          <div className="group relative flex flex-col items-center justify-center">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Weight
             </p>
@@ -79,7 +79,7 @@ export default function OverviewComponent() {
               {weightInKg}kg
             </p>
           </div>
-          <div className="group relative flex flex-col items-center justify-center">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Height
             </p>
@@ -108,7 +108,7 @@ export default function OverviewComponent() {
                   <Tooltip key={`${abilityName}-${index}`}>
                     <TooltipTrigger
                       className={cn(
-                        "group relative flex flex-col items-center justify-center",
+                        "group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer",
                       )}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
