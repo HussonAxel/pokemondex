@@ -62,10 +62,10 @@ const typeClassMap: Record<
     hover: "hover:bg-purple-500/20",
   },
   ground: {
-    bg: "bg-amber-500/10",
-    text: "text-amber-400",
-    border: "border-amber-500/20",
-    hover: "hover:bg-amber-500/20",
+    bg: "bg-stone-500/10",
+    text: "text-stone-300",
+    border: "border-stone-500/20",
+    hover: "hover:bg-stone-500/20",
   },
   flying: {
     bg: "bg-indigo-300/10",
@@ -86,10 +86,10 @@ const typeClassMap: Record<
     hover: "hover:bg-lime-500/20",
   },
   rock: {
-    bg: "bg-yellow-600/10",
-    text: "text-yellow-500",
-    border: "border-yellow-600/20",
-    hover: "hover:bg-yellow-600/20",
+    bg: "bg-amber-700/10",
+    text: "text-amber-600",
+    border: "border-amber-700/20",
+    hover: "hover:bg-amber-700/20",
   },
   ghost: {
     bg: "bg-purple-600/10",
