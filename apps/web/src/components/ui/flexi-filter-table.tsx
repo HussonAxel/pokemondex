@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   Table,
   TableBody,
@@ -41,6 +40,7 @@ import Pokeball from "./svg/pokeball";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
+import { TableHeaderNames } from "@/data/data";
 
 
 const ITEMS_PER_PAGE = 30;
@@ -59,10 +59,26 @@ export default function FlexiFilterTable() {
   const queryClient = useQueryClient();
 
   const prefetchPokemon = (name: string) => {
-    queryClient.prefetchQuery(
-      orpc.getPokemonOverview.queryOptions({ input: { name } })
-    );
+    const queryOptions = orpc.getPokemonOverview.queryOptions({ input: { name } });
+    const queryKey = queryOptions.queryKey;
+    
+    const cachedData = queryClient.getQueryData(queryKey);
+
+    if (!cachedData) {
+      queryClient.prefetchQuery(queryOptions);
+    }
   };
+
+  const prefetchSpecies = (url: string) => {
+    const speciesQueryOptions = orpc.getPokemonSpeciesData.queryOptions({ input: { url } });
+    const speciesQueryKey = speciesQueryOptions.queryKey;
+
+    const cachedSpeciesData = queryClient.getQueryData(speciesQueryKey);
+
+    if (!cachedSpeciesData) {
+      queryClient.prefetchQuery(speciesQueryOptions);
+    }
+  }
 
   const { Pokemons } = useLoaderData({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
@@ -71,11 +87,8 @@ export default function FlexiFilterTable() {
   const navigate = useNavigate({ from: Route.id });
   const currentPage = searchParams.page || 1;
 
-  const PokemonsFiltered = useMemo(() => {
-    if (!searchParams.search) {
-      return Pokemons.results;
-    }
-
+  let PokemonsFiltered = Pokemons.results;
+  if (searchParams.search) {
     const searchTerms = searchParams.search
       .split(",")
       .map((term) => term.trim().toLowerCase())
@@ -83,7 +96,7 @@ export default function FlexiFilterTable() {
 
     console.log(searchTerms);
 
-    return Pokemons.results.filter((item) => {
+    PokemonsFiltered = Pokemons.results.filter((item) => {
       const searchable = `${`${item.id} - `}
         ${item.name} ${item.abilities
         ?.map((ability) => ability.ability.name)
@@ -91,15 +104,13 @@ export default function FlexiFilterTable() {
 
       return searchTerms.every((term) => searchable.includes(term));
     });
-  }, [Pokemons.results, searchParams.search]);
+  }
 
   const totalPages = Math.ceil(PokemonsFiltered.length / ITEMS_PER_PAGE);
 
-  const PokemonsPaginated = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    return PokemonsFiltered.slice(startIndex, endIndex);
-  }, [PokemonsFiltered, currentPage]);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const PokemonsPaginated = PokemonsFiltered.slice(startIndex, endIndex);
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -111,7 +122,6 @@ export default function FlexiFilterTable() {
       },
     });
   };
-
   return (
     <div className="bg-background overflow-hidden p-4 h-full flex flex-col">
       {/* Table */}
@@ -119,12 +129,9 @@ export default function FlexiFilterTable() {
         <Table>
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
-              <TableHead>NAME</TableHead>
-              <TableHead>TYPE(S)</TableHead>
-              <TableHead>ABILITIES</TableHead>
-              <TableHead>STATS</TableHead>
-              <TableHead>STATUS</TableHead>
-              <TableHead>ACTIONS</TableHead>
+              {TableHeaderNames.map((header) => (
+                <TableHead key={header}>{header}</TableHead>
+              ))}
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -137,9 +144,11 @@ export default function FlexiFilterTable() {
                       "hover:bg-muted/30 cursor-pointer",
                       isCatchedView && "opacity-30"
                     )}
-                    onMouseEnter={() => {
-                      prefetchPokemon(pokemon.name);
-                    }}
+                    onMouseEnter={
+                      () => {
+                        prefetchPokemon(pokemon.name);
+                        prefetchSpecies(pokemon.species?.url || "");
+                      }}
                     onClick={() =>
                       navigate({
                         to: ".",

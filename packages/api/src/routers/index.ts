@@ -37,6 +37,7 @@ export const appRouter = {
         generation: pokemon.generation,
         stats: pokemon.stats,
         abilities: pokemon.abilities,
+        species: pokemon.species
       })
       .from(pokemon)
       .orderBy(pokemon.id);
@@ -48,6 +49,7 @@ export const appRouter = {
       generation: p.generation,
       stats: p.stats,
       abilities: p.abilities,
+      species: p.species,
     }));
 
     return { results };
@@ -103,6 +105,27 @@ export const appRouter = {
         cries: p.cries,
       };
     }),
+
+
+    getPokemonSpeciesData: publicProcedure 
+    .input(
+      z.object({
+        url: z.string()
+      }).refine((data) => data.url !== undefined, {
+        message: "URL must be provided",
+      })
+    )
+    .handler( async ({
+      input
+    }) => {
+      const response = await fetch(input.url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Pokémon species data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data;
+    })
+
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;
