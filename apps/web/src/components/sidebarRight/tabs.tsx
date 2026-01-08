@@ -1,5 +1,6 @@
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
-import InfosComponent from "@/components/sidebarRight/infos";
+import OverviewComponent from "@/components/sidebarRight/overview";
+import BreedingComponent from "@/components/sidebarRight/breeding";
 
 export default function TabsComponent() {
   return (
@@ -17,12 +18,10 @@ export default function TabsComponent() {
         </TabsList>
       </div>
       <TabsPanel value="tab-1">
-        <InfosComponent />
+        <OverviewComponent />
       </TabsPanel>
       <TabsPanel value="tab-2">
-        <p className="p-4 text-center text-muted-foreground text-xs">
-          Tab 2 content
-        </p>
+        <BreedingComponent />
       </TabsPanel>
       <TabsPanel value="tab-3">
         <p className="p-4 text-center text-muted-foreground text-xs">
