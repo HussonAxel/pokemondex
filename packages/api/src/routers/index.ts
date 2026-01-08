@@ -37,7 +37,8 @@ export const appRouter = {
         generation: pokemon.generation,
         stats: pokemon.stats,
         abilities: pokemon.abilities,
-        species: pokemon.species
+        species: pokemon.species,
+        isDefault: pokemon.isDefault,
       })
       .from(pokemon)
       .orderBy(pokemon.id);
@@ -50,6 +51,7 @@ export const appRouter = {
       stats: p.stats,
       abilities: p.abilities,
       species: p.species,
+      isDefault: p.isDefault,
     }));
 
     return { results };
@@ -57,9 +59,9 @@ export const appRouter = {
   getPokemonOverview: publicProcedure
     .input(
       z.object({
-        name: z.string().optional(),
-      }).refine((data) => data.name !== undefined, {
-        message: "Name must be provided",
+        id: z.number().optional(),
+      }).refine((data) => data.id !== undefined, {
+        message: "ID must be provided",
       })
     )
     .handler(async ({ input }) => {
@@ -68,12 +70,12 @@ export const appRouter = {
       pokemonData = await db
         .select()
         .from(pokemon)
-        .where(eq(pokemon.name, input.name?.toLowerCase() || ""))
+        .where(eq(pokemon.id, input.id || 0))
         .limit(1);
 
       if (!pokemonData || pokemonData.length === 0) {
         throw new Error(
-          `Pokémon not found with ${`name: ${input.name}`}`
+          `Pokémon not found with ${`id: ${input.id}`}`
         );
       }
 
