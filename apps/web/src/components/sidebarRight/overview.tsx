@@ -15,7 +15,7 @@ export default function OverviewComponent() {
   const activePokemon = searchParams.activePokemon;
 
   const pokemon = useQuery(
-    orpc.getPokemonOverview.queryOptions({ input: { name: activePokemon } })
+    orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } })
   ).data;
 
   if (!pokemon) return null;

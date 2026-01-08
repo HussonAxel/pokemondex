@@ -58,15 +58,9 @@ export default function FlexiFilterTable() {
 
   const queryClient = useQueryClient();
 
-  const prefetchPokemon = (name: string) => {
-    const queryOptions = orpc.getPokemonOverview.queryOptions({ input: { name } });
-    const queryKey = queryOptions.queryKey;
-    
-    const cachedData = queryClient.getQueryData(queryKey);
-
-    if (!cachedData) {
-      queryClient.prefetchQuery(queryOptions);
-    }
+  const prefetchPokemon = (id: number) => {
+    const queryOptions = orpc.getPokemonOverview.queryOptions({ input: { id } });
+    queryClient.prefetchQuery(queryOptions);
   };
 
   const prefetchSpecies = (url: string) => {
@@ -87,14 +81,14 @@ export default function FlexiFilterTable() {
   const navigate = useNavigate({ from: Route.id });
   const currentPage = searchParams.page || 1;
 
-  let PokemonsFiltered = Pokemons.results;
+
+  let PokemonsFiltered = Pokemons.results.filter((item) => item.isDefault);
   if (searchParams.search) {
     const searchTerms = searchParams.search
       .split(",")
       .map((term) => term.trim().toLowerCase())
       .filter((term) => term.length > 0);
 
-    console.log(searchTerms);
 
     PokemonsFiltered = Pokemons.results.filter((item) => {
       const searchable = `${`${item.id} - `}
@@ -146,7 +140,7 @@ export default function FlexiFilterTable() {
                     )}
                     onMouseEnter={
                       () => {
-                        prefetchPokemon(pokemon.name);
+                        prefetchPokemon(pokemon.id);
                         prefetchSpecies(pokemon.species?.url || "");
                       }}
                     onClick={() =>
@@ -154,7 +148,7 @@ export default function FlexiFilterTable() {
                         to: ".",
                         search: {
                           ...searchParams,
-                          activePokemon: pokemon.name,
+                          activePokemon: pokemon.id,
                         },
                       })
                     }

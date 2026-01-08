@@ -1,9 +1,7 @@
-import { createFileRoute, useLoaderData } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { SidebarTop } from "@/components/sidebar-top";
 import { SidebarBottom } from "@/components/sidebar-bottom";
-import { GridTemplateView } from "@/components/GridTemplateView";
 import { ListTemplateView } from "@/components/ListTemplateView.tsx";
-import { useSearch } from "@tanstack/react-router";
 import { z } from "zod";
 import { orpc } from "@/utils/orpc";
 
@@ -13,11 +11,8 @@ export const Route = createFileRoute("/")({
     view: z.enum(["grid", "list"]).optional(),
     search: z.string().optional(),
     activePokemon: z
-      .string()
-      .optional()
-      .transform((val) =>
-        val ? decodeURIComponent(val.replace(/\+/g, " ")) : undefined
-      ),
+      .number()
+      .optional(),
     shinyView: z.boolean().optional(),
     catchedView: z.boolean().optional(),
     page: z.number().optional(),
@@ -31,16 +26,12 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  const searchParams = useSearch({ from: Route.id });
-  const { Pokemons } = useLoaderData({ from: Route.id });
-  console.log(Pokemons);
-  const isList = searchParams.view === "list" || !searchParams.view;
 
   return (
     <div className="flex flex-col h-full">
       <SidebarTop />
       <div className="relative flex-1 min-h-0 overflow-hidden">
-        {isList ? <ListTemplateView /> : <GridTemplateView />}
+        <ListTemplateView />
       </div>
       <SidebarBottom />
     </div>
