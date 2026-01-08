@@ -56,11 +56,13 @@ export const appRouter = {
   }),
   getPokemonOverview: publicProcedure
     .input(
-      z.object({
-        name: z.string().optional(),
-      }).refine((data) => data.name !== undefined, {
-        message: "Name must be provided",
-      })
+      z
+        .object({
+          name: z.string().optional(),
+        })
+        .refine((data) => data.name !== undefined, {
+          message: "Name must be provided",
+        })
     )
     .handler(async ({ input }) => {
       let pokemonData;
@@ -72,9 +74,7 @@ export const appRouter = {
         .limit(1);
 
       if (!pokemonData || pokemonData.length === 0) {
-        throw new Error(
-          `Pokémon not found with ${`name: ${input.name}`}`
-        );
+        throw new Error(`Pokémon not found with ${`name: ${input.name}`}`);
       }
 
       const p = pokemonData[0]!;
