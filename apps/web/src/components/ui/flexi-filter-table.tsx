@@ -42,9 +42,12 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
 
+
 const ITEMS_PER_PAGE = 30;
 
 export default function FlexiFilterTable() {
+
+  const fallBackImage = "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755"
   useHotkeys("arrowleft", () => {
     handlePageChange(currentPage - 1);
   });
@@ -152,7 +155,13 @@ export default function FlexiFilterTable() {
                         src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${
                           isShinyView ? "shiny/" + pokemon.id : pokemon.id
                         }.png`}
-                        alt=""
+                        onError={(e) => {
+                          const img = e.target as HTMLImageElement;
+                          if (img.src !== fallBackImage) {
+                            img.src = fallBackImage;
+                          }
+                        }}
+                        alt={pokemon.name}
                         className="w-16 h-16 bg-sidebar-border rounded-sm p-1"
                       />
                       <div className="flex flex-col max-w-[150px] capitalize font-semibold">
