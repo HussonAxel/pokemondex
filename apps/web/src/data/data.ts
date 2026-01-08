@@ -346,3 +346,6 @@ export const data = [
     catched: false,
   },
 ];
+
+
+export const TableHeaderNames = ["NAME", "TYPE(S)", "ABILITIES", "STATS", "STATUS", "ACTIONS"];
