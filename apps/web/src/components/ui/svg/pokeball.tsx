@@ -7,6 +7,8 @@ const Pokeball = (props: React.SVGProps<SVGSVGElement>) => (
     stroke={props.stroke || "#d73131"}
     strokeWidth={1.5}
     color={props.color || "#d73131"}
+    className={props.className}
+    onClick={props.onClick}
   >
     <path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z" />
     <path d="M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10Z" />

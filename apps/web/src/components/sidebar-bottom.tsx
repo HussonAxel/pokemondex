@@ -1,11 +1,12 @@
 import { useNavigate, useSearch } from "@tanstack/react-router";
-import { Sparkles, LucideBalloon } from "lucide-react";
+import { Sparkles} from "lucide-react";
+import Pokeball from "@/components/ui/svg/pokeball";
+
 import { Route } from "@/routes/index";
 
 export const SidebarBottom = () => {
   const navigate = useNavigate({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
-  const page = searchParams.page ?? 1;
   return (
     <div className="w-full mx-auto h-[48px] border-t border-border items-center px-4 flex flex-row gap-2 justify-between">
       <p className="text-sm text-accent-foreground/80 font-normal">
@@ -31,11 +32,11 @@ export const SidebarBottom = () => {
           />
         </span>
         <span className="inline-flex items-center justify-center">
-          <LucideBalloon
-            className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
+          <Pokeball
+            className={`cursor-pointer transition-all duration-300 ${
               searchParams.catchedView
                 ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-                : "text-red-500/50"
+                : "opacity-50"
             }`}
             onClick={() => {
               navigate({
