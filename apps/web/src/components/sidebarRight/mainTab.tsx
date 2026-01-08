@@ -9,9 +9,7 @@ export default function MainTab() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
 
-  const pokemon = useQuery(
-    orpc.getPokemonOverview.queryOptions({ input: { name: activePokemon } })
-  ).data;
+  const pokemon = useQuery(orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } })).data;
   if (!pokemon) return null;
   return (
     <div>

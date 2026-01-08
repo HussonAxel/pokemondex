@@ -20,7 +20,7 @@ export const SidebarRight = () => {
       open={!!activePokemon}
       style={
         {
-          "--sidebar-width": "22rem",
+          "--sidebar-width": "26rem",
         } as React.CSSProperties
       }
     >

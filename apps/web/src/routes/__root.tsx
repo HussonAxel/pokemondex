@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
+  useSearch,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
@@ -23,6 +24,7 @@ export interface RouterAppContext {
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
+
   head: () => ({
     meta: [
       {
@@ -37,6 +39,11 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
       },
     ],
     links: [
+      {
+        rel: "icon",
+        href: "/favicon.ico",
+        type: "image/x-icon",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -61,6 +68,8 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
+  const searchParams = useSearch({ from: Route.id });
+  const activePokemon = searchParams.activePokemon;
   return (
     <html lang="en" className="dark">
       <head>
@@ -72,9 +81,11 @@ function RootDocument() {
           <div className="h-full overflow-hidden">
             <Outlet />
           </div>
-          <div className="hidden xl:block">
-            <SidebarRight />
-          </div>
+          {activePokemon && (
+            <div className="hidden xl:block">
+              <SidebarRight />
+            </div>
+          )}
           <div className="block xl:hidden">
             <SidebarMobile />
           </div>

@@ -64,7 +64,7 @@ const DATA = {
     name: "Skyleen",
     email: "skyleen@example.com",
     avatar:
-      "https://pbs.twimg.com/profile_images/1909615404789506048/MTqvRsjo_400x400.jpg",
+      "https://chicoeevee.github.io/HOMENatDexIcons/pm1130_12_00_00_big.png",
   },
   teams: [
     {
