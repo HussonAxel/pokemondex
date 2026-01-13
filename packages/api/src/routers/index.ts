@@ -97,19 +97,13 @@ export const appRouter = {
         generation: p.generation,
         abilities: p.abilities || [],
         pastAbilities: p.pastAbilities || [],
-        moves: p.moves || [],
         forms: p.forms || [],
-        gameIndices: p.gameIndices || [],
         heldItems: p.heldItems || [],
         species: p.species,
-        locationAreaEncounters: p.locationAreaEncounters,
-        sprites: p.sprites,
         cries: p.cries,
       };
     }),
-
-
-    getPokemonSpeciesData: publicProcedure 
+  getPokemonSpeciesData: publicProcedure 
     .input(
       z.object({
         url: z.string()
@@ -126,8 +120,24 @@ export const appRouter = {
       }
       const data = await response.json();
       return data;
-    })
+    }),
 
+    getPokemonGrowthRateData: publicProcedure
+    .input( 
+      z.object({
+        url: z.string()
+      }).refine((data) => data.url !== undefined, { 
+        message: "URL must be provided",
+      })
+    )
+    .handler( async ({ input }) => {
+      const response = await fetch(input.url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch Pokémon growth rate data: ${response.statusText}`);
+      }
+      const data = await response.json();
+      return data;
+    })
 };
 export type AppRouter = typeof appRouter;
 export type AppRouterClient = RouterClient<typeof appRouter>;
