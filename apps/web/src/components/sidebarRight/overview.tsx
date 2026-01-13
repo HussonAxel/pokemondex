@@ -14,9 +14,11 @@ export default function OverviewComponent() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
 
-  const pokemon = useQuery(
-    orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } })
-  ).data;
+  const pokemon = useQuery({
+    ...orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } }),
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
+  }).data;
 
   if (!pokemon) return null;
 
