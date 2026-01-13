@@ -65,10 +65,29 @@ export const appRouter = {
       })
     )
     .handler(async ({ input }) => {
-      let pokemonData;
-
-      pokemonData = await db
-        .select()
+      const pokemonData = await db
+        .select({
+          id: pokemon.id,
+          name: pokemon.name,
+          spriteUrl: pokemon.spriteUrl,
+          officialArtworkUrl: pokemon.officialArtworkUrl,
+          height: pokemon.height,
+          weight: pokemon.weight,
+          baseExperience: pokemon.baseExperience,
+          order: pokemon.order,
+          isDefault: pokemon.isDefault,
+          types: pokemon.types,
+          pastTypes: pokemon.pastTypes,
+          stats: pokemon.stats,
+          generation: pokemon.generation,
+          abilities: pokemon.abilities,
+          pastAbilities: pokemon.pastAbilities,
+          forms: pokemon.forms,
+          heldItems: pokemon.heldItems,
+          species: pokemon.species,
+          cries: pokemon.cries,
+          locationAreaEncounters: pokemon.locationAreaEncounters,
+        })
         .from(pokemon)
         .where(eq(pokemon.id, input.id || 0))
         .limit(1);
@@ -101,6 +120,7 @@ export const appRouter = {
         heldItems: p.heldItems || [],
         species: p.species,
         cries: p.cries,
+        locationAreaEncounters: p.locationAreaEncounters,
       };
     }),
   getPokemonSpeciesData: publicProcedure 
