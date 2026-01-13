@@ -60,17 +60,29 @@ export default function FlexiFilterTable() {
 
   const prefetchPokemon = (id: number) => {
     const queryOptions = orpc.getPokemonOverview.queryOptions({ input: { id } });
-    queryClient.prefetchQuery(queryOptions);
+    const queryKey = queryOptions.queryKey;
+    const queryState = queryClient.getQueryState(queryKey);
+
+    if (!queryState || queryState.dataUpdatedAt === null) {
+      queryClient.prefetchQuery({
+        ...queryOptions,
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+      });
+    }
   };
 
   const prefetchSpecies = (url: string) => {
     const speciesQueryOptions = orpc.getPokemonSpeciesData.queryOptions({ input: { url } });
     const speciesQueryKey = speciesQueryOptions.queryKey;
+    const queryState = queryClient.getQueryState(speciesQueryKey);
 
-    const cachedSpeciesData = queryClient.getQueryData(speciesQueryKey);
-
-    if (!cachedSpeciesData) {
-      queryClient.prefetchQuery(speciesQueryOptions);
+    if (!queryState || queryState.dataUpdatedAt === null) {
+      queryClient.prefetchQuery({
+        ...speciesQueryOptions,
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+      });
     }
   }
 
