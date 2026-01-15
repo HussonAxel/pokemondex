@@ -5,6 +5,7 @@ import { orpc, queryClient } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
 import { useSearch } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
+import TrainingRelationsComponent from "@/components/sidebarRight/training-relations";
 
 export default function TabsComponent() {
 
@@ -51,9 +52,7 @@ export default function TabsComponent() {
         <BreedingComponent />
       </TabsPanel>
       <TabsPanel value="tab-3">
-        <p className="p-4 text-center text-muted-foreground text-xs">
-          Tab 3 content
-        </p>
+        <TrainingRelationsComponent />
       </TabsPanel>
       <TabsPanel value="tab-4">
         <p className="p-4 text-center text-muted-foreground text-xs">
