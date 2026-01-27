@@ -1,5 +1,4 @@
 import { LayoutGrid, List, SearchIcon } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
 import { Link, useSearch, useNavigate } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
 

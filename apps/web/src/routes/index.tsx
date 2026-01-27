@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { SidebarTop } from "@/components/sidebar-top";
 import { SidebarBottom } from "@/components/sidebar-bottom";
 import { ListTemplateView } from "@/components/ListTemplateView.tsx";
 import { z } from "zod";
@@ -10,26 +9,22 @@ export const Route = createFileRoute("/")({
   validateSearch: z.object({
     view: z.enum(["grid", "list"]).optional(),
     search: z.string().optional(),
-    activePokemon: z
-      .number()
-      .optional(),
+    activePokemon: z.number().optional(),
     shinyView: z.boolean().optional(),
     catchedView: z.boolean().optional(),
     page: z.number().optional(),
   }),
   loader: async ({ context }) => {
     const Pokemons = await context.queryClient.ensureQueryData(
-      orpc.getPokemonsMainData.queryOptions()
+      orpc.getPokemonsMainData.queryOptions(),
     );
     return { Pokemons } as const;
   },
 });
 
 function HomeComponent() {
-
   return (
     <div className="flex flex-col h-full">
-      <SidebarTop />
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <ListTemplateView />
       </div>

@@ -1,5 +1,3 @@
-import { SidebarTop } from "@/components/sidebar-top";
-
 import {
   Table,
   TableBody,
@@ -147,7 +145,6 @@ export default function FlexiFilterTable() {
   };
   return (
     <div className="bg-background overflow-hidden p-4 h-full flex flex-col">
-      <SidebarTop />
       {/* Table */}
       <div className="flex-1 overflow-y-auto scrollbar-hide rounded-xl border border-border">
         <Table>
