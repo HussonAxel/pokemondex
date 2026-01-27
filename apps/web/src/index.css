@@ -4,747 +4,488 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* -------------------------------------------------------------------------- */
+/* COLOR PALETTES                             */
+/* -------------------------------------------------------------------------- */
+
 :root {
-  --background: oklch(1.0000 0 0);
-  --foreground: oklch(0.2101 0.0318 264.6645);
-  --card: oklch(1.0000 0 0);
-  --card-foreground: oklch(0.2101 0.0318 264.6645);
-  --popover: oklch(1.0000 0 0);
-  --popover-foreground: oklch(0.2101 0.0318 264.6645);
-  --primary: oklch(0.6716 0.1368 48.5130);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.5360 0.0398 196.0280);
-  --secondary-foreground: oklch(1.0000 0 0);
-  --muted: oklch(0.9670 0.0029 264.5419);
-  --muted-foreground: oklch(0.5510 0.0234 264.3637);
-  --accent: oklch(0.9491 0 0);
-  --accent-foreground: oklch(0.2101 0.0318 264.6645);
-  --destructive: oklch(0.6368 0.2078 25.3313);
-  --destructive-foreground: oklch(0.9851 0 0);
-  --border: oklch(0.9276 0.0058 264.5313);
-  --input: oklch(0.9276 0.0058 264.5313);
-  --ring: oklch(0.6716 0.1368 48.5130);
-  --chart-1: oklch(0.5940 0.0443 196.0233);
-  --chart-2: oklch(0.7214 0.1337 49.9802);
-  --chart-3: oklch(0.8721 0.0864 68.5474);
-  --chart-4: oklch(0.6268 0 0);
-  --chart-5: oklch(0.6830 0 0);
-  --sidebar: oklch(0.9670 0.0029 264.5419);
-  --sidebar-foreground: oklch(0.2101 0.0318 264.6645);
-  --sidebar-primary: oklch(0.6716 0.1368 48.5130);
-  --sidebar-primary-foreground: oklch(1.0000 0 0);
-  --sidebar-accent: oklch(1.0000 0 0);
-  --sidebar-accent-foreground: oklch(0.2101 0.0318 264.6645);
-  --sidebar-border: oklch(0.9276 0.0058 264.5313);
-  --sidebar-ring: oklch(0.6716 0.1368 48.5130);
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 0.75rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 4px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.05;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-sm: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow-md: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 2px 4px -1px hsl(0 0% 0% / 0.05);
-  --shadow-lg: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 4px 6px -1px hsl(0 0% 0% / 0.05);
-  --shadow-xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 8px 4px -1px hsl(0 0% 0% / 0.05);
-  --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
-  --tracking-normal: 0rem;
-  --spacing: 0.25rem;
+    /* LIGHT MODE - Kept standard for consistency */
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.2101 0.0318 264.6645);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.2101 0.0318 264.6645);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.2101 0.0318 264.6645);
+    --primary: oklch(0.6716 0.1368 48.513);
+    --primary-foreground: oklch(1 0 0);
+    --secondary: oklch(0.536 0.0398 196.028);
+    --secondary-foreground: oklch(1 0 0);
+    --muted: oklch(0.967 0.0029 264.5419);
+    --muted-foreground: oklch(0.551 0.0234 264.3637);
+    --accent: oklch(0.9491 0 0);
+    --accent-foreground: oklch(0.2101 0.0318 264.6645);
+    --destructive: oklch(0.6368 0.2078 25.3313);
+    --destructive-foreground: oklch(0.9851 0 0);
+    --border: oklch(0.9276 0.0058 264.5313);
+    --input: oklch(0.9276 0.0058 264.5313);
+    --ring: oklch(0.6716 0.1368 48.513);
+    --chart-1: oklch(0.594 0.0443 196.0233);
+    --chart-2: oklch(0.7214 0.1337 49.9802);
+    --chart-3: oklch(0.8721 0.0864 68.5474);
+    --chart-4: oklch(0.6268 0 0);
+    --chart-5: oklch(0.683 0 0);
+    --sidebar: oklch(0.967 0.0029 264.5419);
+    --sidebar-foreground: oklch(0.2101 0.0318 264.6645);
+    --sidebar-primary: oklch(0.6716 0.1368 48.513);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(1 0 0);
+    --sidebar-accent-foreground: oklch(0.2101 0.0318 264.6645);
+    --sidebar-border: oklch(0.9276 0.0058 264.5313);
+    --sidebar-ring: oklch(0.6716 0.1368 48.513);
+    --radius: 0.75rem;
+    --shadow-sm:
+        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
+        0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+    --shadow:
+        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
+        0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+    --shadow-md:
+        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
+        0px 2px 4px -1px hsl(0 0% 0% / 0.05);
+    --shadow-lg:
+        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
+        0px 4px 6px -1px hsl(0 0% 0% / 0.05);
+    --shadow-xl:
+        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
+        0px 8px 4px -1px hsl(0 0% 0% / 0.05);
+    --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
+    --tracking-normal: 0rem;
 }
 
 .dark {
-  --background: oklch(0.1797 0.0043 308.1928);
-  --foreground: oklch(0.8109 0 0);
-  --card: oklch(0.1822 0 0);
-  --card-foreground: oklch(0.8109 0 0);
-  --popover: oklch(0.1797 0.0043 308.1928);
-  --popover-foreground: oklch(0.8109 0 0);
-  --primary: oklch(0.7214 0.1337 49.9802);
-  --primary-foreground: oklch(0.1797 0.0043 308.1928);
-  --secondary: oklch(0.5100 0.0741 269.5479);
-  --secondary-foreground: oklch(0.1797 0.0043 308.1928);
-  --muted: oklch(0.2520 0 0);
-  --muted-foreground: oklch(0.6268 0 0);
-  --accent: oklch(0.3211 0 0);
-  --accent-foreground: oklch(0.8109 0 0);
-  --destructive: oklch(0.5940 0.0443 196.0233);
-  --destructive-foreground: oklch(0.1797 0.0043 308.1928);
-  --border: oklch(0.2520 0 0);
-  --input: oklch(0.2520 0 0);
-  --ring: oklch(0.7214 0.1337 49.9802);
-  --chart-1: oklch(0.5940 0.0443 196.0233);
-  --chart-2: oklch(0.7214 0.1337 49.9802);
-  --chart-3: oklch(0.8721 0.0864 68.5474);
-  --chart-4: oklch(0.6268 0 0);
-  --chart-5: oklch(0.6830 0 0);
-  --sidebar: oklch(0.1822 0 0);
-  --sidebar-foreground: oklch(0.8109 0 0);
-  --sidebar-primary: oklch(0.7214 0.1337 49.9802);
-  --sidebar-primary-foreground: oklch(0.1797 0.0043 308.1928);
-  --sidebar-accent: oklch(0.3211 0 0);
-  --sidebar-accent-foreground: oklch(0.8109 0 0);
-  --sidebar-border: oklch(0.2520 0 0);
-  --sidebar-ring: oklch(0.7214 0.1337 49.9802);
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --font-serif: serif;
-  --font-mono: JetBrains Mono, monospace;
-  --radius: 0.75rem;
-  --shadow-x: 0px;
-  --shadow-y: 1px;
-  --shadow-blur: 4px;
-  --shadow-spread: 0px;
-  --shadow-opacity: 0.05;
-  --shadow-color: #000000;
-  --shadow-2xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-xs: 0px 1px 4px 0px hsl(0 0% 0% / 0.03);
-  --shadow-sm: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 1px 2px -1px hsl(0 0% 0% / 0.05);
-  --shadow-md: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 2px 4px -1px hsl(0 0% 0% / 0.05);
-  --shadow-lg: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 4px 6px -1px hsl(0 0% 0% / 0.05);
-  --shadow-xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.05), 0px 8px 4px -1px hsl(0 0% 0% / 0.05);
-  --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
+    /* BACKGROUND: Deep, rich blue-grey (oklch) for depth */
+    --background: oklch(0.14 0.02 264);
+    /* FOREGROUND: Pure white for maximum readability */
+    --foreground: oklch(0.98 0 0);
+
+    /* CARD: Slightly lighter to create hierarchy */
+    --card: oklch(0.18 0.03 264);
+    --card-foreground: oklch(0.98 0 0);
+
+    --popover: oklch(0.18 0.03 264);
+    --popover-foreground: oklch(0.98 0 0);
+
+    /* PRIMARY: Electric Indigo/Violet - Vibrant */
+    --primary: oklch(0.65 0.22 275);
+    --primary-foreground: oklch(1 0 0);
+
+    /* SECONDARY: Deep Teal/Slate */
+    --secondary: oklch(0.28 0.05 220);
+    --secondary-foreground: oklch(0.98 0 0);
+
+    /* MUTED: Bright enough to be read (grey text) */
+    --muted: oklch(0.25 0.03 264);
+    --muted-foreground: oklch(0.75 0.02 264);
+
+    --accent: oklch(0.28 0.05 275);
+    --accent-foreground: oklch(0.98 0 0);
+
+    --destructive: oklch(0.6 0.25 25);
+    --destructive-foreground: oklch(0.98 0 0);
+
+    /* BORDERS: Visible, defining structure */
+    --border: oklch(0.3 0.04 264);
+    --input: oklch(0.3 0.04 264);
+    --ring: oklch(0.65 0.22 275);
+
+    /* CHARTS: Neon palette */
+    --chart-1: oklch(0.65 0.2 190); /* Cyan */
+    --chart-2: oklch(0.65 0.22 275); /* Violet */
+    --chart-3: oklch(0.75 0.18 45); /* Orange */
+    --chart-4: oklch(0.7 0.2 150); /* Green */
+    --chart-5: oklch(0.7 0.2 340); /* Pink */
+
+    --sidebar: oklch(0.14 0.02 264);
+    --sidebar-foreground: oklch(0.95 0 0);
+    --sidebar-primary: oklch(0.65 0.22 275);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(0.25 0.03 264);
+    --sidebar-accent-foreground: oklch(0.98 0 0);
+    --sidebar-border: oklch(0.3 0.04 264);
+    --sidebar-ring: oklch(0.65 0.22 275);
+
+    /* SHADOWS: Colored shadows for dark mode "glow" feel */
+    --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.5);
+    --shadow: 0 1px 3px 0 oklch(0 0 0 / 0.5), 0 1px 2px -1px oklch(0 0 0 / 0.5);
+    --shadow-md:
+        0 4px 6px -1px oklch(0 0 0 / 0.5), 0 2px 4px -2px oklch(0 0 0 / 0.5);
+    --shadow-lg:
+        0 10px 15px -3px oklch(0 0 0 / 0.5), 0 4px 6px -4px oklch(0 0 0 / 0.5);
 }
+
+/* -------------------------------------------------------------------------- */
+/* THEME MAPPING                               */
+/* -------------------------------------------------------------------------- */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
 
-  /* Couleurs des types Pokémon pour Tailwind */
-  --color-normal: var(--color-normal);
-  --color-fire: var(--color-fire);
-  --color-water: var(--color-water);
-  --color-electric: var(--color-electric);
-  --color-grass: var(--color-grass);
-  --color-ice: var(--color-ice);
-  --color-fighting: var(--color-fighting);
-  --color-poison: var(--color-poison);
-  --color-ground: var(--color-ground);
-  --color-flying: var(--color-flying);
-  --color-psychic: var(--color-psychic);
-  --color-bug: var(--color-bug);
-  --color-rock: var(--color-rock);
-  --color-ghost: var(--color-ghost);
-  --color-dragon: var(--color-dragon);
-  --color-dark: var(--color-dark);
-  --color-steel: var(--color-steel);
-  --color-fairy: var(--color-fairy);
+    /* POKEMON TYPES - VIBRANT / NEON PALETTE */
+    --color-normal: #c8c9cb;
+    --color-fire: #ff7733;
+    --color-water: #44aaff;
+    --color-electric: #ffdd33;
+    --color-grass: #66ee55;
+    --color-ice: #77eeff;
+    --color-fighting: #ff4444;
+    --color-poison: #dd55dd;
+    --color-ground: #eedd77;
+    --color-flying: #8899ff;
+    --color-psychic: #ff6699;
+    --color-bug: #bbee22;
+    --color-rock: #ddcbaa;
+    --color-ghost: #9988dd;
+    --color-dragon: #8866ff;
+    --color-dark: #a9988d;
+    --color-steel: #bbbbcc;
+    --color-fairy: #ffaaee;
 
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
-  --font-serif: var(--font-serif);
+    --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+    --font-serif: serif;
+    --font-mono: JetBrains Mono, monospace;
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --radius-2xl: calc(var(--radius) + 8px);
+    --radius-3xl: calc(var(--radius) + 12px);
+    --radius-4xl: calc(var(--radius) + 16px);
 
-  --shadow-2xs: var(--shadow-2xs);
-  --shadow-xs: var(--shadow-xs);
-  --shadow-sm: var(--shadow-sm);
-  --shadow: var(--shadow);
-  --shadow-md: var(--shadow-md);
-  --shadow-lg: var(--shadow-lg);
-  --shadow-xl: var(--shadow-xl);
-  --shadow-2xl: var(--shadow-2xl);
+    --shadow-sm: var(--shadow-sm);
+    --shadow: var(--shadow);
+    --shadow-md: var(--shadow-md);
+    --shadow-lg: var(--shadow-lg);
+    --shadow-xl: var(--shadow-xl);
+    --shadow-2xl: var(--shadow-2xl);
 
-  --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
-  --tracking-tight: calc(var(--tracking-normal) - 0.025em);
-  --tracking-normal: var(--tracking-normal);
-  --tracking-wide: calc(var(--tracking-normal) + 0.025em);
-  --tracking-wider: calc(var(--tracking-normal) + 0.05em);
-  --tracking-widest: calc(var(--tracking-normal) + 0.1em);
-}
-
-body {
-  letter-spacing: var(--tracking-normal);
-}
-
-@theme inline {
-  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
-  --color-card: var(--card);
-  --color-foreground: var(--foreground);
-  --color-background: var(--background);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
-
-  /* Couleurs des types Pokémon */
-  --color-normal: #A8A77A;
-  --color-fire: #EE8130;
-  --color-water: #6390F0;
-  --color-electric: #F7D02C;
-  --color-grass: #7AC74C;
-  --color-ice: #96D9D6;
-  --color-fighting: #C22E28;
-  --color-poison: #A33EA1;
-  --color-ground: #E2BF65;
-  --color-flying: #A98FF3;
-  --color-psychic: #F95587;
-  --color-bug: #A6B91A;
-  --color-rock: #B6A136;
-  --color-ghost: #735797;
-  --color-dragon: #6F35FC;
-  --color-dark: #705746;
-  --color-steel: #B7B7CE;
-  --color-fairy: #D685AD;
+    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
+    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
+    --tracking-normal: var(--tracking-normal);
+    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
+    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
+    --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-
-  html {
-    @apply h-screen overflow-hidden font-sans;
-  }
-
-  body {
-    @apply h-full overflow-hidden font-sans bg-background text-foreground;
-  }
+    * {
+        @apply border-border outline-ring/50;
+    }
+    html {
+        @apply h-screen overflow-hidden font-sans;
+    }
+    body {
+        @apply h-full overflow-hidden font-sans bg-background text-foreground;
+        letter-spacing: var(--tracking-normal);
+    }
 }
+
+/* -------------------------------------------------------------------------- */
+/* UTILITIES                                 */
+/* -------------------------------------------------------------------------- */
 
 .scrollbar-hide {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
-
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .icon {
-  border-radius: 100%;
-  height: 100px;
-  width: 100px;
-  margin: auto;
-  transition: .2s all
+    border-radius: 100%;
+    height: 100px;
+    width: 100px;
+    margin: auto;
+    transition: 0.2s all;
 }
 
-.bg-Insecte,
-.bg-Insecte {
-  background: #92bc2c;
-  box-shadow: 0 0 2px #92bc2c
-}
+/* -------------------------------------------------------------------------- */
+/* VIBRANT BADGE SYSTEM                            */
+/* -------------------------------------------------------------------------- */
 
-.bg-Insecte path {
-  fill: #92bc2c
-}
-
-.Ténèbres,
-.bg-Ténèbres {
-  background: #595761;
-  box-shadow: 0 0 2px #595761
-}
-
-.bg-Ténèbres path {
-  fill: #595761
-}
-
-.Dragon,
-.bg-Dragon {
-  background: #0c69c8;
-  box-shadow: 0 0 2px #0c69c8
-}
-
-.bg-Dragon path {
-  fill: #0c69c8
-}
-
-.Électrik,
-.bg-Électrik {
-  background: #f2d94e;
-  box-shadow: 0 0 2px #f2d94e
-}
-
-.bg-Électrik path {
-  fill: #f2d94e
-}
-
-.Feu,
-.bg-Feu {
-  background: #fba54c;
-  box-shadow: 0 0 2px #fba64c
-}
-
-.bg-Feu path {
-  fill: #fba54c
-}
-
-.Fée,
-.bg-Fée {
-  background: #ee90e6;
-  box-shadow: 0 0 2px #ee90e6
-}
-
-.bg-Fée path {
-  fill: #ee90e6
-}
-
-.Combat,
-.bg-Combat {
-  background: #d3425f;
-  box-shadow: 0 0 2px #d3425f
-}
-
-.bg-Combat path {
-  fill: #d3425f
-}
-
-.Vol,
-.bg-Vol {
-  background: #a1bbec;
-  box-shadow: 0 0 2px #a1bbec
-}
-
-.bg-Vol path {
-  fill: #a1bbec
-}
-
-.Spectre,
-.bg-Spectre {
-  background: #5f6dbc;
-  box-shadow: 0 0 2px #5f6dbc
-}
-
-.bg-Spectre path {
-  fill: #5f6dbc
-}
-
-.Plante,
-.bg-Plante {
-  background: #5fbd58;
-  box-shadow: 0 0 2px #5fbd58
-}
-
-.bg-Plante path {
-  fill: #5fbd58
-}
-
-.Sol,
-.bg-Sol {
-  background: #da7c4d;
-  box-shadow: 0 0 2px #da7c4d
-}
-
-.bg-Sol path {
-  fill: #da7c4d
-}
-
-.Glace,
-.bg-Glace {
-  background: #75d0c1;
-  box-shadow: 0 0 2px #75d0c1
-}
-
-.bg-Glace path {
-  fill: #75d0c1
-}
-
-.Normal,
-.bg-Normal {
-  background: #a0a29f;
-  box-shadow: 0 0 2px #a0a29f
-}
-
-.bg-Normal path {
-  fill: #a0a29f
-}
-
-.Poison,
-.bg-Poison {
-  background: #b763cf;
-  box-shadow: 0 0 2px #b763cf;
-}
-
-.bg-Poison path {
-  fill: #b763cf
-}
-
-.Psy,
-.bg-Psy {
-  background: #fa8581;
-  box-shadow: 0 0 2px #fa8581
-}
-
-.bg-Psy path {
-  fill: #fa8581
-}
-
-.Roche,
-.bg-Roche {
-  background: #c9bb8a;
-  box-shadow: 0 0 2px #c9bb8a
-}
-
-.bg-Roche path {
-  fill: #c9bb8a
-}
-
-.Acier,
-.bg-Acier {
-  background: #5695a3;
-  box-shadow: 0 0 2px #5695a3
-}
-
-.bg-Acier path {
-  fill: #5695a3
-}
-
-.Eau,
-.bg-Eau {
-  background: #539ddf;
-  box-shadow: 0 0 2px #539ddf
-}
-
-.bg-Eau path {
-  fill: #539ddf
-}
-
-.bg-bug,
-.bug {
-  background: #92bc2c;
-  box-shadow: 0 0 2px #92bc2c
-}
-
-.bg-bug path {
-  fill: #92bc2c
-}
-
-.dark,
-.bg-dark {
-  background: #595761;
-  box-shadow: 0 0 2px #595761
-}
-
-.bg-dark path {
-  fill: #595761
-}
-
-.dragon,
-.bg-dragon {
-  background: #0c69c8;
-  box-shadow: 0 0 2px #0c69c8
-}
-
-.bg-dragon path {
-  fill: #0c69c8
-}
-
-.electric,
-.bg-electric {
-  background: #f2d94e;
-  box-shadow: 0 0 2px #f2d94e
-}
-
-.bg-electric path {
-  fill: #f2d94e
-}
-
+/* Default style for badges (matches English keys) */
+.badge-type-fire,
 .fire,
-.bg-fire {
-  background: #fba54c;
-  box-shadow: 0 0 2px #fba64c
+.bg-fire,
+.bg-Feu {
+    background: var(--color-fire);
+    box-shadow: 0 0 10px -3px var(--color-fire);
+    color: white;
 }
-
-.bg-fire path {
-  fill: #fba54c
-}
-
-.fairy,
-.bg-fairy {
-  background: #ee90e6;
-  box-shadow: 0 0 2px #ee90e6
-}
-
-.bg-fairy path {
-  fill: #ee90e6
-}
-
-.fighting,
-.bg-fighting {
-  background: #d3425f;
-  box-shadow: 0 0 2px #d3425f
-}
-
-.bg-fighting path {
-  fill: #d3425f
-}
-
-.flying,
-.bg-flying {
-  background: #a1bbec;
-  box-shadow: 0 0 2px #a1bbec
-}
-
-.bg-flying path {
-  fill: #a1bbec
-}
-
-.ghost,
-.bg-ghost {
-  background: #5f6dbc;
-  box-shadow: 0 0 2px #5f6dbc
-}
-
-.bg-ghost path {
-  fill: #5f6dbc
-}
-
-.grass,
-.bg-grass {
-  background: #5fbd58;
-  box-shadow: 0 0 2px #5fbd58
-}
-
-.bg-grass path {
-  fill: #5fbd58
-}
-
-.ground,
-.bg-ground {
-  background: #da7c4d;
-  box-shadow: 0 0 2px #da7c4d
-}
-
-.bg-ground path {
-  fill: #da7c4d
-}
-
-.ice,
-.bg-ice {
-  background: #75d0c1;
-  box-shadow: 0 0 2px #75d0c1
-}
-
-.bg-ice path {
-  fill: #75d0c1
-}
-
-.normal,
-.bg-normal {
-  background: #a0a29f;
-  box-shadow: 0 0 2px #a0a29f
-}
-
-.bg-normal path {
-  fill: #a0a29f
-}
-
-.poison,
-.bg-poison {
-  background: #b763cf;
-  box-shadow: 0 0 2px #b763cf;
-}
-
-.bg-poison path {
-  fill: #b763cf
-}
-
-.psychic,
-.bg-psychic {
-  background: #fa8581;
-  box-shadow: 0 0 2px #fa8581
-}
-
-.bg-psychic path {
-  fill: #fa8581
-}
-
-.rock,
-.bg-rock {
-  background: #c9bb8a;
-  box-shadow: 0 0 2px #c9bb8a
-}
-
-.bg-rock path {
-  fill: #c9bb8a
-}
-
-.steel,
-.bg-steel {
-  background: #5695a3;
-  box-shadow: 0 0 2px #5695a3
-}
-
-.bg-steel path {
-  fill: #5695a3
-}
-
+.badge-type-water,
 .water,
-.bg-water {
-  background: #539ddf;
-  box-shadow: 0 0 2px #539ddf
+.bg-water,
+.bg-Eau {
+    background: var(--color-water);
+    box-shadow: 0 0 10px -3px var(--color-water);
+    color: white;
+}
+.badge-type-grass,
+.grass,
+.bg-grass,
+.bg-Plante {
+    background: var(--color-grass);
+    box-shadow: 0 0 10px -3px var(--color-grass);
+    color: black;
+    text-shadow: none;
+}
+.badge-type-electric,
+.electric,
+.bg-electric,
+.bg-Électrik {
+    background: var(--color-electric);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-electric);
+    text-shadow: none;
+}
+.badge-type-psychic,
+.psychic,
+.bg-psychic,
+.bg-Psy {
+    background: var(--color-psychic);
+    box-shadow: 0 0 10px -3px var(--color-psychic);
+    color: white;
+}
+.badge-type-ice,
+.ice,
+.bg-ice,
+.bg-Glace {
+    background: var(--color-ice);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-ice);
+    text-shadow: none;
+}
+.badge-type-dragon,
+.dragon,
+.bg-dragon,
+.bg-Dragon {
+    background: var(--color-dragon);
+    box-shadow: 0 0 10px -3px var(--color-dragon);
+    color: white;
+}
+.badge-type-dark,
+.dark-type,
+.bg-dark-type,
+.bg-Ténèbres {
+    background: var(--color-dark);
+    box-shadow: 0 0 10px -3px var(--color-dark);
+    color: white;
+}
+.badge-type-fairy,
+.fairy,
+.bg-fairy,
+.bg-Fée {
+    background: var(--color-fairy);
+    box-shadow: 0 0 10px -3px var(--color-fairy);
+    color: black;
+    text-shadow: none;
+}
+.badge-type-normal,
+.normal,
+.bg-normal,
+.bg-Normal {
+    background: var(--color-normal);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-normal);
+    text-shadow: none;
+}
+.badge-type-fighting,
+.fighting,
+.bg-fighting,
+.bg-Combat {
+    background: var(--color-fighting);
+    box-shadow: 0 0 10px -3px var(--color-fighting);
+    color: white;
+}
+.badge-type-flying,
+.flying,
+.bg-flying,
+.bg-Vol {
+    background: var(--color-flying);
+    box-shadow: 0 0 10px -3px var(--color-flying);
+    color: white;
+}
+.badge-type-poison,
+.poison,
+.bg-poison,
+.bg-Poison {
+    background: var(--color-poison);
+    box-shadow: 0 0 10px -3px var(--color-poison);
+    color: white;
+}
+.badge-type-ground,
+.ground,
+.bg-ground,
+.bg-Sol {
+    background: var(--color-ground);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-ground);
+    text-shadow: none;
+}
+.badge-type-bug,
+.bug,
+.bg-bug,
+.bg-Insecte {
+    background: var(--color-bug);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-bug);
+    text-shadow: none;
+}
+.badge-type-rock,
+.rock,
+.bg-rock,
+.bg-Roche {
+    background: var(--color-rock);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-rock);
+    text-shadow: none;
+}
+.badge-type-ghost,
+.ghost,
+.bg-ghost,
+.bg-Spectre {
+    background: var(--color-ghost);
+    box-shadow: 0 0 10px -3px var(--color-ghost);
+    color: white;
+}
+.badge-type-steel,
+.steel,
+.bg-steel,
+.bg-Acier {
+    background: var(--color-steel);
+    color: black;
+    box-shadow: 0 0 10px -3px var(--color-steel);
+    text-shadow: none;
 }
 
+/* Apply base styling to all badge-like classes */
+[class^="badge-type-"],
+.bg-fire,
+.bg-water,
+.bg-grass,
+.bg-electric,
+.bg-psychic,
+.bg-ice,
+.bg-dragon,
+.bg-dark-type,
+.bg-fairy,
+.bg-normal,
+.bg-fighting,
+.bg-flying,
+.bg-poison,
+.bg-ground,
+.bg-bug,
+.bg-rock,
+.bg-ghost,
+.bg-steel {
+    /* Common shape and text styles */
+    border-radius: 9999px; /* rounded-full */
+    padding-left: 0.75rem; /* px-3 */
+    padding-right: 0.75rem;
+    padding-top: 0.25rem; /* py-1 */
+    padding-bottom: 0.25rem;
+    font-size: 0.75rem; /* text-xs */
+    line-height: 1rem;
+    font-weight: 700; /* font-bold */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow for readability */
+    transition: all 0.2s;
+}
+
+/* SVG Fill Helpers - Maps fills to the variables */
+.bg-fire path {
+    fill: var(--color-fire);
+}
 .bg-water path {
-  fill: #539ddf
+    fill: var(--color-water);
 }
-
-/* Badge types avec dégradés */
-.badge-type-fire {
-  background: linear-gradient(to right, #C85A2A 0%, #EE8130 50%, #F5A85A 100%);
-  color: #FFFFFF;
+.bg-grass path {
+    fill: var(--color-grass);
 }
-
-.badge-type-flying {
-  background: linear-gradient(to right, #5A6B8A 0%, #7A8FB3 50%, #A1BBEC 100%);
-  color: #FFFFFF;
+.bg-electric path {
+    fill: var(--color-electric);
 }
-
-.badge-type-normal {
-  background: linear-gradient(to right, #8B8A6F 0%, #A8A77A 100%);
-  color: #FFFFFF;
+.bg-psychic path {
+    fill: var(--color-psychic);
 }
-
-.badge-type-water {
-  background: linear-gradient(to right, #4A7BC8 0%, #6390F0 50%, #7BA3F8 100%);
-  color: #FFFFFF;
+.bg-ice path {
+    fill: var(--color-ice);
 }
-
-.badge-type-electric {
-  background: linear-gradient(to right, #D4B91F 0%, #F7D02C 50%, #FFE066 100%);
-  color: #FFFFFF;
+.bg-dragon path {
+    fill: var(--color-dragon);
 }
-
-.badge-type-grass {
-  background: linear-gradient(to right, #5FA83D 0%, #7AC74C 50%, #9AE06A 100%);
-  color: #FFFFFF;
+.bg-dark-type path {
+    fill: var(--color-dark);
 }
-
-.badge-type-ice {
-  background: linear-gradient(to right, #6BB5A8 0%, #96D9D6 50%, #B8E8E3 100%);
-  color: #FFFFFF;
+.bg-fairy path {
+    fill: var(--color-fairy);
 }
-
-.badge-type-fighting {
-  background: linear-gradient(to right, #9A1F1A 0%, #C22E28 50%, #E04A44 100%);
-  color: #FFFFFF;
+.bg-normal path {
+    fill: var(--color-normal);
 }
-
-.badge-type-poison {
-  background: linear-gradient(to right, #7A2D78 0%, #A33EA1 50%, #C85FC6 100%);
-  color: #FFFFFF;
+.bg-fighting path {
+    fill: var(--color-fighting);
 }
-
-.badge-type-ground {
-  background: linear-gradient(to right, #B8943A 0%, #E2BF65 50%, #F5D48A 100%);
-  color: #FFFFFF;
+.bg-flying path {
+    fill: var(--color-flying);
 }
-
-.badge-type-psychic {
-  background: linear-gradient(to right, #C73A5A 0%, #F95587 50%, #FF7BA3 100%);
-  color: #FFFFFF;
+.bg-poison path {
+    fill: var(--color-poison);
 }
-
-.badge-type-bug {
-  background: linear-gradient(to right, #7A8F0F 0%, #A6B91A 50%, #C9D82A 100%);
-  color: #FFFFFF;
+.bg-ground path {
+    fill: var(--color-ground);
 }
-
-.badge-type-rock {
-  background: linear-gradient(to right, #8B7A2A 0%, #B6A136 50%, #D4C05A 100%);
-  color: #FFFFFF;
+.bg-bug path {
+    fill: var(--color-bug);
 }
-
-.badge-type-ghost {
-  background: linear-gradient(to right, #4F3D6A 0%, #735797 50%, #9A7BB8 100%);
-  color: #FFFFFF;
+.bg-rock path {
+    fill: var(--color-rock);
 }
-
-.badge-type-dragon {
-  background: linear-gradient(to right, #4F1FC4 0%, #6F35FC 50%, #8F55FF 100%);
-  color: #FFFFFF;
+.bg-ghost path {
+    fill: var(--color-ghost);
 }
-
-.badge-type-dark {
-  background: linear-gradient(to right, #4A3A2F 0%, #705746 50%, #8B6F5A 100%);
-  color: #FFFFFF;
-}
-
-.badge-type-steel {
-  background: linear-gradient(to right, #8B8B9E 0%, #B7B7CE 50%, #D3D3E6 100%);
-  color: #FFFFFF;
-}
-
-.badge-type-fairy {
-  background: linear-gradient(to right, #A85A8A 0%, #D685AD 50%, #F5A5CD 100%);
-  color: #FFFFFF;
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+.bg-steel path {
+    fill: var(--color-steel);
 }

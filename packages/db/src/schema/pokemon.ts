@@ -37,6 +37,15 @@ export const pokemon = pgTable(
       speed: number;
     }>(),
 
+    // Detailed stats as returned by PokeAPI (with EVs, stat names & urls)
+    statsDetails: jsonb("stats_details").$type<
+      Array<{
+        base_stat: number;
+        effort: number;
+        stat: { name: string; url: string };
+      }>
+    >(),
+
     // Génération (calculée depuis l'ID)
     generation: integer("generation"),
 

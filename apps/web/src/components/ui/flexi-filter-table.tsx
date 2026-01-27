@@ -1,3 +1,5 @@
+import { SidebarTop } from "@/components/sidebar-top";
+
 import {
   Table,
   TableBody,
@@ -42,12 +44,11 @@ import { useQueryClient } from "@tanstack/react-query";
 import { orpc } from "@/utils/orpc";
 import { TableHeaderNames } from "@/data/data";
 
-
 const ITEMS_PER_PAGE = 30;
 
 export default function FlexiFilterTable() {
-
-  const fallBackImage = "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755"
+  const fallBackImage =
+    "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755";
   useHotkeys("arrowleft", () => {
     handlePageChange(currentPage - 1);
   });
@@ -59,11 +60,20 @@ export default function FlexiFilterTable() {
   const queryClient = useQueryClient();
 
   const prefetchPokemon = (id: number) => {
-    const queryOptions = orpc.getPokemonOverview.queryOptions({ input: { id } });
+    const queryOptions = orpc.getPokemonOverview.queryOptions({
+      input: { id },
+    });
     const queryKey = queryOptions.queryKey;
     const queryState = queryClient.getQueryState(queryKey);
 
-    if (!queryState || queryState.dataUpdatedAt === null) {
+    // Prefetch seulement si les données n'existent pas ou sont obsolètes
+    const shouldPrefetch =
+      !queryState ||
+      queryState.dataUpdatedAt === null ||
+      (queryState.dataUpdatedAt &&
+        Date.now() - queryState.dataUpdatedAt > 5 * 60 * 1000);
+
+    if (shouldPrefetch) {
       queryClient.prefetchQuery({
         ...queryOptions,
         staleTime: 5 * 60 * 1000,
@@ -73,18 +83,27 @@ export default function FlexiFilterTable() {
   };
 
   const prefetchSpecies = (url: string) => {
-    const speciesQueryOptions = orpc.getPokemonSpeciesData.queryOptions({ input: { url } });
+    const speciesQueryOptions = orpc.getPokemonSpeciesData.queryOptions({
+      input: { url },
+    });
     const speciesQueryKey = speciesQueryOptions.queryKey;
     const queryState = queryClient.getQueryState(speciesQueryKey);
 
-    if (!queryState || queryState.dataUpdatedAt === null) {
+    // Prefetch seulement si les données n'existent pas ou sont obsolètes
+    const shouldPrefetch =
+      !queryState ||
+      queryState.dataUpdatedAt === null ||
+      (queryState.dataUpdatedAt &&
+        Date.now() - queryState.dataUpdatedAt > 5 * 60 * 1000);
+
+    if (shouldPrefetch) {
       queryClient.prefetchQuery({
         ...speciesQueryOptions,
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
       });
     }
-  }
+  };
 
   const { Pokemons } = useLoaderData({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
@@ -93,7 +112,6 @@ export default function FlexiFilterTable() {
   const navigate = useNavigate({ from: Route.id });
   const currentPage = searchParams.page || 1;
 
-
   let PokemonsFiltered = Pokemons.results.filter((item) => item.isDefault);
   if (searchParams.search) {
     const searchTerms = searchParams.search
@@ -101,12 +119,11 @@ export default function FlexiFilterTable() {
       .map((term) => term.trim().toLowerCase())
       .filter((term) => term.length > 0);
 
-
     PokemonsFiltered = PokemonsFiltered.filter((item) => {
       const searchable = `${`${item.id} - `}
         ${item.name} ${item.abilities
-        ?.map((ability) => ability.ability.name)
-        .join(", ")} ${`${item.types.join(", ")}`}`;
+          ?.map((ability) => ability.ability.name)
+          .join(", ")} ${`${item.types.join(", ")}`}`;
 
       return searchTerms.every((term) => searchable.includes(term));
     });
@@ -130,6 +147,7 @@ export default function FlexiFilterTable() {
   };
   return (
     <div className="bg-background overflow-hidden p-4 h-full flex flex-col">
+      <SidebarTop />
       {/* Table */}
       <div className="flex-1 overflow-y-auto scrollbar-hide rounded-xl border border-border">
         <Table>
@@ -148,13 +166,12 @@ export default function FlexiFilterTable() {
                     key={pokemon.id}
                     className={cn(
                       "hover:bg-muted/30 cursor-pointer",
-                      isCatchedView && "opacity-30"
+                      isCatchedView && "opacity-30",
                     )}
-                    onMouseEnter={
-                      () => {
-                        prefetchPokemon(pokemon.id);
-                        prefetchSpecies(pokemon.species?.url || "");
-                      }}
+                    onMouseEnter={() => {
+                      prefetchPokemon(pokemon.id);
+                      prefetchSpecies(pokemon.species?.url || "");
+                    }}
                     onClick={() =>
                       navigate({
                         to: ".",
@@ -174,8 +191,12 @@ export default function FlexiFilterTable() {
                             img.src = fallBackImage;
                           }
                         }}
-                        alt={pokemon.name}
-                        className="w-16 h-16 bg-sidebar-border rounded-sm p-1"
+                        alt={`${pokemon.name} Pokémon sprite${isShinyView ? " (shiny)" : ""}`}
+                        width={64}
+                        height={64}
+                        loading="lazy"
+                        decoding="async"
+                        className="w-16 h-16 bg-sidebar-border rounded-sm p-2"
                       />
                       <div className="flex flex-col max-w-[150px] capitalize font-semibold text-center lg:text-left">
                         {pokemon.name.charAt(0).toUpperCase() +
@@ -216,7 +237,7 @@ export default function FlexiFilterTable() {
                     <TableCell>
                       <div className="flex flex-row gap-2 flex-wrap lg:flex-nowrap">
                         <BadgeTypes
-                        className="!flex-nowrap"
+                          className="!flex-nowrap"
                           classNameBadge="font-semibold text-white "
                           onClick={(e, type) => {
                             e.stopPropagation();
@@ -244,7 +265,7 @@ export default function FlexiFilterTable() {
                               ?.filter(
                                 (ability) =>
                                   ability.ability.name &&
-                                  ability.is_hidden === false
+                                  ability.is_hidden === false,
                               )
                               .map((ability) => ability.ability.name) || []
                           }
@@ -256,7 +277,7 @@ export default function FlexiFilterTable() {
                               ?.filter(
                                 (ability) =>
                                   ability.ability.name &&
-                                  ability.is_hidden === true
+                                  ability.is_hidden === true,
                               )
                               .map((ability) => ability.ability.name) || []
                           }
@@ -290,7 +311,7 @@ export default function FlexiFilterTable() {
                         value={Object.values(pokemon?.stats || {}).reduce(
                           (sum: number, stat: unknown) =>
                             sum + (stat as number),
-                          0
+                          0,
                         )}
                       >
                         <ProgressTrack>
@@ -346,7 +367,7 @@ export default function FlexiFilterTable() {
                     handlePageChange(currentPage - 1);
                   }}
                   className={cn(
-                    currentPage === 1 && "pointer-events-none opacity-50"
+                    currentPage === 1 && "pointer-events-none opacity-50",
                   )}
                 />
               </PaginationItem>
@@ -382,7 +403,7 @@ export default function FlexiFilterTable() {
                     );
                   }
                   return null;
-                }
+                },
               )}
               <PaginationItem>
                 <PaginationNext
@@ -393,7 +414,7 @@ export default function FlexiFilterTable() {
                   }}
                   className={cn(
                     currentPage === totalPages &&
-                      "pointer-events-none opacity-50"
+                      "pointer-events-none opacity-50",
                   )}
                 />
               </PaginationItem>

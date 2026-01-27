@@ -24,7 +24,6 @@ export interface RouterAppContext {
 }
 
 export const Route = createRootRouteWithContext<RouterAppContext>()({
-
   head: () => ({
     meta: [
       {
@@ -71,7 +70,7 @@ function RootDocument() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
   return (
-    <html lang="en" className="dark">
+    <html lang="fr" className="dark">
       <head>
         <HeadContent />
       </head>

@@ -50,8 +50,10 @@ interface PokeAPIPokemon {
   }>;
   stats: Array<{
     base_stat: number;
+    effort: number;
     stat: {
       name: string;
+      url: string;
     };
   }>;
   abilities: Array<{
@@ -105,7 +107,7 @@ function getGeneration(id: number): number {
   if (id <= 721) return 6;
   if (id <= 809) return 7;
   if (id <= 905) return 8;
-  if (id <= 1010) return 9;
+  if (id <= 1025) return 9;
   return 10; // Génération actuelle
 }
 
@@ -196,6 +198,8 @@ export async function syncPokemon() {
         specialDefense: number;
         speed: number;
       };
+      // Detailed stats from PokeAPI, including EV yield and stat metadata
+      statsDetails: PokeAPIPokemon["stats"];
       generation: number;
       abilities: PokeAPIPokemon["abilities"];
       pastAbilities: PokeAPIPokemon["past_abilities"];
@@ -265,6 +269,8 @@ export async function syncPokemon() {
             types: types.length > 0 ? types : [],
             pastTypes: pastTypes,
             stats: transformStats(pokemon.stats || []),
+            // Keep the raw stats from PokeAPI so we have base_stat, effort & urls
+            statsDetails: pokemon.stats || [],
             generation: getGeneration(pokemon.id),
             abilities: pokemon.abilities || [],
             pastAbilities: pokemon.past_abilities || [],
@@ -333,6 +339,7 @@ export async function syncPokemon() {
           types: p.types,
           pastTypes: p.pastTypes,
           stats: p.stats,
+          statsDetails: p.statsDetails,
           generation: p.generation,
           abilities: p.abilities,
           pastAbilities: p.pastAbilities,
@@ -360,6 +367,7 @@ export async function syncPokemon() {
             types: p.types,
             pastTypes: p.pastTypes,
             stats: p.stats,
+          statsDetails: p.statsDetails,
             generation: p.generation,
             abilities: p.abilities,
             pastAbilities: p.pastAbilities,
