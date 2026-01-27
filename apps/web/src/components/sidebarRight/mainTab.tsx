@@ -1,9 +1,9 @@
-import { useSearch } from "@tanstack/react-router";
-import { Route } from "@/routes/index";
-import BadgeTypes from "@/components/ui/badge-type";
 import TabsComponent from "@/components/sidebarRight/tabs";
+import BadgeTypes from "@/components/ui/badge-type";
+import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
+import { useSearch } from "@tanstack/react-router";
 
 export default function MainTab() {
   const searchParams = useSearch({ from: Route.id });
@@ -21,8 +21,11 @@ export default function MainTab() {
         <div className="flex flex-col gap-2 text-center">
           <img
             src={pokemon.spriteUrl || ""}
-            alt={pokemon.name}
-            className="w-40 h-40"
+            alt={`${pokemon.name} Pokémon sprite`}
+            width={160}
+            height={160}
+            fetchPriority="high"
+            className="w-32 h-32"
           />
           <div className="flex flex-col">
             <p className="text-[10px] text-accent-foreground/60 font-normal">

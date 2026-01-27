@@ -11,11 +11,10 @@ import {
 
 export const SidebarTop = () => {
   const searchParams = useSearch({ from: Route.id });
-  // const page = searchParams.page || 1;
   const navigate = useNavigate({ from: Route.id });
   return (
-    <div className="w-full h-[64px] bg-sidebar border-b border-border items-center px-4 flex flex-row gap-4">
-      <InputGroup className="flex-1 rounded-lg bg-sidebar-accent max-w-[500px]">
+    <div className="w-full border-border items-center flex flex-row gap-4 pb-4">
+      <InputGroup className="flex-1 rounded-md bg-sidebar-accent">
         <InputGroupInput
           placeholder={
             searchParams.search !== undefined && searchParams.search !== ""
@@ -39,37 +38,6 @@ export const SidebarTop = () => {
           <SearchIcon />
         </InputGroupAddon>
       </InputGroup>
-
-      <div className="flex flex-row gap-2 ml-auto">
-        <div className="flex flex-row gap-1 rounded-lg bg-sidebar-accent/30 p-1 items-center justify text-center">
-          <Link
-            to="/"
-            search={{ ...searchParams, view: "grid" }}
-            className="p-1 rounded-md transition-all duration-300 opacity-40 hover:opacity-80"
-            activeProps={{
-              className:
-                "text-accent-foreground opacity-100 bg-sidebar-accent/60 rounded-sm transition-all duration-300",
-            }}
-          >
-            <LayoutGrid className="w-4 h-4" />
-          </Link>
-          <Separator
-            className="w-px h-4 bg-border opacity-60 self-center!"
-            orientation="vertical"
-          />
-          <Link
-            to="/"
-            search={{ ...searchParams, view: "list" }}
-            className="p-1 rounded-md transition-all duration-300 opacity-40 hover:opacity-80"
-            activeProps={{
-              className:
-                "text-accent-foreground opacity-100 bg-sidebar-accent/60 rounded-sm transition-all duration-300",
-            }}
-          >
-            <List className="w-4 h-4" />
-          </Link>
-        </div>
-      </div>
     </div>
   );
 };

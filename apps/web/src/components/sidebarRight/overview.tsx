@@ -22,10 +22,14 @@ export default function OverviewComponent() {
 
   if (!pokemon) return null;
 
-  const heightInMeters = pokemon.height ? (pokemon.height / 10).toFixed(1) : "0.0";
+  const heightInMeters = pokemon.height
+    ? (pokemon.height / 10).toFixed(1)
+    : "0.0";
   const weightInKg = pokemon.weight ? (pokemon.weight / 10).toFixed(0) : "0";
 
-  const generationText = pokemon.generation ? `Generation ${pokemon.generation}` : "Unknown";
+  const generationText = pokemon.generation
+    ? `Generation ${pokemon.generation}`
+    : "Unknown";
 
   const abilities = pokemon.abilities || [];
 
@@ -55,7 +59,7 @@ export default function OverviewComponent() {
           </h2>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer bg-[#262626]/70 hover:bg-[#262626]/90">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Introduced
             </p>
@@ -63,17 +67,18 @@ export default function OverviewComponent() {
               {generationText}
             </p>
           </div>
-          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer bg-[#262626]/70 hover:bg-[#262626]/90">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Category
             </p>
             <p className="text-sm font-semibold text-foreground relative z-10">
               {pokemon.types && pokemon.types.length > 0
-                ? pokemon.types[0].charAt(0).toUpperCase() + pokemon.types[0].slice(1)
+                ? pokemon.types[0].charAt(0).toUpperCase() +
+                  pokemon.types[0].slice(1)
                 : "Unknown"}
             </p>
           </div>
-          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer bg-[#262626]/70 hover:bg-[#262626]/90">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Weight
             </p>
@@ -81,7 +86,7 @@ export default function OverviewComponent() {
               {weightInKg}kg
             </p>
           </div>
-          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer">
+          <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer bg-[#262626]/70 hover:bg-[#262626]/90">
             <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
               Height
             </p>
@@ -105,26 +110,27 @@ export default function OverviewComponent() {
               abilities.map((ability, index) => {
                 const abilityName = ability.ability.name;
                 const isHidden = ability.is_hidden;
-                
+
                 return (
                   <Tooltip key={`${abilityName}-${index}`}>
                     <TooltipTrigger
                       className={cn(
-                        "group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer",
+                        "group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-2 cursor-pointer bg-[#262626]/70 hover:bg-[#262626]/90",
                       )}
                     >
                       <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
                         {isHidden ? "Hidden Ability" : "Ability"}
                       </p>
                       <p className="text-sm font-semibold text-foreground relative z-10">
-                        {abilityName.charAt(0).toUpperCase() + abilityName.slice(1)}
+                        {abilityName.charAt(0).toUpperCase() +
+                          abilityName.slice(1)}
                       </p>
                     </TooltipTrigger>
                     <TooltipPopup
                       className="max-w-3/4 w-fit mx-auto text-center"
                       align="center"
                     >
-                      {isHidden 
+                      {isHidden
                         ? `Capacité cachée : ${abilityName}`
                         : `Capacité : ${abilityName}`}
                     </TooltipPopup>
