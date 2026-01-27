@@ -4,9 +4,8 @@ import { XIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverClose, PopoverPopup } from "@/components/ui/popover";
-import { useSearch } from "@tanstack/react-router";
 import { Route } from "@/routes";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import SidebarMainTab from "./mainTab";
 
 export default function SidebarMobile() {

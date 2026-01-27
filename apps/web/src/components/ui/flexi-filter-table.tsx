@@ -1,3 +1,10 @@
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -6,13 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 
 import {
   Progress,
@@ -30,17 +30,17 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { MoreVertical } from "lucide-react";
-import { useSearch, useNavigate, useLoaderData } from "@tanstack/react-router";
-import { Route } from "@/routes/index";
 import { cn } from "@/lib/utils";
+import { Route } from "@/routes/index";
+import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
+import { MoreVertical, Sparkles } from "lucide-react";
 import BadgeTypes from "./badge-type";
 import Pokeball from "./svg/pokeball";
 
-import { useHotkeys } from "react-hotkeys-hook";
-import { useQueryClient } from "@tanstack/react-query";
-import { orpc } from "@/utils/orpc";
 import { TableHeaderNames } from "@/data/data";
+import { orpc } from "@/utils/orpc";
+import { useQueryClient } from "@tanstack/react-query";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const ITEMS_PER_PAGE = 30;
 
@@ -144,9 +144,115 @@ export default function FlexiFilterTable() {
     });
   };
   return (
-    <div className="bg-background overflow-hidden p-4 h-full flex flex-col">
+    <div className="bg-background overflow-hidden p-2 h-full flex flex-col gap-2">
+      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-between border border-border rounded-sm">
+        <p className="text-sm text-accent-foreground/80 font-normal">
+          1025 Pokémons
+        </p>
+        {totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage - 1);
+                    }}
+                    className={cn(
+                      currentPage === 1 && "pointer-events-none opacity-50",
+                    )}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => {
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 2 && page <= currentPage + 2)
+                    ) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageChange(page);
+                            }}
+                            isActive={page === currentPage}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    } else if (
+                      page === currentPage - 3 ||
+                      page === currentPage + 3
+                    ) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    return null;
+                  },
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage + 1);
+                    }}
+                    className={cn(
+                      currentPage === totalPages &&
+                      "pointer-events-none opacity-50",
+                    )}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+        <div className="flex flex-row gap-4">
+          <span className="inline-flex items-center justify-center">
+            <Sparkles
+              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${searchParams.shinyView
+                  ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+                  : "text-yellow-500/50"
+                }`}
+              onClick={() => {
+                navigate({
+                  search: {
+                    ...searchParams,
+                    shinyView: !searchParams.shinyView,
+                  },
+                });
+              }}
+            />
+          </span>
+          <span className="inline-flex items-center justify-center">
+            <Pokeball
+              className={`cursor-pointer transition-all duration-300 ${searchParams.catchedView
+                  ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                  : "opacity-50"
+                }`}
+              onClick={() => {
+                navigate({
+                  search: {
+                    ...searchParams,
+                    catchedView: !searchParams.catchedView,
+                  },
+                });
+              }}
+            />
+          </span>
+        </div>
+      </div>
       {/* Table */}
-      <div className="flex-1 overflow-y-auto scrollbar-hide rounded-xl border border-border">
+      <div className="flex-1 overflow-y-auto scrollbar-hide rounded-sm border border-border">
         <Table>
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
@@ -352,73 +458,113 @@ export default function FlexiFilterTable() {
         </Table>
       </div>
       {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="mt-4 flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(currentPage - 1);
-                  }}
-                  className={cn(
-                    currentPage === 1 && "pointer-events-none opacity-50",
-                  )}
-                />
-              </PaginationItem>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                (page) => {
-                  if (
-                    page === 1 ||
-                    page === totalPages ||
-                    (page >= currentPage - 2 && page <= currentPage + 2)
-                  ) {
-                    return (
-                      <PaginationItem key={page}>
-                        <PaginationLink
-                          href="#"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handlePageChange(page);
-                          }}
-                          isActive={page === currentPage}
-                        >
-                          {page}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  } else if (
-                    page === currentPage - 3 ||
-                    page === currentPage + 3
-                  ) {
-                    return (
-                      <PaginationItem key={page}>
-                        <PaginationEllipsis />
-                      </PaginationItem>
-                    );
-                  }
-                  return null;
-                },
-              )}
-              <PaginationItem>
-                <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handlePageChange(currentPage + 1);
-                  }}
-                  className={cn(
-                    currentPage === totalPages &&
+
+      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-between border border-border rounded-sm">
+        <p className="text-sm text-accent-foreground/80 font-normal">
+          1025 Pokémons
+        </p>
+        {totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage - 1);
+                    }}
+                    className={cn(
+                      currentPage === 1 && "pointer-events-none opacity-50",
+                    )}
+                  />
+                </PaginationItem>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                  (page) => {
+                    if (
+                      page === 1 ||
+                      page === totalPages ||
+                      (page >= currentPage - 2 && page <= currentPage + 2)
+                    ) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationLink
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handlePageChange(page);
+                            }}
+                            isActive={page === currentPage}
+                          >
+                            {page}
+                          </PaginationLink>
+                        </PaginationItem>
+                      );
+                    } else if (
+                      page === currentPage - 3 ||
+                      page === currentPage + 3
+                    ) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+                    return null;
+                  },
+                )}
+                <PaginationItem>
+                  <PaginationNext
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePageChange(currentPage + 1);
+                    }}
+                    className={cn(
+                      currentPage === totalPages &&
                       "pointer-events-none opacity-50",
-                  )}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+                    )}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
+        <div className="flex flex-row gap-4">
+          <span className="inline-flex items-center justify-center">
+            <Sparkles
+              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${searchParams.shinyView
+                  ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+                  : "text-yellow-500/50"
+                }`}
+              onClick={() => {
+                navigate({
+                  search: {
+                    ...searchParams,
+                    shinyView: !searchParams.shinyView,
+                  },
+                });
+              }}
+            />
+          </span>
+          <span className="inline-flex items-center justify-center">
+            <Pokeball
+              className={`cursor-pointer transition-all duration-300 ${searchParams.catchedView
+                  ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                  : "opacity-50"
+                }`}
+              onClick={() => {
+                navigate({
+                  search: {
+                    ...searchParams,
+                    catchedView: !searchParams.catchedView,
+                  },
+                });
+              }}
+            />
+          </span>
         </div>
-      )}
+      </div>
     </div>
   );
 }

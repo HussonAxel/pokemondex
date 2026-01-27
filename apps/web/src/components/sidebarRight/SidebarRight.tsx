@@ -1,16 +1,15 @@
 "use client";
 
 import {
-  SidebarProvider,
   Sidebar,
   SidebarContent,
-  SidebarRail,
+  SidebarProvider
 } from "@/components/animate-ui/components/radix/sidebar";
 
 import SidebarMainTab from "@/components/sidebarRight/mainTab";
 
-import { useSearch } from "@tanstack/react-router";
 import { Route } from "@/routes/index";
+import { useSearch } from "@tanstack/react-router";
 
 export const SidebarRight = () => {
   const searchParams = useSearch({ from: Route.id });
@@ -18,6 +17,7 @@ export const SidebarRight = () => {
   return (
     <SidebarProvider
       open={!!activePokemon}
+      className="hidden xl:block"
       style={
         {
           "--sidebar-width": "26rem",
@@ -27,14 +27,13 @@ export const SidebarRight = () => {
       <Sidebar collapsible="icon" side="right">
         <SidebarContent>
           <div
-            className={`transition-opacity duration-300 ease-in-out ${
+            className={`transition-opacity duration-300 ease-in-out border rounded-sm my-auto mr-2 h-[1330px] ${
               activePokemon ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
             <SidebarMainTab />
           </div>
         </SidebarContent>
-        <SidebarRail />
       </Sidebar>
     </SidebarProvider>
   );

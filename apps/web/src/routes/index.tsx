@@ -1,8 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { SidebarBottom } from "@/components/sidebar-bottom";
 import { ListTemplateView } from "@/components/ListTemplateView.tsx";
-import { z } from "zod";
 import { orpc } from "@/utils/orpc";
+import { createFileRoute } from "@tanstack/react-router";
+import { z } from "zod";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
@@ -28,7 +27,6 @@ function HomeComponent() {
       <div className="relative flex-1 min-h-0 overflow-hidden">
         <ListTemplateView />
       </div>
-      <SidebarBottom />
     </div>
   );
 }
