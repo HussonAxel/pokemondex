@@ -1,3 +1,5 @@
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -45,6 +47,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 const ITEMS_PER_PAGE = 30;
 
 export default function FlexiFilterTable() {
+  const { theme, toggleTheme } = useTheme();
+
   const fallBackImage =
     "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755";
   useHotkeys("arrowleft", () => {
@@ -217,6 +221,19 @@ export default function FlexiFilterTable() {
           </div>
         )}
         <div className="flex flex-row gap-4">
+          <span className="inline-flex items-center justify-center">
+            {theme === "light" ? (
+              <Moon
+                className="w-4 h-4 cursor-pointer transition-all duration-300 text-slate-500 hover:text-slate-700"
+                onClick={toggleTheme}
+              />
+            ) : (
+              <Sun
+                className="w-4 h-4 cursor-pointer transition-all duration-300 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+                onClick={toggleTheme}
+              />
+            )}
+          </span>
           <span className="inline-flex items-center justify-center">
             <Sparkles
               className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
