@@ -10,11 +10,19 @@ export default function BreedingComponent() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
   const pokemonSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${activePokemon}/`;
-  
-  const species = useQuery(orpc.getPokemonSpeciesData.queryOptions({ input: { url: pokemonSpeciesUrl } })).data;
+
+  const species = useQuery(
+    orpc.getPokemonSpeciesData.queryOptions({
+      input: { url: pokemonSpeciesUrl },
+    }),
+  ).data;
   if (!species) return null;
 
-  const growthRate = useQuery(orpc.getPokemonGrowthRateData.queryOptions({ input: { url: species.growth_rate.url } })).data;
+  const growthRate = useQuery(
+    orpc.getPokemonGrowthRateData.queryOptions({
+      input: { url: species.growth_rate.url },
+    }),
+  ).data;
 
   if (!growthRate) return null;
 
@@ -55,7 +63,7 @@ export default function BreedingComponent() {
       <Separator />
 
       <div className="grid grid-cols-2 gap-3">
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-3 cursor-pointer">
+        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
           {genderInfo.genderless ? (
             <>
               <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
@@ -72,14 +80,18 @@ export default function BreedingComponent() {
               </p>
               <div className="flex items-center gap-2 relative z-10">
                 <div className="flex flex-col items-center">
-                  <span className="text-xs text-blue-500/50 font-semibold">♂</span>
+                  <span className="text-xs text-blue-500/50 font-semibold">
+                    ♂
+                  </span>
                   <span className="text-sm font-semibold text-foreground">
                     {genderInfo.male.toFixed(1)}%
                   </span>
                 </div>
                 <Separator orientation="vertical" className="h-8" />
                 <div className="flex flex-col items-center">
-                  <span className="text-xs text-pink-500/70 font-semibold">♀</span>
+                  <span className="text-xs text-pink-500/70 font-semibold">
+                    ♀
+                  </span>
                   <span className="text-sm font-semibold text-foreground">
                     {genderInfo.female.toFixed(1)}%
                   </span>
@@ -89,7 +101,7 @@ export default function BreedingComponent() {
           )}
         </div>
 
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-3 cursor-pointer">
+        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Egg Cycles
           </p>
@@ -101,7 +113,7 @@ export default function BreedingComponent() {
           </p>
         </div>
 
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-3 cursor-pointer">
+        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Growth Rate
           </p>
@@ -113,7 +125,7 @@ export default function BreedingComponent() {
           </p>
         </div>
 
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-accent rounded-md py-3 cursor-pointer">
+        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Habitat
           </p>
@@ -126,11 +138,7 @@ export default function BreedingComponent() {
       <Separator />
 
       <div className="flex justify-center">
-        <Button
-          variant="default"
-          size="default"
-          className="w-full rounded-sm"
-        >
+        <Button variant="default" size="default" className="w-full rounded-sm">
           Breeding Calculator
         </Button>
       </div>

@@ -148,7 +148,7 @@ export default function FlexiFilterTable() {
     });
   };
   return (
-    <div className="bg-background overflow-hidden p-2 h-full flex flex-col gap-2">
+    <div className="bg-background overflow-hidden p-2 pl-4 h-full flex flex-col gap-2">
       <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-between border border-border rounded-sm">
         <p className="text-sm text-accent-foreground/80 font-normal">
           1025 Pokémons

@@ -161,7 +161,7 @@ const SidebarLeftContent = () => {
     <Sidebar
       collapsible="icon"
       side="left"
-      className="border rounded-sm my-auto mr-2 h-full"
+      className="border rounded-sm m-2 my-2"
     >
       <SidebarHeader>
         {/* Team Switcher */}
@@ -402,7 +402,7 @@ const SidebarLeftContent = () => {
 export const SidebarLeft = () => {
   return (
     <SidebarProvider
-      className="contents"
+      className="contents "
       style={
         {
           "--sidebar-width": "16rem",
