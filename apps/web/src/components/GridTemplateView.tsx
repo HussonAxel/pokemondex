@@ -29,7 +29,6 @@ export function GridTemplateView({ columns = 6 }) {
       .map((term) => term.trim().toLowerCase())
       .filter((term) => term.length > 0);
 
-
     return data.filter((item: (typeof defaultData)[0]) => {
       const searchable = `${
         item.name
@@ -50,8 +49,8 @@ export function GridTemplateView({ columns = 6 }) {
         <div
           key={row.id}
           className={cn(
-            "bg-sidebar-border flex flex-col items-center justify-center rounded-lg ring-1 ring-accent text-white hover:scale-[1.02] hover:bg-sidebar/40 active:scale-[0.98] transition-all duration-300 ease-in-out cursor-pointer group relative p-4 max-h-[150px]",
-            isCatchedView && !row.catched && "opacity-30"
+            "bg-sidebar-border flex flex-col items-center justify-center rounded-lg ring-1 ring-accent hover:scale-[1.02] hover:bg-sidebar/40 active:scale-[0.98] transition-all duration-300 ease-in-out cursor-pointer group relative p-4 max-h-[150px]",
+            isCatchedView && !row.catched && "opacity-30",
           )}
           onClick={() =>
             navigate({

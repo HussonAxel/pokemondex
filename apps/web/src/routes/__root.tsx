@@ -70,7 +70,7 @@ function RootDocument() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
   return (
-    <html lang="fr" className="dark">
+    <html lang="fr" className="">
       <head>
         <HeadContent />
       </head>
@@ -83,7 +83,7 @@ function RootDocument() {
           {activePokemon && (
             <>
               <SidebarRight />
-            <SidebarMobile />
+              <SidebarMobile />
             </>
           )}
         </div>

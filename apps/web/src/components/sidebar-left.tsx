@@ -158,7 +158,11 @@ const SidebarLeftContent = () => {
   if (!activeTeam) return null;
 
   return (
-    <Sidebar collapsible="icon" side="left">
+    <Sidebar
+      collapsible="icon"
+      side="left"
+      className="border rounded-sm my-auto mr-2 h-full"
+    >
       <SidebarHeader>
         {/* Team Switcher */}
         <SidebarMenu>
@@ -391,7 +395,6 @@ const SidebarLeftContent = () => {
         </SidebarMenu>
         {/* Nav User */}
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 };
@@ -402,7 +405,7 @@ export const SidebarLeft = () => {
       className="contents"
       style={
         {
-          "--sidebar-width": "12rem",
+          "--sidebar-width": "16rem",
         } as React.CSSProperties
       }
     >

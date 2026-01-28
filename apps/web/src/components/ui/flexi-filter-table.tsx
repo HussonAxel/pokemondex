@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { Route } from "@/routes/index";
 import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
 import { MoreVertical, Sparkles } from "lucide-react";
-import BadgeTypes from "./badge-type";
+import BadgeTypes from "@/components/ui/badge-type";
 import Pokeball from "./svg/pokeball";
 
 import { TableHeaderNames } from "@/data/data";
@@ -208,7 +208,7 @@ export default function FlexiFilterTable() {
                     }}
                     className={cn(
                       currentPage === totalPages &&
-                      "pointer-events-none opacity-50",
+                        "pointer-events-none opacity-50",
                     )}
                   />
                 </PaginationItem>
@@ -219,10 +219,11 @@ export default function FlexiFilterTable() {
         <div className="flex flex-row gap-4">
           <span className="inline-flex items-center justify-center">
             <Sparkles
-              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${searchParams.shinyView
+              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
+                searchParams.shinyView
                   ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
                   : "text-yellow-500/50"
-                }`}
+              }`}
               onClick={() => {
                 navigate({
                   search: {
@@ -235,10 +236,11 @@ export default function FlexiFilterTable() {
           </span>
           <span className="inline-flex items-center justify-center">
             <Pokeball
-              className={`cursor-pointer transition-all duration-300 ${searchParams.catchedView
+              className={`cursor-pointer transition-all duration-300 ${
+                searchParams.catchedView
                   ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
                   : "opacity-50"
-                }`}
+              }`}
               onClick={() => {
                 navigate({
                   search: {
@@ -285,7 +287,7 @@ export default function FlexiFilterTable() {
                       })
                     }
                   >
-                    <TableCell className=" flex flex-col lg:flex-row items-center font-semibold text-[16px] gap-4 py-[6px]">
+                    <TableCell className=" flex flex-row items-center font-semibold text-[16px] gap-4 py-[12px]">
                       <img
                         src={`sprites/${isShinyView ? "shiny/" + pokemon.id + ".webp" : "base/" + pokemon.id + ".webp"}`}
                         onError={(e) => {
@@ -299,12 +301,12 @@ export default function FlexiFilterTable() {
                         height={64}
                         loading="lazy"
                         decoding="async"
-                        className="w-16 h-16 bg-sidebar-border rounded-sm p-2"
+                        className="w-16 h-16 bg-sidebar rounded-sm p-2"
                       />
-                      <div className="flex flex-col max-w-[150px] capitalize font-semibold text-center lg:text-left">
+                      <div className="flex flex-col max-w-[150px] capitalize font-semibold text-[12px] lg:text-[14px] lg:text-left">
                         {pokemon.name.charAt(0).toUpperCase() +
                           pokemon.name.slice(1)}
-                        <p className="text-[13px] text-accent-foreground/60 font-normal">
+                        <p className="text-[10px] lg:text-[14px] text-accent-foreground/60 font-normal">
                           #{pokemon.id.toString().padStart(4, "0")}
                         </p>
                       </div>
@@ -341,7 +343,7 @@ export default function FlexiFilterTable() {
                       <div className="flex flex-row gap-2 flex-wrap lg:flex-nowrap">
                         <BadgeTypes
                           className="!flex-nowrap"
-                          classNameBadge="font-semibold text-white "
+                          classNameBadge="font-semibold"
                           onClick={(e, type) => {
                             e.stopPropagation();
 
@@ -374,7 +376,7 @@ export default function FlexiFilterTable() {
                           }
                         />
                         <BadgeTypes
-                          classNameBadge="!border-primary/60 !bg-primary/10 font-bold text-white flex-nowrap"
+                          classNameBadge="!border-primary/60 !bg-primary/10 font-bold flex-nowrap"
                           pokemonTypes={
                             pokemon.abilities
                               ?.filter(
@@ -522,7 +524,7 @@ export default function FlexiFilterTable() {
                     }}
                     className={cn(
                       currentPage === totalPages &&
-                      "pointer-events-none opacity-50",
+                        "pointer-events-none opacity-50",
                     )}
                   />
                 </PaginationItem>
@@ -533,10 +535,11 @@ export default function FlexiFilterTable() {
         <div className="flex flex-row gap-4">
           <span className="inline-flex items-center justify-center">
             <Sparkles
-              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${searchParams.shinyView
+              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
+                searchParams.shinyView
                   ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
                   : "text-yellow-500/50"
-                }`}
+              }`}
               onClick={() => {
                 navigate({
                   search: {
@@ -549,10 +552,11 @@ export default function FlexiFilterTable() {
           </span>
           <span className="inline-flex items-center justify-center">
             <Pokeball
-              className={`cursor-pointer transition-all duration-300 ${searchParams.catchedView
+              className={`cursor-pointer transition-all duration-300 ${
+                searchParams.catchedView
                   ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
                   : "opacity-50"
-                }`}
+              }`}
               onClick={() => {
                 navigate({
                   search: {

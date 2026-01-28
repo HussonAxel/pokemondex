@@ -9,123 +9,122 @@
 /* -------------------------------------------------------------------------- */
 
 :root {
-    /* LIGHT MODE - Kept standard for consistency */
     --background: oklch(1 0 0);
-    --foreground: oklch(0.2101 0.0318 264.6645);
+    --foreground: oklch(0.3211 0 0);
     --card: oklch(1 0 0);
-    --card-foreground: oklch(0.2101 0.0318 264.6645);
+    --card-foreground: oklch(0.3211 0 0);
     --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.2101 0.0318 264.6645);
-    --primary: oklch(0.6716 0.1368 48.513);
+    --popover-foreground: oklch(0.3211 0 0);
+    --primary: oklch(0.6397 0.172 36.4421);
     --primary-foreground: oklch(1 0 0);
-    --secondary: oklch(0.536 0.0398 196.028);
-    --secondary-foreground: oklch(1 0 0);
-    --muted: oklch(0.967 0.0029 264.5419);
+    --secondary: oklch(0.967 0.0029 264.5419);
+    --secondary-foreground: oklch(0.4461 0.0263 256.8018);
+    --muted: oklch(0.9846 0.0017 247.8389);
     --muted-foreground: oklch(0.551 0.0234 264.3637);
-    --accent: oklch(0.9491 0 0);
-    --accent-foreground: oklch(0.2101 0.0318 264.6645);
+    --accent: oklch(0.9119 0.0222 243.8174);
+    --accent-foreground: oklch(0.3791 0.1378 265.5222);
     --destructive: oklch(0.6368 0.2078 25.3313);
-    --destructive-foreground: oklch(0.9851 0 0);
-    --border: oklch(0.9276 0.0058 264.5313);
-    --input: oklch(0.9276 0.0058 264.5313);
-    --ring: oklch(0.6716 0.1368 48.513);
-    --chart-1: oklch(0.594 0.0443 196.0233);
-    --chart-2: oklch(0.7214 0.1337 49.9802);
-    --chart-3: oklch(0.8721 0.0864 68.5474);
-    --chart-4: oklch(0.6268 0 0);
-    --chart-5: oklch(0.683 0 0);
-    --sidebar: oklch(0.967 0.0029 264.5419);
-    --sidebar-foreground: oklch(0.2101 0.0318 264.6645);
-    --sidebar-primary: oklch(0.6716 0.1368 48.513);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.9022 0.0052 247.8822);
+    --input: oklch(0.97 0.0029 264.542);
+    --ring: oklch(0.6397 0.172 36.4421);
+    --chart-1: oklch(0.7156 0.0605 248.6845);
+    --chart-2: oklch(0.7875 0.0917 35.9616);
+    --chart-3: oklch(0.5778 0.0759 254.1573);
+    --chart-4: oklch(0.5016 0.0849 259.4902);
+    --chart-5: oklch(0.4241 0.0952 264.0306);
+    --sidebar: oklch(0.975 0 0);
+    --sidebar-foreground: oklch(0.3211 0 0);
+    --sidebar-primary: oklch(0.6397 0.172 36.4421);
     --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(1 0 0);
-    --sidebar-accent-foreground: oklch(0.2101 0.0318 264.6645);
+    --sidebar-accent: oklch(0.9119 0.0222 243.8174);
+    --sidebar-accent-foreground: oklch(0.3791 0.1378 265.5222);
     --sidebar-border: oklch(0.9276 0.0058 264.5313);
-    --sidebar-ring: oklch(0.6716 0.1368 48.513);
+    --sidebar-ring: oklch(0.6397 0.172 36.4421);
+    --font-sans: Inter, sans-serif;
+    --font-serif: Source Serif 4, serif;
+    --font-mono: JetBrains Mono, monospace;
     --radius: 0.75rem;
+    --shadow-x: 0px;
+    --shadow-y: 1px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.1;
+    --shadow-color: hsl(0 0% 0%);
+    --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.05);
     --shadow-sm:
-        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-        0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
     --shadow:
-        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-        0px 1px 2px -1px hsl(0 0% 0% / 0.05);
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
     --shadow-md:
-        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-        0px 2px 4px -1px hsl(0 0% 0% / 0.05);
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
     --shadow-lg:
-        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-        0px 4px 6px -1px hsl(0 0% 0% / 0.05);
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
     --shadow-xl:
-        0px 1px 4px 0px hsl(0 0% 0% / 0.05),
-        0px 8px 4px -1px hsl(0 0% 0% / 0.05);
-    --shadow-2xl: 0px 1px 4px 0px hsl(0 0% 0% / 0.13);
-    --tracking-normal: 0rem;
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
+    --tracking-normal: 0em;
+    --spacing: 0.25rem;
 }
 
 .dark {
-    /* BACKGROUND: Deep, rich blue-grey (oklch) for depth */
-    --background: oklch(0.14 0.02 264);
-    /* FOREGROUND: Pure white for maximum readability */
-    --foreground: oklch(0.98 0 0);
-
-    /* CARD: Slightly lighter to create hierarchy */
-    --card: oklch(0.18 0.03 264);
-    --card-foreground: oklch(0.98 0 0);
-
-    --popover: oklch(0.18 0.03 264);
-    --popover-foreground: oklch(0.98 0 0);
-
-    /* PRIMARY: Electric Indigo/Violet - Vibrant */
-    --primary: oklch(0.65 0.22 275);
+    --background: oklch(0.2598 0.0306 262.6666);
+    --foreground: oklch(0.9219 0 0);
+    --card: oklch(0.3106 0.0301 268.6365);
+    --card-foreground: oklch(0.9219 0 0);
+    --popover: oklch(0.29 0.0249 268.3986);
+    --popover-foreground: oklch(0.9219 0 0);
+    --primary: oklch(0.6397 0.172 36.4421);
     --primary-foreground: oklch(1 0 0);
-
-    /* SECONDARY: Deep Teal/Slate */
-    --secondary: oklch(0.28 0.05 220);
-    --secondary-foreground: oklch(0.98 0 0);
-
-    /* MUTED: Bright enough to be read (grey text) */
-    --muted: oklch(0.25 0.03 264);
-    --muted-foreground: oklch(0.75 0.02 264);
-
-    --accent: oklch(0.28 0.05 275);
-    --accent-foreground: oklch(0.98 0 0);
-
-    --destructive: oklch(0.6 0.25 25);
-    --destructive-foreground: oklch(0.98 0 0);
-
-    /* BORDERS: Visible, defining structure */
-    --border: oklch(0.3 0.04 264);
-    --input: oklch(0.3 0.04 264);
-    --ring: oklch(0.65 0.22 275);
-
-    /* CHARTS: Neon palette */
-    --chart-1: oklch(0.65 0.2 190); /* Cyan */
-    --chart-2: oklch(0.65 0.22 275); /* Violet */
-    --chart-3: oklch(0.75 0.18 45); /* Orange */
-    --chart-4: oklch(0.7 0.2 150); /* Green */
-    --chart-5: oklch(0.7 0.2 340); /* Pink */
-
-    --sidebar: oklch(0.14 0.02 264);
-    --sidebar-foreground: oklch(0.95 0 0);
-    --sidebar-primary: oklch(0.65 0.22 275);
+    --secondary: oklch(0.3095 0.0266 266.7132);
+    --secondary-foreground: oklch(0.9219 0 0);
+    --muted: oklch(0.3095 0.0266 266.7132);
+    --muted-foreground: oklch(0.7155 0 0);
+    --accent: oklch(0.338 0.0589 267.5867);
+    --accent-foreground: oklch(0.8823 0.0571 254.1284);
+    --destructive: oklch(0.6368 0.2078 25.3313);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.3843 0.0301 269.7337);
+    --input: oklch(0.3843 0.0301 269.7337);
+    --ring: oklch(0.6397 0.172 36.4421);
+    --chart-1: oklch(0.7156 0.0605 248.6845);
+    --chart-2: oklch(0.7693 0.0876 34.1875);
+    --chart-3: oklch(0.5778 0.0759 254.1573);
+    --chart-4: oklch(0.5016 0.0849 259.4902);
+    --chart-5: oklch(0.4241 0.0952 264.0306);
+    --sidebar: oklch(0.31 0.0283 267.7408);
+    --sidebar-foreground: oklch(0.9219 0 0);
+    --sidebar-primary: oklch(0.6397 0.172 36.4421);
     --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(0.25 0.03 264);
-    --sidebar-accent-foreground: oklch(0.98 0 0);
-    --sidebar-border: oklch(0.3 0.04 264);
-    --sidebar-ring: oklch(0.65 0.22 275);
-
-    /* SHADOWS: Colored shadows for dark mode "glow" feel */
-    --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 0.5);
-    --shadow: 0 1px 3px 0 oklch(0 0 0 / 0.5), 0 1px 2px -1px oklch(0 0 0 / 0.5);
+    --sidebar-accent: oklch(0.338 0.0589 267.5867);
+    --sidebar-accent-foreground: oklch(0.8823 0.0571 254.1284);
+    --sidebar-border: oklch(0.3843 0.0301 269.7337);
+    --sidebar-ring: oklch(0.6397 0.172 36.4421);
+    --font-sans: Inter, sans-serif;
+    --font-serif: Source Serif 4, serif;
+    --font-mono: JetBrains Mono, monospace;
+    --radius: 0.75rem;
+    --shadow-x: 0px;
+    --shadow-y: 1px;
+    --shadow-blur: 3px;
+    --shadow-spread: 0px;
+    --shadow-opacity: 0.1;
+    --shadow-color: hsl(0 0% 0%);
+    --shadow-2xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.05);
+    --shadow-sm:
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
+    --shadow:
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 1px 2px -1px hsl(0 0% 0% / 0.1);
     --shadow-md:
-        0 4px 6px -1px oklch(0 0 0 / 0.5), 0 2px 4px -2px oklch(0 0 0 / 0.5);
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 2px 4px -1px hsl(0 0% 0% / 0.1);
     --shadow-lg:
-        0 10px 15px -3px oklch(0 0 0 / 0.5), 0 4px 6px -4px oklch(0 0 0 / 0.5);
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 4px 6px -1px hsl(0 0% 0% / 0.1);
+    --shadow-xl:
+        0px 1px 3px 0px hsl(0 0% 0% / 0.1), 0px 8px 10px -1px hsl(0 0% 0% / 0.1);
+    --shadow-2xl: 0px 1px 3px 0px hsl(0 0% 0% / 0.25);
 }
-
-/* -------------------------------------------------------------------------- */
-/* THEME MAPPING                               */
-/* -------------------------------------------------------------------------- */
 
 @theme inline {
     --color-background: var(--background);
@@ -161,51 +160,23 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
-    /* POKEMON TYPES - VIBRANT / NEON PALETTE */
-    --color-normal: #c8c9cb;
-    --color-fire: #ff7733;
-    --color-water: #44aaff;
-    --color-electric: #ffdd33;
-    --color-grass: #66ee55;
-    --color-ice: #77eeff;
-    --color-fighting: #ff4444;
-    --color-poison: #dd55dd;
-    --color-ground: #eedd77;
-    --color-flying: #8899ff;
-    --color-psychic: #ff6699;
-    --color-bug: #bbee22;
-    --color-rock: #ddcbaa;
-    --color-ghost: #9988dd;
-    --color-dragon: #8866ff;
-    --color-dark: #a9988d;
-    --color-steel: #bbbbcc;
-    --color-fairy: #ffaaee;
-
-    --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
-    --font-serif: serif;
-    --font-mono: JetBrains Mono, monospace;
+    --font-sans: var(--font-sans);
+    --font-mono: var(--font-mono);
+    --font-serif: var(--font-serif);
 
     --radius-sm: calc(var(--radius) - 4px);
     --radius-md: calc(var(--radius) - 2px);
     --radius-lg: var(--radius);
     --radius-xl: calc(var(--radius) + 4px);
-    --radius-2xl: calc(var(--radius) + 8px);
-    --radius-3xl: calc(var(--radius) + 12px);
-    --radius-4xl: calc(var(--radius) + 16px);
 
+    --shadow-2xs: var(--shadow-2xs);
+    --shadow-xs: var(--shadow-xs);
     --shadow-sm: var(--shadow-sm);
     --shadow: var(--shadow);
     --shadow-md: var(--shadow-md);
     --shadow-lg: var(--shadow-lg);
     --shadow-xl: var(--shadow-xl);
     --shadow-2xl: var(--shadow-2xl);
-
-    --tracking-tighter: calc(var(--tracking-normal) - 0.05em);
-    --tracking-tight: calc(var(--tracking-normal) - 0.025em);
-    --tracking-normal: var(--tracking-normal);
-    --tracking-wide: calc(var(--tracking-normal) + 0.025em);
-    --tracking-wider: calc(var(--tracking-normal) + 0.05em);
-    --tracking-widest: calc(var(--tracking-normal) + 0.1em);
 }
 
 @layer base {
@@ -231,261 +202,4 @@
 }
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
-}
-
-.icon {
-    border-radius: 100%;
-    height: 100px;
-    width: 100px;
-    margin: auto;
-    transition: 0.2s all;
-}
-
-/* -------------------------------------------------------------------------- */
-/* VIBRANT BADGE SYSTEM                            */
-/* -------------------------------------------------------------------------- */
-
-/* Default style for badges (matches English keys) */
-.badge-type-fire,
-.fire,
-.bg-fire,
-.bg-Feu {
-    background: var(--color-fire);
-    box-shadow: 0 0 10px -3px var(--color-fire);
-    color: white;
-}
-.badge-type-water,
-.water,
-.bg-water,
-.bg-Eau {
-    background: var(--color-water);
-    box-shadow: 0 0 10px -3px var(--color-water);
-    color: white;
-}
-.badge-type-grass,
-.grass,
-.bg-grass,
-.bg-Plante {
-    background: var(--color-grass);
-    box-shadow: 0 0 10px -3px var(--color-grass);
-    color: black;
-    text-shadow: none;
-}
-.badge-type-electric,
-.electric,
-.bg-electric,
-.bg-Électrik {
-    background: var(--color-electric);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-electric);
-    text-shadow: none;
-}
-.badge-type-psychic,
-.psychic,
-.bg-psychic,
-.bg-Psy {
-    background: var(--color-psychic);
-    box-shadow: 0 0 10px -3px var(--color-psychic);
-    color: white;
-}
-.badge-type-ice,
-.ice,
-.bg-ice,
-.bg-Glace {
-    background: var(--color-ice);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-ice);
-    text-shadow: none;
-}
-.badge-type-dragon,
-.dragon,
-.bg-dragon,
-.bg-Dragon {
-    background: var(--color-dragon);
-    box-shadow: 0 0 10px -3px var(--color-dragon);
-    color: white;
-}
-.badge-type-dark,
-.dark-type,
-.bg-dark-type,
-.bg-Ténèbres {
-    background: var(--color-dark);
-    box-shadow: 0 0 10px -3px var(--color-dark);
-    color: white;
-}
-.badge-type-fairy,
-.fairy,
-.bg-fairy,
-.bg-Fée {
-    background: var(--color-fairy);
-    box-shadow: 0 0 10px -3px var(--color-fairy);
-    color: black;
-    text-shadow: none;
-}
-.badge-type-normal,
-.normal,
-.bg-normal,
-.bg-Normal {
-    background: var(--color-normal);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-normal);
-    text-shadow: none;
-}
-.badge-type-fighting,
-.fighting,
-.bg-fighting,
-.bg-Combat {
-    background: var(--color-fighting);
-    box-shadow: 0 0 10px -3px var(--color-fighting);
-    color: white;
-}
-.badge-type-flying,
-.flying,
-.bg-flying,
-.bg-Vol {
-    background: var(--color-flying);
-    box-shadow: 0 0 10px -3px var(--color-flying);
-    color: white;
-}
-.badge-type-poison,
-.poison,
-.bg-poison,
-.bg-Poison {
-    background: var(--color-poison);
-    box-shadow: 0 0 10px -3px var(--color-poison);
-    color: white;
-}
-.badge-type-ground,
-.ground,
-.bg-ground,
-.bg-Sol {
-    background: var(--color-ground);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-ground);
-    text-shadow: none;
-}
-.badge-type-bug,
-.bug,
-.bg-bug,
-.bg-Insecte {
-    background: var(--color-bug);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-bug);
-    text-shadow: none;
-}
-.badge-type-rock,
-.rock,
-.bg-rock,
-.bg-Roche {
-    background: var(--color-rock);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-rock);
-    text-shadow: none;
-}
-.badge-type-ghost,
-.ghost,
-.bg-ghost,
-.bg-Spectre {
-    background: var(--color-ghost);
-    box-shadow: 0 0 10px -3px var(--color-ghost);
-    color: white;
-}
-.badge-type-steel,
-.steel,
-.bg-steel,
-.bg-Acier {
-    background: var(--color-steel);
-    color: black;
-    box-shadow: 0 0 10px -3px var(--color-steel);
-    text-shadow: none;
-}
-
-/* Apply base styling to all badge-like classes */
-[class^="badge-type-"],
-.bg-fire,
-.bg-water,
-.bg-grass,
-.bg-electric,
-.bg-psychic,
-.bg-ice,
-.bg-dragon,
-.bg-dark-type,
-.bg-fairy,
-.bg-normal,
-.bg-fighting,
-.bg-flying,
-.bg-poison,
-.bg-ground,
-.bg-bug,
-.bg-rock,
-.bg-ghost,
-.bg-steel {
-    /* Common shape and text styles */
-    border-radius: 9999px; /* rounded-full */
-    padding-left: 0.75rem; /* px-3 */
-    padding-right: 0.75rem;
-    padding-top: 0.25rem; /* py-1 */
-    padding-bottom: 0.25rem;
-    font-size: 0.75rem; /* text-xs */
-    line-height: 1rem;
-    font-weight: 700; /* font-bold */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Subtle text shadow for readability */
-    transition: all 0.2s;
-}
-
-/* SVG Fill Helpers - Maps fills to the variables */
-.bg-fire path {
-    fill: var(--color-fire);
-}
-.bg-water path {
-    fill: var(--color-water);
-}
-.bg-grass path {
-    fill: var(--color-grass);
-}
-.bg-electric path {
-    fill: var(--color-electric);
-}
-.bg-psychic path {
-    fill: var(--color-psychic);
-}
-.bg-ice path {
-    fill: var(--color-ice);
-}
-.bg-dragon path {
-    fill: var(--color-dragon);
-}
-.bg-dark-type path {
-    fill: var(--color-dark);
-}
-.bg-fairy path {
-    fill: var(--color-fairy);
-}
-.bg-normal path {
-    fill: var(--color-normal);
-}
-.bg-fighting path {
-    fill: var(--color-fighting);
-}
-.bg-flying path {
-    fill: var(--color-flying);
-}
-.bg-poison path {
-    fill: var(--color-poison);
-}
-.bg-ground path {
-    fill: var(--color-ground);
-}
-.bg-bug path {
-    fill: var(--color-bug);
-}
-.bg-rock path {
-    fill: var(--color-rock);
-}
-.bg-ghost path {
-    fill: var(--color-ghost);
-}
-.bg-steel path {
-    fill: var(--color-steel);
 }

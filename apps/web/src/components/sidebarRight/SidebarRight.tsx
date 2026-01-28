@@ -1,9 +1,7 @@
-"use client";
-
 import {
   Sidebar,
   SidebarContent,
-  SidebarProvider
+  SidebarProvider,
 } from "@/components/animate-ui/components/radix/sidebar";
 
 import SidebarMainTab from "@/components/sidebarRight/mainTab";
@@ -27,7 +25,7 @@ export const SidebarRight = () => {
       <Sidebar collapsible="icon" side="right">
         <SidebarContent>
           <div
-            className={`transition-opacity duration-300 ease-in-out border rounded-sm my-auto mr-2 h-[1330px] ${
+            className={`transition-opacity duration-300 ease-in-out border rounded-sm my-auto mr-2 h-full ${
               activePokemon ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >
