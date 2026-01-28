@@ -60,7 +60,7 @@ function PerformanceTestPage() {
         result = await queryClient.fetchQuery(orpc.getPokemons.queryOptions());
       } else {
         result = await queryClient.fetchQuery(
-          orpc.getPokemonsMainData.queryOptions()
+          orpc.getPokemonsMainData.queryOptions(),
         );
       }
 
