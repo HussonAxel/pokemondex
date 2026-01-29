@@ -12,7 +12,7 @@ export const FiltersTop = () => {
   });
 
   return (
-    <div className="w-full mx-auto px-1 py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 border border-border">
+    <div className="w-full mx-auto p-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 xl:grid-cols-8 gap-3 border border-border">
       {filters.map((filter, index) => (
         <div
           key={index}
