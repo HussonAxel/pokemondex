@@ -55,6 +55,7 @@ import {
   Sparkles,
   SquareTerminal,
   Trash2,
+  Filter,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -88,7 +89,7 @@ const DATA = {
       title: "Favorites",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
           title: "All Pokémons",
@@ -100,6 +101,82 @@ const DATA = {
         },
         {
           title: "Active Pokémons",
+          url: "#",
+        },
+      ],
+    },
+    {
+      title: "Filters",
+      url: "#",
+      icon: Filter,
+      isActive: false,
+      items: [
+        {
+          title: "Starters",
+          url: "#",
+        },
+        {
+          title: "Regional Birds",
+          url: "#",
+        },
+        {
+          title: "Regional Mammals",
+          url: "#",
+        },
+        {
+          title: "Regional Bugs",
+          url: "#",
+        },
+        {
+          title: "Fossils",
+          url: "#",
+        },
+        {
+          title: "Babies",
+          url: "#",
+        },
+        {
+          title: "Pikachu Clones",
+          url: "#",
+        },
+        {
+          title: "Eeveelutions",
+          url: "#",
+        },
+        {
+          title: "Regional Variants",
+          url: "#",
+        },
+        {
+          title: "New Evolutions",
+          url: "#",
+        },
+        {
+          title: "Mega Evolutions",
+          url: "#",
+        },
+        {
+          title: "Gigantamax",
+          url: "#",
+        },
+        {
+          title: "Pseudos Legends",
+          url: "#",
+        },
+        {
+          title: "Ultra Beasts",
+          url: "#",
+        },
+        {
+          title: "Paradoxes",
+          url: "#",
+        },
+        {
+          title: "Legendaries",
+          url: "#",
+        },
+        {
+          title: "Mythicals",
           url: "#",
         },
       ],
@@ -312,89 +389,7 @@ const SidebarLeftContent = () => {
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarGroup>
-        {/* Nav Project */}
       </SidebarContent>
-      <SidebarFooter>
-        {/* Nav User */}
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <Avatar className="h-8 w-8 rounded-lg">
-                    <AvatarImage src={DATA.user.avatar} alt={DATA.user.name} />
-                    <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                  </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">
-                      {DATA.user.name}
-                    </span>
-                    <span className="truncate text-xs">{DATA.user.email}</span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align="end"
-                sideOffset={4}
-              >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                    <Avatar className="h-8 w-8 rounded-lg">
-                      <AvatarImage
-                        src={DATA.user.avatar}
-                        alt={DATA.user.name}
-                      />
-                      <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                    </Avatar>
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">
-                        {DATA.user.name}
-                      </span>
-                      <span className="truncate text-xs">
-                        {DATA.user.email}
-                      </span>
-                    </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <Sparkles />
-                    Upgrade to Pro
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuGroup>
-                  <DropdownMenuItem>
-                    <BadgeCheck />
-                    Account
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <CreditCard />
-                    Billing
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Bell />
-                    Notifications
-                  </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        {/* Nav User */}
-      </SidebarFooter>
     </Sidebar>
   );
 };
