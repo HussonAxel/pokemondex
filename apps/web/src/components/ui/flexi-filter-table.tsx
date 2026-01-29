@@ -40,9 +40,6 @@ import { MoreVertical, Sparkles } from "lucide-react";
 import BadgeTypes from "@/components/ui/badge-type";
 import Pokeball from "./svg/pokeball";
 
-// Note: TableHeaderNames is no longer used in the render,
-// as we are manually defining headers for width control.
-import { TableHeaderNames } from "@/data/data";
 import { orpc } from "@/utils/orpc";
 import { useQueryClient } from "@tanstack/react-query";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -111,6 +108,8 @@ export default function FlexiFilterTable() {
 
   const { Pokemons } = useLoaderData({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
+  const searchTypes = searchParams.type;
+  const searchAbilities = searchParams.ability;
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
   const navigate = useNavigate({ from: Route.id });
@@ -131,6 +130,28 @@ export default function FlexiFilterTable() {
 
       return searchTerms.every((term) => searchable.includes(term));
     });
+  }
+
+  if (searchParams.type) {
+    const types = Array.isArray(searchParams.type)
+      ? searchParams.type
+      : [searchParams.type];
+
+    PokemonsFiltered = PokemonsFiltered.filter((item) =>
+      types.every((type) => item.types.includes(type)),
+    );
+  }
+
+  if (searchParams.ability) {
+    const abilities = Array.isArray(searchParams.ability)
+      ? searchParams.ability
+      : [searchParams.ability];
+
+    PokemonsFiltered = PokemonsFiltered.filter((item) =>
+      abilities.every((ability) =>
+        item.abilities?.some((a) => a.ability.name === ability),
+      ),
+    );
   }
 
   const totalPages = Math.ceil(PokemonsFiltered.length / ITEMS_PER_PAGE);
@@ -157,9 +178,9 @@ export default function FlexiFilterTable() {
         <Table className="table-fixed w-full">
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
-              <TableHead className="w-[150px]">Name</TableHead>
-              <TableHead className="w-[180px]">Type(s)</TableHead>
-              <TableHead className="w-[250px]">Abilities</TableHead>
+              <TableHead className="w-[100px]">Name</TableHead>
+              <TableHead className="w-[80px]">Type(s)</TableHead>
+              <TableHead className="w-[125px]">Abilities</TableHead>
               <TableHead className="w-[100px]">Stats</TableHead>
               <TableHead className="w-[60px] text-right">Actions</TableHead>
             </TableRow>
@@ -213,19 +234,17 @@ export default function FlexiFilterTable() {
                         </p>
                       </div>
                     </TableCell>
-                    <TableCell size="sm">
+                    <TableCell>
                       <div className="flex items-center gap-2 flex-wrap">
                         <BadgeTypes
                           pokemonTypes={pokemon.types}
                           onClick={(e, type) => {
                             e.stopPropagation();
 
-                            const currentTypes =
-                              searchParams.search?.split(",").filter(Boolean) ??
-                              [];
+                            const currentTypes = searchTypes ?? [];
                             const hasType = currentTypes.includes(type);
 
-                            const newTypes = hasType
+                            const nextTypes = hasType
                               ? currentTypes.filter((t) => t !== type)
                               : [...currentTypes, type];
 
@@ -233,7 +252,8 @@ export default function FlexiFilterTable() {
                               to: ".",
                               search: {
                                 ...searchParams,
-                                search: newTypes.join(",") || undefined,
+                                type:
+                                  nextTypes.length > 0 ? nextTypes : undefined,
                                 page: 1,
                               },
                             });
@@ -245,23 +265,24 @@ export default function FlexiFilterTable() {
                       <div className="flex flex-row gap-2 flex-wrap">
                         <BadgeTypes
                           className="flex-nowrap"
-                          onClick={(e, type) => {
+                          onClick={(e, ability) => {
                             e.stopPropagation();
 
-                            const currentAbilities =
-                              searchParams.search?.split(",").filter(Boolean) ??
-                              [];
-                            const hasAbility = currentAbilities.includes(type);
+                            const currentAbilities = searchAbilities ?? [];
+                            const hasType = currentAbilities.includes(ability);
 
-                            const newAbilities = hasAbility
-                              ? currentAbilities.filter((t) => t !== type)
-                              : [...currentAbilities, type];
+                            const nextAbilities = hasType
+                              ? currentAbilities.filter((t) => t !== ability)
+                              : [...currentAbilities, ability];
 
                             navigate({
                               to: ".",
                               search: {
                                 ...searchParams,
-                                search: newAbilities.join(",") || undefined,
+                                ability:
+                                  nextAbilities.length > 0
+                                    ? nextAbilities
+                                    : undefined,
                                 page: 1,
                               },
                             });

@@ -70,7 +70,7 @@ function RootDocument() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
   return (
-    <html lang="fr" className="">
+    <html lang="fr" className="dark">
       <head>
         <HeadContent />
       </head>

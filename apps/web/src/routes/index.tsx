@@ -12,6 +12,8 @@ export const Route = createFileRoute("/")({
     shinyView: z.boolean().optional(),
     catchedView: z.boolean().optional(),
     page: z.number().optional(),
+    type: z.array(z.string().optional()).max(2).optional(),
+    ability: z.array(z.string().optional()).max(3).optional(),
   }),
   loader: async ({ context }) => {
     const Pokemons = await context.queryClient.ensureQueryData(
