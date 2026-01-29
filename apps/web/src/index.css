@@ -15,7 +15,10 @@
     --card-foreground: oklch(0 0 0);
     --popover: oklch(0.9911 0 0);
     --popover-foreground: oklch(0 0 0);
-    --primary: oklch(0.5421 0.2711 287.7289);
+
+    /* UPDATED: Changed from Purple to Orange to fix the active tab underline */
+    --primary: oklch(0.623 0.214 46.51);
+
     --primary-foreground: oklch(1 0 0);
     --secondary: oklch(0.954 0.0063 255.4755);
     --secondary-foreground: oklch(0.1344 0 0);
@@ -34,11 +37,17 @@
     --chart-4: oklch(0.5765 0.1844 260.6278);
     --chart-5: oklch(0.559 0 0);
     --sidebar: oklch(0.9777 0.0051 247.8763);
-    --sidebar-foreground: oklch(0 0 0);
-    --sidebar-primary: oklch(0 0 0);
+
+    /* UPDATED: Changed from Pure Black (0 0 0) to Dark Gray to reduce heaviness */
+    --sidebar-foreground: oklch(0.25 0 0);
+
+    --sidebar-primary: oklch(0.623 0.214 46.51);
     --sidebar-primary-foreground: oklch(1 0 0);
     --sidebar-accent: oklch(0.9401 0 0);
-    --sidebar-accent-foreground: oklch(0 0 0);
+
+    /* UPDATED: Matched to the new softer foreground */
+    --sidebar-accent-foreground: oklch(0.25 0 0);
+
     --sidebar-border: oklch(0.9401 0 0);
     --sidebar-ring: oklch(0 0 0);
     --font-sans: Geist, ui-sans-serif, sans-serif, system-ui;
@@ -80,7 +89,7 @@
     --card-foreground: oklch(0.9551 0 0);
     --popover: oklch(0.2568 0.0076 274.6528);
     --popover-foreground: oklch(0.9551 0 0);
-    --primary: oklch(0.7394 0.1704 46.4692);
+    --primary: oklch(0.7 0.3 290);
     --primary-foreground: oklch(1 0 0);
     --secondary: oklch(0.294 0.013 272.9312);
     --secondary-foreground: oklch(0.9551 0 0);
@@ -95,7 +104,7 @@
     --ring: oklch(0.616 0.2295 292.797);
     --chart-1: oklch(0.8007 0.1803 152.1957);
     --chart-2: oklch(0.616 0.2295 292.797);
-    --chart-3: oklch(0.8094 0.1023 20.2756);
+    --chart-3: oklch(0.75 0.2 310);
     --chart-4: oklch(0.6628 0.1602 261.3712);
     --chart-5: oklch(0.7058 0 0);
     --sidebar: oklch(0.2103 0.0059 285.8852);
