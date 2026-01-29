@@ -6,39 +6,53 @@ export const FiltersTop = () => {
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
 
-  // Simulating your data to keep code clean
   const filters = Array(15).fill({
     id: "MF-214",
     name: "Repair Context Graph",
   });
 
   return (
-    <div className="w-full mx-auto items-center px-1 py-2 flex flex-row gap-2 rounded-sm border border-border cursor-pointer flex-wrap">
+    <div className="w-full mx-auto px-1 py-2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 border border-border">
       {filters.map((filter, index) => (
         <div
           key={index}
           className="
-            flex flex-row gap-2 justify-between items-center
-            bg-sidebar-accent/60 hover:bg-sidebar-accent/80 transition-colors
-            rounded-[4px] px-2 py-1 text-sm
-            max-w-full w-auto
+            group flex items-center gap-2
+            bg-sidebar-accent/40 hover:bg-sidebar-accent/60
+            border border-transparent hover:border-border/50
+            transition-all duration-200
+            rounded-md pl-1.5 pr-1 py-1 text-sm
+            w-full cursor-default
           "
         >
-          {/* Container for text: ensures it truncates if screen is too small */}
-          <div className="flex flex-row gap-1 items-center overflow-hidden">
-            <p className="font-thin opacity-60 whitespace-nowrap">
+          {/* Content Container */}
+          <div className="flex items-center gap-2 overflow-hidden select-none">
+            {/* ID Badge: Monospace font makes it look like technical data */}
+            <span className="font-mono text-[10px] font-medium text-foreground/70 bg-background/50 px-1.5 py-0.5 rounded border border-border/50 shadow-sm whitespace-nowrap">
               {filter.id}
-            </p>
-            <p className="opacity-60">.</p>
-            <p className="font-semibold opacity-80 whitespace-nowrap truncate">
+            </span>
+
+            {/* Divider (Visual separation) */}
+            <div className="h-3 w-[1px] bg-border/60 shrink-0" />
+
+            {/* Main Text */}
+            <span className="font-medium text-foreground/90 truncate text-xs sm:text-sm">
               {filter.name}
-            </p>
+            </span>
           </div>
 
-          <X
-            size={14}
-            className="opacity-70 hover:bg-black/10 rounded-md cursor-pointer flex-shrink-0"
-          />
+          {/* Close Action: Kept separate so it never truncates */}
+          <button
+            onClick={() => console.log("remove filter")}
+            className="
+              flex-shrink-0 p-0.5 rounded-sm
+              text-muted-foreground opacity-50
+              group-hover:opacity-100 group-hover:bg-background group-hover:text-foreground
+              transition-all
+            "
+          >
+            <X size={14} />
+          </button>
         </div>
       ))}
     </div>

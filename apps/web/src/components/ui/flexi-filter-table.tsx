@@ -161,7 +161,6 @@ export default function FlexiFilterTable() {
               <TableHead className="w-[180px]">Type(s)</TableHead>
               <TableHead className="w-[250px]">Abilities</TableHead>
               <TableHead className="w-[100px]">Stats</TableHead>
-              <TableHead className="w-[80px] text-center">Status</TableHead>
               <TableHead className="w-[60px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -190,6 +189,8 @@ export default function FlexiFilterTable() {
                     }
                   >
                     <TableCell className="flex flex-row items-center font-semibold text-[16px] gap-4 py-[12px]">
+                      <Pokeball stroke="red" className="w-4 h-4 " />
+
                       <img
                         src={`sprites/${isShinyView ? "shiny/" + pokemon.id + ".webp" : "base/" + pokemon.id + ".webp"}`}
                         onError={(e) => {
@@ -206,10 +207,9 @@ export default function FlexiFilterTable() {
                         className="w-16 h-16 bg-sidebar-accent rounded-sm p-2"
                       />
                       <div className="flex flex-col max-w-[150px] capitalize font-semibold text-[12px] lg:text-[15px] lg:text-left">
-                        {pokemon.name.charAt(0).toUpperCase() +
-                          pokemon.name.slice(1)}
-                        <p className="text-[10px] lg:text-[14px] text-accent-foreground/60 font-normal">
-                          #{pokemon.id.toString().padStart(4, "0")}
+                        <p>{pokemon.name}</p>
+                        <p className="text-[10px] lg:text-[14px] text-accent-foreground/60 font-normal items-center ">
+                          #{pokemon.id.toString().padStart(3, "0")}
                         </p>
                       </div>
                     </TableCell>
@@ -326,15 +326,6 @@ export default function FlexiFilterTable() {
                             <ProgressIndicator className="bg-sidebar-primary" />
                           </ProgressTrack>
                         </Progress>
-                      </div>
-                    </TableCell>
-                    {/* FIX 4: Centered the Status icon */}
-                    <TableCell
-                      className="text-center"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="flex justify-center">
-                        <Pokeball stroke="red" />
                       </div>
                     </TableCell>
                     {/* FIX 5: Right aligned the Action menu */}

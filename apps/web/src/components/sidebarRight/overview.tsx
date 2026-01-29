@@ -115,13 +115,12 @@ export default function OverviewComponent() {
                   <Tooltip key={`${abilityName}-${index}`}>
                     <TooltipTrigger
                       className={cn(
-                        "group relative flex flex-col items-center justify-center ring ring-border rounded-md py-2 cursor-pointer hover:bg-accent/10",
+                        `group relative flex flex-col items-center justify-center border rounded-md py-2 cursor-pointer hover:bg-accent/40 ${isHidden ? "!border-primary/60" : ""}`,
                       )}
                     >
-                      <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
-                        {isHidden ? "Hidden Ability" : "Ability"}
-                      </p>
-                      <p className="text-sm font-semibold text-foreground relative z-10">
+                      <p
+                        className={`text-sm font-semibold text-foreground relative z-10`}
+                      >
                         {abilityName.charAt(0).toUpperCase() +
                           abilityName.slice(1)}
                       </p>
