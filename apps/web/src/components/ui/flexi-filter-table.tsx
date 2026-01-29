@@ -39,6 +39,8 @@ import { MoreVertical, Sparkles } from "lucide-react";
 import BadgeTypes from "@/components/ui/badge-type";
 import Pokeball from "./svg/pokeball";
 
+// Note: TableHeaderNames is no longer used in the render,
+// as we are manually defining headers for width control.
 import { TableHeaderNames } from "@/data/data";
 import { orpc } from "@/utils/orpc";
 import { useQueryClient } from "@tanstack/react-query";
@@ -51,6 +53,7 @@ export default function FlexiFilterTable() {
 
   const fallBackImage =
     "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755";
+
   useHotkeys("arrowleft", () => {
     handlePageChange(currentPage - 1);
   });
@@ -68,7 +71,6 @@ export default function FlexiFilterTable() {
     const queryKey = queryOptions.queryKey;
     const queryState = queryClient.getQueryState(queryKey);
 
-    // Prefetch seulement si les données n'existent pas ou sont obsolètes
     const shouldPrefetch =
       !queryState ||
       queryState.dataUpdatedAt === null ||
@@ -91,7 +93,6 @@ export default function FlexiFilterTable() {
     const speciesQueryKey = speciesQueryOptions.queryKey;
     const queryState = queryClient.getQueryState(speciesQueryKey);
 
-    // Prefetch seulement si les données n'existent pas ou sont obsolètes
     const shouldPrefetch =
       !queryState ||
       queryState.dataUpdatedAt === null ||
@@ -147,79 +148,10 @@ export default function FlexiFilterTable() {
       },
     });
   };
+
   return (
     <div className="bg-background overflow-hidden p-2 pl-4 h-full flex flex-col gap-2">
-      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-between border border-border rounded-sm">
-        <p className="text-sm text-accent-foreground/80 font-normal">
-          1025 Pokémons
-        </p>
-        {totalPages > 1 && (
-          <div className="flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage - 1);
-                    }}
-                    className={cn(
-                      currentPage === 1 && "pointer-events-none opacity-50",
-                    )}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => {
-                    if (
-                      page === 1 ||
-                      page === totalPages ||
-                      (page >= currentPage - 2 && page <= currentPage + 2)
-                    ) {
-                      return (
-                        <PaginationItem key={page}>
-                          <PaginationLink
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handlePageChange(page);
-                            }}
-                            isActive={page === currentPage}
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      );
-                    } else if (
-                      page === currentPage - 3 ||
-                      page === currentPage + 3
-                    ) {
-                      return (
-                        <PaginationItem key={page}>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      );
-                    }
-                    return null;
-                  },
-                )}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage + 1);
-                    }}
-                    className={cn(
-                      currentPage === totalPages &&
-                        "pointer-events-none opacity-50",
-                    )}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        )}
+      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-end border border-border rounded-sm">
         <div className="flex flex-row gap-4">
           <span className="inline-flex items-center justify-center">
             {theme === "light" ? (
@@ -270,14 +202,18 @@ export default function FlexiFilterTable() {
           </span>
         </div>
       </div>
+
       {/* Table */}
       <div className="flex-1 overflow-y-auto scrollbar-hide rounded-sm border border-border">
-        <Table>
+        <Table className="table-fixed w-full">
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
             <TableRow>
-              {TableHeaderNames.map((header) => (
-                <TableHead key={header}>{header}</TableHead>
-              ))}
+              <TableHead className="w-[150px]">Name</TableHead>
+              <TableHead className="w-[180px]">Type(s)</TableHead>
+              <TableHead className="w-[250px]">Abilities</TableHead>
+              <TableHead className="w-[100px]">Stats</TableHead>
+              <TableHead className="w-[80px] text-center">Status</TableHead>
+              <TableHead className="w-[60px] text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -304,7 +240,7 @@ export default function FlexiFilterTable() {
                       })
                     }
                   >
-                    <TableCell className=" flex flex-row items-center font-semibold text-[16px] gap-4 py-[12px]">
+                    <TableCell className="flex flex-row items-center font-semibold text-[16px] gap-4 py-[12px]">
                       <img
                         src={`sprites/${isShinyView ? "shiny/" + pokemon.id + ".webp" : "base/" + pokemon.id + ".webp"}`}
                         onError={(e) => {
@@ -318,9 +254,9 @@ export default function FlexiFilterTable() {
                         height={64}
                         loading="lazy"
                         decoding="async"
-                        className="w-16 h-16 bg-sidebar rounded-sm p-2"
+                        className="w-16 h-16 bg-sidebar-accent rounded-sm p-2"
                       />
-                      <div className="flex flex-col max-w-[150px] capitalize font-semibold text-[12px] lg:text-[14px] lg:text-left">
+                      <div className="flex flex-col max-w-[150px] capitalize font-semibold text-[12px] lg:text-[15px] lg:text-left">
                         {pokemon.name.charAt(0).toUpperCase() +
                           pokemon.name.slice(1)}
                         <p className="text-[10px] lg:text-[14px] text-accent-foreground/60 font-normal">
@@ -328,8 +264,8 @@ export default function FlexiFilterTable() {
                         </p>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2 flex-wrap lg:flex-nowrap">
+                    <TableCell size="sm">
+                      <div className="flex items-center gap-2 flex-wrap">
                         <BadgeTypes
                           pokemonTypes={pokemon.types}
                           onClick={(e, type) => {
@@ -357,10 +293,9 @@ export default function FlexiFilterTable() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-row gap-2 flex-wrap lg:flex-nowrap">
+                      <div className="flex flex-row gap-2 flex-wrap">
                         <BadgeTypes
-                          className="!flex-nowrap"
-                          classNameBadge="font-semibold"
+                          className="flex-nowrap"
                           onClick={(e, type) => {
                             e.stopPropagation();
 
@@ -393,7 +328,7 @@ export default function FlexiFilterTable() {
                           }
                         />
                         <BadgeTypes
-                          classNameBadge="!border-primary/60 !bg-primary/10 font-bold flex-nowrap"
+                          classNameBadge="!border-primary/60 !bg-primary/10 flex-nowrap"
                           pokemonTypes={
                             pokemon.abilities
                               ?.filter(
@@ -428,23 +363,36 @@ export default function FlexiFilterTable() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Progress
-                        max={800}
-                        value={Object.values(pokemon?.stats || {}).reduce(
-                          (sum: number, stat: unknown) =>
-                            sum + (stat as number),
-                          0,
-                        )}
-                      >
-                        <ProgressTrack>
-                          <ProgressIndicator className="bg-sidebar-primary" />
-                        </ProgressTrack>
-                      </Progress>
+                      {/* FIX 3: Wrapped progress in a w-full div */}
+                      <div className="w-full pr-4">
+                        <Progress
+                          max={800}
+                          value={Object.values(pokemon?.stats || {}).reduce(
+                            (sum: number, stat: unknown) =>
+                              sum + (stat as number),
+                            0,
+                          )}
+                        >
+                          <ProgressTrack>
+                            <ProgressIndicator className="bg-sidebar-primary" />
+                          </ProgressTrack>
+                        </Progress>
+                      </div>
                     </TableCell>
-                    <TableCell onClick={(e) => e.stopPropagation()}>
-                      <Pokeball stroke="red" />
+                    {/* FIX 4: Centered the Status icon */}
+                    <TableCell
+                      className="text-center"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="flex justify-center">
+                        <Pokeball stroke="red" />
+                      </div>
                     </TableCell>
-                    <TableCell onClick={(e) => e.stopPropagation()}>
+                    {/* FIX 5: Right aligned the Action menu */}
+                    <TableCell
+                      className="text-right"
+                      onClick={(e) => e.stopPropagation()}
+                    >
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button size="icon" variant="ghost">
@@ -476,115 +424,73 @@ export default function FlexiFilterTable() {
           </TableBody>
         </Table>
       </div>
-      {/* Pagination */}
 
-      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-between border border-border rounded-sm">
-        <p className="text-sm text-accent-foreground/80 font-normal">
-          1025 Pokémons
-        </p>
+      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-center border border-border rounded-sm">
         {totalPages > 1 && (
-          <div className="flex justify-center">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage - 1);
-                    }}
-                    className={cn(
-                      currentPage === 1 && "pointer-events-none opacity-50",
-                    )}
-                  />
-                </PaginationItem>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => {
-                    if (
-                      page === 1 ||
-                      page === totalPages ||
-                      (page >= currentPage - 2 && page <= currentPage + 2)
-                    ) {
-                      return (
-                        <PaginationItem key={page}>
-                          <PaginationLink
-                            href="#"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              handlePageChange(page);
-                            }}
-                            isActive={page === currentPage}
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      );
-                    } else if (
-                      page === currentPage - 3 ||
-                      page === currentPage + 3
-                    ) {
-                      return (
-                        <PaginationItem key={page}>
-                          <PaginationEllipsis />
-                        </PaginationItem>
-                      );
-                    }
-                    return null;
-                  },
-                )}
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handlePageChange(currentPage + 1);
-                    }}
-                    className={cn(
-                      currentPage === totalPages &&
-                        "pointer-events-none opacity-50",
-                    )}
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(currentPage - 1);
+                  }}
+                  className={cn(
+                    currentPage === 1 && "pointer-events-none opacity-50",
+                  )}
+                />
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => {
+                  if (
+                    page === 1 ||
+                    page === totalPages ||
+                    (page >= currentPage - 2 && page <= currentPage + 2)
+                  ) {
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          href="#"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handlePageChange(page);
+                          }}
+                          isActive={page === currentPage}
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  } else if (
+                    page === currentPage - 3 ||
+                    page === currentPage + 3
+                  ) {
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationEllipsis />
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                },
+              )}
+              <PaginationItem>
+                <PaginationNext
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePageChange(currentPage + 1);
+                  }}
+                  className={cn(
+                    currentPage === totalPages &&
+                      "pointer-events-none opacity-50",
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         )}
-        <div className="flex flex-row gap-4">
-          <span className="inline-flex items-center justify-center">
-            <Sparkles
-              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
-                searchParams.shinyView
-                  ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-                  : "text-yellow-500/50"
-              }`}
-              onClick={() => {
-                navigate({
-                  search: {
-                    ...searchParams,
-                    shinyView: !searchParams.shinyView,
-                  },
-                });
-              }}
-            />
-          </span>
-          <span className="inline-flex items-center justify-center">
-            <Pokeball
-              className={`cursor-pointer transition-all duration-300 ${
-                searchParams.catchedView
-                  ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-                  : "opacity-50"
-              }`}
-              onClick={() => {
-                navigate({
-                  search: {
-                    ...searchParams,
-                    catchedView: !searchParams.catchedView,
-                  },
-                });
-              }}
-            />
-          </span>
-        </div>
       </div>
     </div>
   );
