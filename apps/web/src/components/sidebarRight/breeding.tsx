@@ -40,7 +40,7 @@ export default function BreedingComponent() {
   return (
     <div className="flex flex-col gap-4 px-4 py-4">
       <div className="flex flex-col gap-2">
-        <h2 className="text-base font-semibold text-foreground tracking-tight">
+        <h2 className="text-base font-medium text-foreground tracking-tight">
           Egg Groups
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -69,7 +69,7 @@ export default function BreedingComponent() {
               <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
                 Gender
               </p>
-              <p className="text-sm font-semibold text-foreground relative z-10">
+              <p className="text-sm font-medium text-foreground relative z-10">
                 Genderless
               </p>
             </>
@@ -80,19 +80,19 @@ export default function BreedingComponent() {
               </p>
               <div className="flex items-center gap-2 relative z-10">
                 <div className="flex flex-col items-center">
-                  <span className="text-xs text-blue-500/50 font-semibold">
+                  <span className="text-xs text-blue-500/50 font-medium">
                     ♂
                   </span>
-                  <span className="text-sm font-semibold text-foreground">
+                  <span className="text-sm font-medium text-foreground">
                     {genderInfo.male.toFixed(1)}%
                   </span>
                 </div>
                 <Separator orientation="vertical" className="h-8" />
                 <div className="flex flex-col items-center">
-                  <span className="text-xs text-pink-500/70 font-semibold">
+                  <span className="text-xs text-pink-500/70 font-medium">
                     ♀
                   </span>
-                  <span className="text-sm font-semibold text-foreground">
+                  <span className="text-sm font-medium text-foreground">
                     {genderInfo.female.toFixed(1)}%
                   </span>
                 </div>
@@ -105,7 +105,7 @@ export default function BreedingComponent() {
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Egg Cycles
           </p>
-          <p className="text-sm font-semibold text-foreground relative z-10">
+          <p className="text-sm font-medium text-foreground relative z-10">
             {species.hatch_counter} cycles
           </p>
           <p className="text-xs text-muted-foreground/80 mt-1 relative z-10">
@@ -117,7 +117,7 @@ export default function BreedingComponent() {
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Growth Rate
           </p>
-          <p className="text-sm font-semibold text-foreground relative z-10 capitalize">
+          <p className="text-sm font-medium text-foreground relative z-10 capitalize">
             {species.growth_rate.name}
           </p>
           <p className="text-xs text-muted-foreground/80 mt-1 relative z-10">
@@ -129,7 +129,7 @@ export default function BreedingComponent() {
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Habitat
           </p>
-          <p className="text-sm font-semibold text-foreground relative z-10 capitalize">
+          <p className="text-sm font-medium text-foreground relative z-10 capitalize">
             {species.habitat?.name || "Unknown"}
           </p>
         </div>
@@ -138,7 +138,7 @@ export default function BreedingComponent() {
       <Separator />
 
       <div className="flex justify-center">
-        <Button variant="default" size="default" className="w-full rounded-sm">
+        <Button variant="primary" size="default" className="w-full rounded-sm">
           Breeding Calculator
         </Button>
       </div>
