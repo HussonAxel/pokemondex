@@ -1,6 +1,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { Button } from "@/components/ui/button";
+import { FiltersTop } from "@/components/filters-top";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -151,59 +152,7 @@ export default function FlexiFilterTable() {
 
   return (
     <div className="bg-background overflow-hidden p-2 pl-4 h-full flex flex-col gap-2">
-      <div className="w-full mx-auto items-center px-4 py-2 flex flex-row gap-2 justify-end border border-border rounded-sm">
-        <div className="flex flex-row gap-4">
-          <span className="inline-flex items-center justify-center">
-            {theme === "light" ? (
-              <Moon
-                className="w-4 h-4 cursor-pointer transition-all duration-300 text-slate-500 hover:text-slate-700"
-                onClick={toggleTheme}
-              />
-            ) : (
-              <Sun
-                className="w-4 h-4 cursor-pointer transition-all duration-300 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-                onClick={toggleTheme}
-              />
-            )}
-          </span>
-          <span className="inline-flex items-center justify-center">
-            <Sparkles
-              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
-                searchParams.shinyView
-                  ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-                  : "text-yellow-500/50"
-              }`}
-              onClick={() => {
-                navigate({
-                  search: {
-                    ...searchParams,
-                    shinyView: !searchParams.shinyView,
-                  },
-                });
-              }}
-            />
-          </span>
-          <span className="inline-flex items-center justify-center">
-            <Pokeball
-              className={`cursor-pointer transition-all duration-300 ${
-                searchParams.catchedView
-                  ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-                  : "opacity-50"
-              }`}
-              onClick={() => {
-                navigate({
-                  search: {
-                    ...searchParams,
-                    catchedView: !searchParams.catchedView,
-                  },
-                });
-              }}
-            />
-          </span>
-        </div>
-      </div>
-
-      {/* Table */}
+      <FiltersTop />
       <div className="flex-1 overflow-y-auto scrollbar-hide rounded-sm border border-border">
         <Table className="table-fixed w-full">
           <TableHeader className="sticky top-0 bg-background z-10 overflow-y-auto">
@@ -491,6 +440,55 @@ export default function FlexiFilterTable() {
             </PaginationContent>
           </Pagination>
         )}
+        <div className="flex flex-row gap-4">
+          <span className="inline-flex items-center justify-center">
+            {theme === "light" ? (
+              <Moon
+                className="w-4 h-4 cursor-pointer transition-all duration-300 text-slate-500 hover:text-slate-700"
+                onClick={toggleTheme}
+              />
+            ) : (
+              <Sun
+                className="w-4 h-4 cursor-pointer transition-all duration-300 text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+                onClick={toggleTheme}
+              />
+            )}
+          </span>
+          <span className="inline-flex items-center justify-center">
+            <Sparkles
+              className={`w-4 h-4 cursor-pointer transition-all duration-300 ${
+                searchParams.shinyView
+                  ? "text-yellow-500 drop-shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+                  : "text-yellow-500/50"
+              }`}
+              onClick={() => {
+                navigate({
+                  search: {
+                    ...searchParams,
+                    shinyView: !searchParams.shinyView,
+                  },
+                });
+              }}
+            />
+          </span>
+          <span className="inline-flex items-center justify-center">
+            <Pokeball
+              className={`cursor-pointer transition-all duration-300 ${
+                searchParams.catchedView
+                  ? "text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+                  : "opacity-50"
+              }`}
+              onClick={() => {
+                navigate({
+                  search: {
+                    ...searchParams,
+                    catchedView: !searchParams.catchedView,
+                  },
+                });
+              }}
+            />
+          </span>
+        </div>
       </div>
     </div>
   );
