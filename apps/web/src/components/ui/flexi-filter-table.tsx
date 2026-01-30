@@ -349,7 +349,7 @@ export default function FlexiFilterTable() {
       </div>
 
       {/* FOOTER */}
-      <div className="flex items-center justify-between border border-border rounded-sm px-4 py-2">
+      <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between border border-border rounded-sm px-4 py-2">
         {totalPages > 1 && (
           <Pagination>
             <PaginationContent>
@@ -362,13 +362,12 @@ export default function FlexiFilterTable() {
                   }}
                 />
               </PaginationItem>
-
               {Array.from({ length: totalPages }, (_, i) => i + 1).map(
                 (page) => {
                   if (
                     page === 1 ||
                     page === totalPages ||
-                    (page >= currentPage - 2 && page <= currentPage + 2)
+                    (page >= currentPage - 1 && page <= currentPage + 1)
                   ) {
                     return (
                       <PaginationItem key={page}>
@@ -397,7 +396,6 @@ export default function FlexiFilterTable() {
                   return null;
                 },
               )}
-
               <PaginationItem>
                 <PaginationNext
                   href="#"
@@ -410,7 +408,6 @@ export default function FlexiFilterTable() {
             </PaginationContent>
           </Pagination>
         )}
-
         <div className="flex gap-4">
           {theme === "light" ? (
             <Moon className="w-4 h-4 cursor-pointer" onClick={toggleTheme} />
