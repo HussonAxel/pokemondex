@@ -9,7 +9,7 @@
 /* -------------------------------------------------------------------------- */
 
 :root {
-    --background: oklch(0.994 0 0);
+    --background: oklch(0.98 0 0);
     --foreground: oklch(0 0 0);
     --card: oklch(0.994 0 0);
     --card-foreground: oklch(0 0 0);
@@ -28,7 +28,7 @@
     --accent-foreground: oklch(0.2 0 0);
     --destructive: oklch(0.6286 0.1906 24.1227);
     --destructive-foreground: oklch(1 0 0);
-    --border: oklch(0.93 0.0094 286.2156);
+    --border: oklch(0.8 0.0094 286.2156);
     --input: oklch(0.9401 0 0);
     --ring: oklch(0 0 0);
     --chart-1: oklch(0.7463 0.1465 157.1759);
@@ -99,7 +99,7 @@
     --accent-foreground: oklch(0.98 0 0);
     --destructive: oklch(0.7134 0.1639 22.9712);
     --destructive-foreground: oklch(1 0 0);
-    --border: oklch(0.3289 0.0092 268.3843);
+    --border: oklch(0.4 0.0092 268.3843);
     --input: oklch(0.3289 0.0092 268.3843);
     --ring: oklch(0.616 0.2295 292.797);
     --chart-1: oklch(0.8007 0.1803 152.1957);

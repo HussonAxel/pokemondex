@@ -49,8 +49,8 @@ export default function FlexiFilterTable() {
   const queryClient = useQueryClient();
 
   const currentPage = searchParams.page || 1;
-  const searchTypes = searchParams.type;
-  const searchAbilities = searchParams.ability;
+  const searchTypes = searchParams.type ?? [];
+  const searchAbilities = searchParams.ability ?? [];
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
 
@@ -64,40 +64,30 @@ export default function FlexiFilterTable() {
     const queryOptions = orpc.getPokemonOverview.queryOptions({
       input: { id },
     });
-    const queryKey = queryOptions.queryKey;
-    const queryState = queryClient.getQueryState(queryKey);
+    const state = queryClient.getQueryState(queryOptions.queryKey);
 
-    if (
-      !queryState ||
-      !queryState.dataUpdatedAt ||
-      Date.now() - queryState.dataUpdatedAt > 5 * 60 * 1000
-    ) {
+    if (!state || Date.now() - (state.dataUpdatedAt ?? 0) > 300000) {
       queryClient.prefetchQuery({
         ...queryOptions,
-        staleTime: 5 * 60 * 1000,
-        gcTime: 10 * 60 * 1000,
+        staleTime: 300000,
+        gcTime: 600000,
       });
     }
   };
 
-  const prefetchSpecies = (url: string) => {
+  const prefetchSpecies = (url?: string) => {
     if (!url) return;
 
     const queryOptions = orpc.getPokemonSpeciesData.queryOptions({
       input: { url },
     });
-    const queryKey = queryOptions.queryKey;
-    const queryState = queryClient.getQueryState(queryKey);
+    const state = queryClient.getQueryState(queryOptions.queryKey);
 
-    if (
-      !queryState ||
-      !queryState.dataUpdatedAt ||
-      Date.now() - queryState.dataUpdatedAt > 5 * 60 * 1000
-    ) {
+    if (!state || Date.now() - (state.dataUpdatedAt ?? 0) > 300000) {
       queryClient.prefetchQuery({
         ...queryOptions,
-        staleTime: 5 * 60 * 1000,
-        gcTime: 10 * 60 * 1000,
+        staleTime: 300000,
+        gcTime: 600000,
       });
     }
   };
@@ -119,19 +109,17 @@ export default function FlexiFilterTable() {
     );
   }
 
-  if (searchTypes) {
-    const types = Array.isArray(searchTypes) ? searchTypes : [searchTypes];
+  if (searchTypes.length) {
     PokemonsFiltered = PokemonsFiltered.filter((p) =>
-      types.every((t) => p.types.includes(t)),
+      searchTypes.every((t) => p.types.includes(t)),
     );
   }
 
-  if (searchAbilities) {
-    const abilities = Array.isArray(searchAbilities)
-      ? searchAbilities
-      : [searchAbilities];
+  if (searchAbilities.length) {
     PokemonsFiltered = PokemonsFiltered.filter((p) =>
-      abilities.every((a) => p.abilities?.some((ab) => ab.ability.name === a)),
+      searchAbilities.every((a) =>
+        p.abilities?.some((ab) => ab.ability.name === a),
+      ),
     );
   }
 
@@ -157,7 +145,7 @@ export default function FlexiFilterTable() {
     <div className="bg-background h-full flex flex-col gap-2 p-2 pl-4">
       <FiltersTop />
 
-      {/* TABLE WRAPPER */}
+      {/* TABLE */}
       <div className="flex-1 overflow-auto rounded-sm border border-border scroll-smooth overscroll-x-contain">
         <div className="min-w-[900px]">
           <Table className="w-full">
@@ -184,7 +172,7 @@ export default function FlexiFilterTable() {
                     )}
                     onMouseEnter={() => {
                       prefetchPokemon(pokemon.id);
-                      prefetchSpecies(pokemon.species?.url || "");
+                      prefetchSpecies(pokemon.species?.url);
                     }}
                     onClick={() =>
                       navigate({
@@ -228,26 +216,81 @@ export default function FlexiFilterTable() {
 
                     {/* TYPES */}
                     <TableCell className="min-w-[180px]">
-                      <BadgeTypes pokemonTypes={pokemon.types} />
+                      <BadgeTypes
+                        pokemonTypes={pokemon.types}
+                        onClick={(e, type) => {
+                          e.stopPropagation();
+
+                          const has = searchTypes.includes(type);
+                          const next = has
+                            ? searchTypes.filter((t) => t !== type)
+                            : [...searchTypes, type];
+
+                          navigate({
+                            to: ".",
+                            search: {
+                              ...searchParams,
+                              type: next.length ? next : undefined,
+                              page: 1,
+                            },
+                          });
+                        }}
+                      />
                     </TableCell>
 
                     {/* ABILITIES */}
                     <TableCell className="min-w-[260px]">
                       <div className="flex flex-wrap gap-2">
                         <BadgeTypes
+                          className="flex-nowrap"
                           pokemonTypes={
                             pokemon.abilities
                               ?.filter((a) => !a.is_hidden)
                               .map((a) => a.ability.name) || []
                           }
+                          onClick={(e, ability) => {
+                            e.stopPropagation();
+
+                            const has = searchAbilities.includes(ability);
+                            const next = has
+                              ? searchAbilities.filter((a) => a !== ability)
+                              : [...searchAbilities, ability];
+
+                            navigate({
+                              to: ".",
+                              search: {
+                                ...searchParams,
+                                ability: next.length ? next : undefined,
+                                page: 1,
+                              },
+                            });
+                          }}
                         />
+
                         <BadgeTypes
-                          classNameBadge="!border-primary/60 !bg-primary/10"
+                          classNameBadge="!border-primary/60 !bg-primary/10 flex-nowrap"
                           pokemonTypes={
                             pokemon.abilities
                               ?.filter((a) => a.is_hidden)
                               .map((a) => a.ability.name) || []
                           }
+                          onClick={(e, ability) => {
+                            e.stopPropagation();
+
+                            const has = searchAbilities.includes(ability);
+                            const next = has
+                              ? searchAbilities.filter((a) => a !== ability)
+                              : [...searchAbilities, ability];
+
+                            navigate({
+                              to: ".",
+                              search: {
+                                ...searchParams,
+                                ability: next.length ? next : undefined,
+                                page: 1,
+                              },
+                            });
+                          }}
                         />
                       </div>
                     </TableCell>
@@ -337,7 +380,11 @@ export default function FlexiFilterTable() {
                         {page}
                       </PaginationLink>
                     </PaginationItem>
-                  ) : null,
+                  ) : (
+                    <PaginationItem key={page}>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  ),
               )}
 
               <PaginationItem>
@@ -366,13 +413,13 @@ export default function FlexiFilterTable() {
           <Sparkles
             className={cn(
               "w-4 h-4 cursor-pointer",
-              searchParams.shinyView ? "text-yellow-500" : "text-yellow-500/50",
+              isShinyView ? "text-yellow-500" : "text-yellow-500/50",
             )}
             onClick={() =>
               navigate({
                 search: {
                   ...searchParams,
-                  shinyView: !searchParams.shinyView,
+                  shinyView: !isShinyView,
                 },
               })
             }
@@ -381,13 +428,13 @@ export default function FlexiFilterTable() {
           <Pokeball
             className={cn(
               "cursor-pointer",
-              searchParams.catchedView ? "text-red-500" : "opacity-50",
+              isCatchedView ? "text-red-500" : "opacity-50",
             )}
             onClick={() =>
               navigate({
                 search: {
                   ...searchParams,
-                  catchedView: !searchParams.catchedView,
+                  catchedView: !isCatchedView,
                 },
               })
             }

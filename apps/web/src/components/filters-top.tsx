@@ -1,61 +1,91 @@
 import { X } from "lucide-react";
 import { useSearch, useNavigate } from "@tanstack/react-router";
-import { Route } from "@/routes/index";
+import { Route } from "@/routes";
+import { cn } from "@/lib/utils";
+import { getTypeClasses } from "@/data/data";
 
 export const FiltersTop = () => {
   const searchParams = useSearch({ from: Route.id });
+  const navigate = useNavigate({ from: Route.id });
 
-  const types = searchParams.type;
-  const abilities = searchParams.ability;
-
-  console.log(types);
-  console.log(abilities);
-
-  const filters = Array(15).fill({
-    id: "MF-214",
-    name: "Repair Context Graph",
-  });
+  const types = searchParams.type ?? [];
+  const abilities = searchParams.ability ?? [];
 
   return (
-    <div className="w-full rounded-sm mx-auto p-2 gap-3 border border-border flex">
-      {types &&
-        types.map((type, index) => (
+    <div className="w-full rounded-sm mx-auto p-2 gap-3 border border-border flex flex-wrap min-h-[46px]">
+      {/* TYPES */}
+      {types.map((type) => {
+        const colors = getTypeClasses(type);
+
+        return (
           <div
-            key={index}
-            className="
-            group flex items-center gap-2
-            bg-sidebar-accent/40 hover:bg-sidebar-accent/60
-            border border-transparent hover:border-border/50
-            transition-all duration-200
-            rounded-md pl-1.5 pr-1 py-1 text-sm
-            w-fit cursor-pointer
-          "
+            key={type}
+            className={cn(
+              "group flex items-center gap-2 rounded-md px-2 py-1",
+              "border transition-all duration-200 cursor-pointer",
+              colors.bg,
+              colors.border,
+              colors.hover,
+            )}
+            onClick={() =>
+              navigate({
+                search: {
+                  ...searchParams,
+                  type:
+                    types.length > 1
+                      ? types.filter((t) => t !== type)
+                      : undefined,
+                  page: 1,
+                },
+              })
+            }
           >
-            <div className="flex items-center gap-2 overflow-hidden select-none">
-              <p className="font-mono text-[10px] text-foreground/40 px-1 border-[0.5px] rounded-[2px] border-foreground/10">
-                TYPE
-              </p>
+            <p className="font-mono text-[10px] text-foreground/80 px-1 border rounded-[2px] border-foreground/30">
+              TYPE
+            </p>
 
-              <div className="h-3 w-px bg-border/60 shrink-0" />
+            <span className="capitalize text-[12px] font-medium">{type}</span>
 
-              <span className="capitalize text-foreground/80 truncate text-[12px]">
-                {type}
-              </span>
-            </div>
-
-            <button
-              onClick={() => console.log("remove filter")}
-              className="
-              flex-shrink-0 p-0.5 rounded-sm
-              text-muted-foreground opacity-50
-              group-hover:opacity-100 group-hover:bg-background group-hover:text-foreground
-              transition-all
-            "
-            >
+            <button className="p-0.5 rounded-sm opacity-60 group-hover:opacity-100">
               <X size={14} />
             </button>
           </div>
-        ))}
+        );
+      })}
+
+      {/* ABILITIES */}
+      {abilities.map((ability) => (
+        <div
+          key={ability}
+          className={cn(
+            "group flex items-center gap-2 rounded-md px-2 py-1",
+            "border transition-all duration-200",
+            "bg-primary/10 border-primary/60 hover:bg-primary/20 cursor-pointer",
+          )}
+          onClick={() =>
+            navigate({
+              search: {
+                ...searchParams,
+                ability:
+                  abilities.length > 1
+                    ? abilities.filter((a) => a !== ability)
+                    : undefined,
+                page: 1,
+              },
+            })
+          }
+        >
+          <p className="font-mono text-[10px] text-foreground/50 px-1 border rounded-[2px] border-foreground/10">
+            ABILITY
+          </p>
+
+          <span className="capitalize text-[12px] font-mono">{ability}</span>
+
+          <button className="p-0.5 rounded-sm opacity-60 group-hover:opacity-100">
+            <X size={14} />
+          </button>
+        </div>
+      ))}
     </div>
   );
 };
