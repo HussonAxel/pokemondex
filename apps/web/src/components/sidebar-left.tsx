@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useNavigate, useRouterState } from "@tanstack/react-router";
 
 import {
   SidebarProvider,
@@ -58,6 +59,7 @@ import {
   Filter,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { pokemonCollectionFilters } from "@/data/data";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const DATA = {
@@ -230,7 +232,17 @@ const DATA = {
 
 const SidebarLeftContent = () => {
   const isMobile = useIsMobile();
+  const navigate = useNavigate();
+  const searchString = useRouterState({
+    select: (state) => state.location.searchStr,
+  });
   const [activeTeam, setActiveTeam] = React.useState(DATA.teams[0]);
+  const activeCollection = React.useMemo(() => {
+    const collection = new URLSearchParams(searchString).get("collection");
+    return pokemonCollectionFilters.some((filter) => filter.key === collection)
+      ? collection
+      : undefined;
+  }, [searchString]);
 
   if (!activeTeam) return null;
 
@@ -309,7 +321,7 @@ const SidebarLeftContent = () => {
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={item.isActive}
+                defaultOpen={item.isActive || (!!activeCollection && item.title === "Filters")}
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -322,15 +334,52 @@ const SidebarLeftContent = () => {
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
-                              <span>{subItem.title}</span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
+                      {item.title === "Filters"
+                        ? pokemonCollectionFilters.map((subItem) => {
+                            const isActive = activeCollection === subItem.key;
+
+                            return (
+                              <SidebarMenuSubItem key={subItem.key}>
+                                <SidebarMenuSubButton asChild isActive={isActive}>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const nextSearchParams =
+                                        new URLSearchParams(searchString);
+
+                                      if (isActive) {
+                                        nextSearchParams.delete("collection");
+                                      } else {
+                                        nextSearchParams.set(
+                                          "collection",
+                                          subItem.key,
+                                        );
+                                      }
+
+                                      nextSearchParams.set("page", "1");
+
+                                      navigate({
+                                        href: nextSearchParams.size
+                                          ? `/?${nextSearchParams.toString()}`
+                                          : "/",
+                                      });
+                                    }}
+                                  >
+                                    <span>{subItem.title}</span>
+                                  </button>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            );
+                          })
+                        : item.items?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton asChild>
+                                <a href={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>

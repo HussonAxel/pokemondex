@@ -1,4 +1,5 @@
 import { ListTemplateView } from "@/components/ListTemplateView.tsx";
+import { pokemonCollectionFilterKeys } from "@/data/data";
 import { orpc } from "@/utils/orpc";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
@@ -12,8 +13,9 @@ export const Route = createFileRoute("/")({
     shinyView: z.boolean().optional(),
     catchedView: z.boolean().optional(),
     page: z.number().optional(),
-    type: z.array(z.string().optional()).max(2).optional(),
-    ability: z.array(z.string().optional()).max(3).optional(),
+    type: z.array(z.string()).max(2).optional(),
+    ability: z.array(z.string()).max(3).optional(),
+    collection: z.enum(pokemonCollectionFilterKeys).optional(),
   }),
   loader: async ({ context }) => {
     const Pokemons = await context.queryClient.ensureQueryData(

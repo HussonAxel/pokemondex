@@ -9,6 +9,24 @@ import {
   boolean,
 } from "drizzle-orm/pg-core";
 
+export type SpriteValue = string | null | undefined | SpriteMap;
+export type SpriteMap = {
+  [key: string]: SpriteValue;
+};
+
+export type PokemonSprites = SpriteMap & {
+  back_default?: string | null;
+  back_female?: string | null;
+  back_shiny?: string | null;
+  back_shiny_female?: string | null;
+  front_default?: string | null;
+  front_female?: string | null;
+  front_shiny?: string | null;
+  front_shiny_female?: string | null;
+  other?: SpriteMap;
+  versions?: SpriteMap;
+};
+
 // Table principale pour les Pokémon
 export const pokemon = pgTable(
   "pokemon",
@@ -97,27 +115,7 @@ export const pokemon = pgTable(
     locationAreaEncounters: text("location_area_encounters"),
 
     // Sprites complets (toutes les variantes)
-    sprites: jsonb("sprites").$type<{
-      back_default?: string | null;
-      back_female?: string | null;
-      back_shiny?: string | null;
-      back_shiny_female?: string | null;
-      front_default?: string | null;
-      front_female?: string | null;
-      front_shiny?: string | null;
-      front_shiny_female?: string | null;
-      other?: {
-        "official-artwork"?: { front_default?: string | null };
-        dream_world?: { front_default?: string | null };
-        home?: {
-          front_default?: string | null;
-          front_female?: string | null;
-          front_shiny?: string | null;
-          front_shiny_female?: string | null;
-        };
-      };
-      versions?: Record<string, any>;
-    }>(),
+    sprites: jsonb("sprites").$type<PokemonSprites>(),
 
     // Cries
     cries: jsonb("cries").$type<{
