@@ -1,8 +1,9 @@
 import type { RouterClient } from "@orpc/server";
-import { eq } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 
 import { db, pokemon } from "@my-better-t-app/db";
 import z from "zod";
+import { fetchPokeApiJson } from "../pokeapi";
 import { protectedProcedure, publicProcedure } from "../index";
 
 const DEFAULT_POKEAPI_URL = "https://pokeapi.co/api/v2";
@@ -90,18 +91,22 @@ async function getSpeciesVarieties(speciesUrl?: string | null) {
     return [] as PokemonVariety[];
   }
 
-  const response = await fetch(speciesUrl);
-  if (!response.ok) {
-    throw new Error(
-      `Failed to fetch Pokémon species data: ${response.statusText}`,
-    );
-  }
-
-  const data = (await response.json()) as {
+  const data = await fetchPokeApiJson<{
     varieties?: PokemonVariety[];
-  };
+  }>(speciesUrl);
 
   return data.varieties ?? [];
+}
+
+function normalizeSearchTerms(search?: string) {
+  if (!search) {
+    return [];
+  }
+
+  return search
+    .split(",")
+    .map((term) => term.trim().toLowerCase())
+    .filter(Boolean);
 }
 
 export const appRouter = {
@@ -154,6 +159,135 @@ export const appRouter = {
 
     return { results };
   }),
+  getPokemonsCatalog: publicProcedure
+    .input(
+      z.object({
+        page: z.number().int().positive().default(1),
+        pageSize: z.number().int().positive().max(100).default(30),
+        search: z.string().optional(),
+        type: z.array(z.string()).max(2).optional(),
+        ability: z.array(z.string()).max(3).optional(),
+        collection: z.string().optional(),
+        pokemonIds: z.array(z.number().int().positive()).optional(),
+        shinyView: z.boolean().optional(),
+        catchedView: z.boolean().optional(),
+      }),
+    )
+    .handler(async ({ input }) => {
+      const searchTerms = normalizeSearchTerms(input.search);
+      const offset = (input.page - 1) * input.pageSize;
+      const whereClauses = [];
+
+      if (input.pokemonIds?.length) {
+        whereClauses.push(inArray(pokemon.id, input.pokemonIds));
+      }
+
+      for (const term of searchTerms) {
+        const pattern = `%${term}%`;
+        whereClauses.push(sql`
+          (
+            CAST(${pokemon.id} AS text) ILIKE ${pattern}
+            OR ${pokemon.name} ILIKE ${pattern}
+            OR EXISTS (
+              SELECT 1
+              FROM jsonb_array_elements_text(COALESCE(${pokemon.types}, '[]'::jsonb)) AS type_elem
+              WHERE type_elem ILIKE ${pattern}
+            )
+            OR EXISTS (
+              SELECT 1
+              FROM jsonb_array_elements(COALESCE(${pokemon.abilities}, '[]'::jsonb)) AS ability_elem
+              WHERE ability_elem->'ability'->>'name' ILIKE ${pattern}
+            )
+          )
+        `);
+      }
+
+      if (input.type?.length) {
+        whereClauses.push(
+          sql`COALESCE(${pokemon.types}, '[]'::jsonb) @> ${JSON.stringify(input.type)}::jsonb`,
+        );
+      }
+
+      for (const ability of input.ability ?? []) {
+        whereClauses.push(sql`
+          EXISTS (
+            SELECT 1
+            FROM jsonb_array_elements(COALESCE(${pokemon.abilities}, '[]'::jsonb)) AS ability_elem
+            WHERE ability_elem->'ability'->>'name' = ${ability}
+          )
+        `);
+      }
+
+      const whereSql = whereClauses.length
+        ? sql`WHERE ${sql.join(whereClauses, sql` AND `)}`
+        : sql``;
+
+      const countResult = await db.execute<{ count: number }>(sql`
+        SELECT COUNT(*)::int AS count
+        FROM ${pokemon}
+        ${whereSql}
+      `);
+
+      const catalogRows = await db.execute<{
+        id: number;
+        name: string;
+        types: string[] | null;
+        visibleAbilityNames: string[] | null;
+        hiddenAbilityNames: string[] | null;
+        bst: number;
+        generation: number | null;
+        speciesUrl: string | null;
+      }>(sql`
+        SELECT
+          ${pokemon.id} AS id,
+          ${pokemon.name} AS name,
+          COALESCE(${pokemon.types}, '[]'::jsonb) AS types,
+          ARRAY(
+            SELECT ability_elem->'ability'->>'name'
+            FROM jsonb_array_elements(COALESCE(${pokemon.abilities}, '[]'::jsonb)) AS ability_elem
+            WHERE COALESCE((ability_elem->>'is_hidden')::boolean, false) = false
+          ) AS "visibleAbilityNames",
+          ARRAY(
+            SELECT ability_elem->'ability'->>'name'
+            FROM jsonb_array_elements(COALESCE(${pokemon.abilities}, '[]'::jsonb)) AS ability_elem
+            WHERE COALESCE((ability_elem->>'is_hidden')::boolean, false) = true
+          ) AS "hiddenAbilityNames",
+          (
+            COALESCE((${pokemon.stats}->>'hp')::int, 0)
+            + COALESCE((${pokemon.stats}->>'attack')::int, 0)
+            + COALESCE((${pokemon.stats}->>'defense')::int, 0)
+            + COALESCE((${pokemon.stats}->>'specialAttack')::int, 0)
+            + COALESCE((${pokemon.stats}->>'specialDefense')::int, 0)
+            + COALESCE((${pokemon.stats}->>'speed')::int, 0)
+          )::int AS bst,
+          ${pokemon.generation} AS generation,
+          ${pokemon.species}->>'url' AS "speciesUrl"
+        FROM ${pokemon}
+        ${whereSql}
+        ORDER BY ${pokemon.id}
+        LIMIT ${input.pageSize}
+        OFFSET ${offset}
+      `);
+
+      const total = countResult.rows[0]?.count ?? 0;
+      const items = catalogRows.rows.map((entry) => ({
+        id: entry.id,
+        name: entry.name,
+        types: entry.types ?? [],
+        visibleAbilityNames: entry.visibleAbilityNames ?? [],
+        hiddenAbilityNames: entry.hiddenAbilityNames ?? [],
+        bst: entry.bst,
+        generation: entry.generation,
+        speciesUrl: entry.speciesUrl,
+      }));
+
+      return {
+        items,
+        total,
+        page: input.page,
+        pageSize: input.pageSize,
+      };
+    }),
   getPokemonOverview: publicProcedure
     .input(
       z.object({
@@ -202,7 +336,6 @@ export const appRouter = {
 
       const p = pokemonData[0]!;
       const varieties = await getSpeciesVarieties(p.species?.url);
-      console.log(varieties)
 
       return {
         id: p.id,
@@ -243,11 +376,7 @@ export const appRouter = {
     .handler( async ({
       input
     }) => {
-      const response = await fetch(input.url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch Pokémon species data: ${response.statusText}`);
-      }
-      const data = await response.json();
+      const data = await fetchPokeApiJson(input.url);
       return data;
     }),
   getPokemonAbilityData: publicProcedure
@@ -257,14 +386,7 @@ export const appRouter = {
       }),
     )
     .handler(async ({ input }) => {
-      const response = await fetch(input.url);
-      if (!response.ok) {
-        throw new Error(
-          `Failed to fetch Pokemon ability data: ${response.statusText}`,
-        );
-      }
-
-      const data = (await response.json()) as PokeApiAbilityPayload;
+      const data = await fetchPokeApiJson<PokeApiAbilityPayload>(input.url);
       const shortEffect = getLocalizedAbilityText(
         data.effect_entries,
         "short_effect",
@@ -290,11 +412,7 @@ export const appRouter = {
       })
     )
     .handler( async ({ input }) => {
-      const response = await fetch(input.url);
-      if (!response.ok) {
-        throw new Error(`Failed to fetch Pokémon growth rate data: ${response.statusText}`);
-      }
-      const data = await response.json();
+      const data = await fetchPokeApiJson(input.url);
       return data;
     })
 };

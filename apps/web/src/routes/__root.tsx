@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
+import { lazy, Suspense } from "react";
 
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import {
   HeadContent,
   Outlet,
@@ -8,16 +8,41 @@ import {
   createRootRouteWithContext,
   useRouterState,
 } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 import type { orpc } from "@/utils/orpc";
 
+import Loader from "@/components/demo/loader";
 import { Toaster } from "@/components/ui/sonner";
 
 import { SidebarLeft } from "@/components/sidebar-left";
-import SidebarMobile from "@/components/sidebarRight/SidebarMobile";
-import { SidebarRight } from "@/components/sidebarRight/SidebarRight";
 import appCss from "../index.css?url";
+
+const SidebarRight = lazy(() =>
+  import("@/components/sidebarRight/SidebarRight").then((module) => ({
+    default: module.SidebarRight,
+  })),
+);
+const SidebarMobile = lazy(() => import("@/components/sidebarRight/SidebarMobile"));
+const RouterDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import("@tanstack/react-router-devtools").then((module) => ({
+        default: () => <module.TanStackRouterDevtools position="bottom-left" />,
+      })),
+    )
+  : null;
+const QueryDevtools = import.meta.env.DEV
+  ? lazy(() =>
+      import("@tanstack/react-query-devtools").then((module) => ({
+        default: () => (
+          <module.ReactQueryDevtools
+            position="bottom"
+            buttonPosition="bottom-right"
+          />
+        ),
+      })),
+    )
+  : null;
+
 export interface RouterAppContext {
   orpc: typeof orpc;
   queryClient: QueryClient;
@@ -72,7 +97,7 @@ function RootDocument() {
       new URLSearchParams(state.location.searchStr).get("activePokemon"),
   });
   return (
-    <html lang="fr" className="dark">
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
@@ -83,15 +108,23 @@ function RootDocument() {
             <Outlet />
           </div>
           {activePokemon && (
-            <>
+            <Suspense fallback={<Loader />}>
               <SidebarRight />
               <SidebarMobile />
-            </>
+            </Suspense>
           )}
         </div>
         <Toaster richColors />
-        <TanStackRouterDevtools position="bottom-left" />
-        <ReactQueryDevtools position="bottom" buttonPosition="bottom-right" />
+        {RouterDevtools ? (
+          <Suspense fallback={null}>
+            <RouterDevtools />
+          </Suspense>
+        ) : null}
+        {QueryDevtools ? (
+          <Suspense fallback={null}>
+            <QueryDevtools />
+          </Suspense>
+        ) : null}
         <Scripts />
       </body>
     </html>

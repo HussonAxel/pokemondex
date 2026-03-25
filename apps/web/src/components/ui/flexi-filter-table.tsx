@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 import { FiltersTop } from "@/components/filters-top";
 import BadgeTypes from "@/components/ui/badge-type";
 import { Button } from "@/components/ui/button";
@@ -30,26 +32,30 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { pokemonCollectionFilterMap } from "@/data/data";
-import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
-import { Route } from "@/routes";
+import {
+  HOME_CATALOG_PAGE_SIZE,
+  Route,
+  getHomeCatalogInput,
+  getHomeLoaderDeps,
+} from "@/routes";
 import { orpc } from "@/utils/orpc";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTheme } from "next-themes";
 import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
 import { Moon, MoreVertical, Sparkles, Sun } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pokeball from "./svg/pokeball";
 
-const ITEMS_PER_PAGE = 30;
-
 export default function FlexiFilterTable() {
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
-  const { Pokemons } = useLoaderData({ from: Route.id });
+  const { catalog } = useLoaderData({ from: Route.id });
   const queryClient = useQueryClient();
+  const preloadedImageUrlsRef = useRef(new Set<string>());
 
-  const currentPage = searchParams.page || 1;
+  const currentPage = catalog.page;
   const activePokemon = searchParams.activePokemon;
   const searchTypes = searchParams.type ?? [];
   const searchAbilities = searchParams.ability ?? [];
@@ -58,7 +64,6 @@ export default function FlexiFilterTable() {
   const activeCollection = searchParams.collection
     ? pokemonCollectionFilterMap[searchParams.collection]
     : undefined;
-  const collectionPokemonIds = activeCollection?.pokemonIds ?? [];
 
   const fallBackImage =
     "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755";
@@ -98,47 +103,34 @@ export default function FlexiFilterTable() {
     }
   };
 
-  let PokemonsFiltered = activeCollection
-    ? Pokemons.results.filter((pokemon) =>
-        collectionPokemonIds.includes(pokemon.id),
-      )
-    : Pokemons.results;
+  const totalPages = Math.max(1, Math.ceil(catalog.total / HOME_CATALOG_PAGE_SIZE));
+  const PokemonsPaginated = catalog.items;
 
-  if (searchParams.search) {
-    const terms = searchParams.search
-      .split(",")
-      .map((t) => t.trim().toLowerCase())
-      .filter(Boolean);
+  const preloadSprite = (src: string) => {
+    if (typeof window === "undefined") {
+      return;
+    }
 
-    PokemonsFiltered = PokemonsFiltered.filter((p) =>
-      terms.every((term) =>
-        `${p.id} ${p.name} ${p.types.join(" ")} ${p.abilities
-          ?.map((a) => a.ability.name)
-          .join(" ")}`.includes(term),
-      ),
-    );
-  }
+    if (preloadedImageUrlsRef.current.has(src)) {
+      return;
+    }
 
-  if (searchTypes.length) {
-    PokemonsFiltered = PokemonsFiltered.filter((p) =>
-      searchTypes.every((t) => p.types.includes(t)),
-    );
-  }
+    preloadedImageUrlsRef.current.add(src);
 
-  if (searchAbilities.length) {
-    PokemonsFiltered = PokemonsFiltered.filter((p) =>
-      searchAbilities.every((a) =>
-        p.abilities?.some((ab) => ab.ability.name === a),
-      ),
-    );
-  }
-  
-  const totalPages = Math.ceil(PokemonsFiltered.length / ITEMS_PER_PAGE);
-  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-  const PokemonsPaginated = PokemonsFiltered.slice(
-    startIndex,
-    startIndex + ITEMS_PER_PAGE,
-  );
+    const image = new window.Image();
+    image.src = src;
+  };
+
+  const preloadSpritesForItems = (
+    items: Array<{
+      id: number;
+    }>,
+  ) => {
+    for (const item of items) {
+      preloadSprite(`/sprites/base/${item.id}.webp`);
+      preloadSprite(`/sprites/shiny/${item.id}.webp`);
+    }
+  };
 
   function handlePageChange(page: number) {
     if (page < 1 || page > totalPages) return;
@@ -150,6 +142,33 @@ export default function FlexiFilterTable() {
       },
     });
   }
+
+  useEffect(() => {
+    preloadSpritesForItems(PokemonsPaginated);
+
+    const adjacentPages = [currentPage - 1, currentPage + 1].filter(
+      (page) => page >= 1 && page <= totalPages,
+    );
+
+    for (const page of adjacentPages) {
+      const deps = getHomeLoaderDeps({
+        search: {
+          ...searchParams,
+          page,
+        },
+      });
+
+      void queryClient
+        .ensureQueryData(
+          orpc.getPokemonsCatalog.queryOptions({
+            input: getHomeCatalogInput(deps),
+          }),
+        )
+        .then((nextCatalog) => {
+          preloadSpritesForItems(nextCatalog.items);
+        });
+    }
+  }, [PokemonsPaginated, currentPage, queryClient, searchParams, totalPages]);
 
   return (
     <div className="bg-background h-full flex flex-col gap-2 p-2 pl-4">
@@ -185,7 +204,7 @@ export default function FlexiFilterTable() {
                     )}
                     onMouseEnter={() => {
                       prefetchPokemon(pokemon.id);
-                      prefetchSpecies(pokemon.species?.url);
+                      prefetchSpecies(pokemon.speciesUrl ?? undefined);
                     }}
                     onClick={() =>
                       navigate({
@@ -264,11 +283,7 @@ export default function FlexiFilterTable() {
                       <div className="flex flex-wrap gap-2">
                         <BadgeTypes
                           className="flex-nowrap"
-                          pokemonTypes={
-                            pokemon.abilities
-                              ?.filter((a) => !a.is_hidden)
-                              .map((a) => a.ability.name) || []
-                          }
+                          pokemonTypes={pokemon.visibleAbilityNames}
                           onClick={(e, ability) => {
                             e.stopPropagation();
 
@@ -290,11 +305,7 @@ export default function FlexiFilterTable() {
 
                         <BadgeTypes
                           classNameBadge="!border-primary/60 !bg-primary/10 flex-nowrap"
-                          pokemonTypes={
-                            pokemon.abilities
-                              ?.filter((a) => a.is_hidden)
-                              .map((a) => a.ability.name) || []
-                          }
+                          pokemonTypes={pokemon.hiddenAbilityNames}
                           onClick={(e, ability) => {
                             e.stopPropagation();
 
@@ -319,10 +330,7 @@ export default function FlexiFilterTable() {
                     {/* STATS */}
                     <TableCell className="min-w-[160px]">
                       {(() => {
-                        const bst = Object.values(pokemon.stats || {}).reduce(
-                          (sum, stat) => sum + (stat as number),
-                          0,
-                        );
+                        const bst = pokemon.bst;
 
                         return (
                           <div className="flex min-w-[180px] items-center gap-3">

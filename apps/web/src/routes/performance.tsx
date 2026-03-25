@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { orpc, queryClient } from "@/utils/orpc";
+import { orpc } from "@/utils/orpc";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import BadgeTypes from "@/components/ui/badge-type";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PokemonData {
   id: number;
@@ -36,6 +37,7 @@ export const Route = createFileRoute("/performance")({
 });
 
 function PerformanceTestPage() {
+  const queryClient = useQueryClient();
   const [pokemons, setPokemons] = useState<PokemonData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [duration, setDuration] = useState<number | null>(null);

@@ -10,18 +10,24 @@ import { QueryCache, QueryClient } from "@tanstack/react-query";
 import { createIsomorphicFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 
-export const queryClient = new QueryClient({
-  queryCache: new QueryCache({
-    onError: (error, query) => {
-      toast.error(`Error: ${error.message}`, {
-        action: {
-          label: "retry",
-          onClick: () => query.invalidate(),
-        },
-      });
-    },
-  }),
-});
+export function createQueryClient() {
+  return new QueryClient({
+    queryCache: new QueryCache({
+      onError: (error, query) => {
+        if (typeof window === "undefined") {
+          return;
+        }
+
+        toast.error(`Error: ${error.message}`, {
+          action: {
+            label: "retry",
+            onClick: () => query.invalidate(),
+          },
+        });
+      },
+    }),
+  });
+}
 
 const getORPCClient = createIsomorphicFn()
   .server(() =>

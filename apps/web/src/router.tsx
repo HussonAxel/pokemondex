@@ -1,12 +1,15 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { ThemeProvider } from "next-themes";
 
 import "./index.css";
 import Loader from "./components/demo/loader";
 import { routeTree } from "./routeTree.gen";
-import { orpc, queryClient } from "./utils/orpc";
+import { createQueryClient, orpc } from "./utils/orpc";
 
 export const getRouter = () => {
+  const queryClient = createQueryClient();
+
   const router = createTanStackRouter({
     routeTree,
     scrollRestoration: true,
@@ -15,7 +18,16 @@ export const getRouter = () => {
     defaultPendingComponent: () => <Loader />,
     defaultNotFoundComponent: () => <div>Not Found</div>,
     Wrap: ({ children }) => (
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </QueryClientProvider>
     ),
   });
   return router;
