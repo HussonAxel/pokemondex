@@ -1,7 +1,6 @@
-import { startTransition, useDeferredValue, useEffect, useState } from "react";
+import { startTransition, useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
@@ -37,18 +36,6 @@ type SelectProps = {
 type SpritesComponentProps = {
   onSelectSprite: (src: string, alt: string) => void;
   selectedSpriteSrc: string | null;
-};
-
-const GENERATION_ORDER: Record<string, number> = {
-  "GEN-I": 1,
-  "GEN-II": 2,
-  "GEN-III": 3,
-  "GEN-IV": 4,
-  "GEN-V": 5,
-  "GEN-VI": 6,
-  "GEN-VII": 7,
-  "GEN-VIII": 8,
-  "GEN-IX": 9,
 };
 
 function FilterSelect({ label, onChange, options, value }: SelectProps) {
@@ -97,14 +84,6 @@ function getMediaType(src: string) {
   }
 
   return "png";
-}
-
-function getGenerationRank(generationKey: string | null) {
-  if (!generationKey) {
-    return 0;
-  }
-
-  return GENERATION_ORDER[generationKey] ?? 999;
 }
 
 function createSpriteAsset(path: string[], src: string): SpriteAsset {
@@ -187,42 +166,6 @@ function collectSpriteAssets(
 
   return assets;
 }
-
-function sortAssets(assets: SpriteAsset[], sortBy: string) {
-  const nextAssets = [...assets];
-
-  nextAssets.sort((left, right) => {
-    const leftGeneration = getGenerationRank(left.generationKey);
-    const rightGeneration = getGenerationRank(right.generationKey);
-    const byGame =
-      (left.setLabel ?? "").localeCompare(right.setLabel ?? "") ||
-      left.shortLabel.localeCompare(right.shortLabel);
-    const byVariant = left.shortLabel.localeCompare(right.shortLabel);
-    const bySource =
-      left.sourceLabel.localeCompare(right.sourceLabel) ||
-      leftGeneration - rightGeneration ||
-      byGame;
-
-    switch (sortBy) {
-      case "generation-desc":
-        return rightGeneration - leftGeneration || byGame;
-      case "generation-asc":
-        return leftGeneration - rightGeneration || byGame;
-      case "variant":
-        return byVariant;
-      case "media":
-        return left.mediaType.localeCompare(right.mediaType) || byGame;
-      case "source":
-        return bySource;
-      case "game":
-      default:
-        return byGame || leftGeneration - rightGeneration;
-    }
-  });
-
-  return nextAssets;
-}
-
 function getSpriteContext(asset: SpriteAsset) {
   return uniqueValues(
     [
@@ -300,14 +243,10 @@ export default function SpritesComponent({
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
 
-  const [search, setSearch] = useState("");
   const [sourceFilter, setSourceFilter] = useState("all");
-  const [generationFilter, setGenerationFilter] = useState("all");
   const [setFilter, setSetFilter] = useState("all");
   const [variantFilter, setVariantFilter] = useState("all");
   const [mediaFilter, setMediaFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("game");
-  const deferredSearch = useDeferredValue(search);
 
   const pokemon = useQuery({
     ...orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } }),
@@ -320,21 +259,14 @@ export default function SpritesComponent({
   }
 
   const spriteTree = pokemon.sprites as Record<string, unknown> | null | undefined;
-  const allAssets = sortAssets(collectSpriteAssets(spriteTree), sortBy);
-  const availableGenerations = uniqueValues(
-    allAssets
-      .map((asset) => asset.generationKey)
-      .filter((value): value is string => Boolean(value)),
-  ).sort((left, right) => getGenerationRank(left) - getGenerationRank(right));
+  const allAssets = collectSpriteAssets(spriteTree);
+
 
   const setCandidates = allAssets.filter((asset) => {
     if (sourceFilter !== "all" && asset.source !== sourceFilter) {
       return false;
     }
 
-    if (generationFilter !== "all" && asset.generationKey !== generationFilter) {
-      return false;
-    }
 
     return true;
   });
@@ -370,15 +302,11 @@ export default function SpritesComponent({
     }
   }, [availableSets, setFilter]);
 
-  const normalizedSearch = deferredSearch.trim().toLowerCase();
   const filteredAssets = allAssets.filter((asset) => {
     if (sourceFilter !== "all" && asset.source !== sourceFilter) {
       return false;
     }
 
-    if (generationFilter !== "all" && asset.generationKey !== generationFilter) {
-      return false;
-    }
 
     if (setFilter !== "all" && asset.setKey !== setFilter) {
       return false;
@@ -392,9 +320,6 @@ export default function SpritesComponent({
       return false;
     }
 
-    if (!normalizedSearch) {
-      return true;
-    }
 
     return [
       asset.label,
@@ -406,7 +331,6 @@ export default function SpritesComponent({
     ]
       .join(" ")
       .toLowerCase()
-      .includes(normalizedSearch);
   });
 
   const shinyCount = allAssets.filter((asset) => asset.tags.includes("shiny")).length;
@@ -447,20 +371,6 @@ export default function SpritesComponent({
 
       <div className="rounded-md border border-border bg-card/30 p-3">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-          <label className="flex flex-col gap-1.5 md:col-span-2 xl:col-span-3">
-            <span className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70">
-              Search
-            </span>
-            <Input
-              onChange={(event) =>
-                startTransition(() => setSearch(event.target.value))
-              }
-              placeholder="Search by game, generation, variant or sprite path"
-              type="search"
-              value={search}
-            />
-          </label>
-
           <FilterSelect
             label="Source"
             onChange={(value) => startTransition(() => setSourceFilter(value))}
@@ -472,33 +382,6 @@ export default function SpritesComponent({
             ]}
             value={sourceFilter}
           />
-
-          <FilterSelect
-            label="GEN"
-            onChange={(value) => startTransition(() => setGenerationFilter(value))}
-            options={[
-              { label: "ALL GEN", value: "all" },
-              ...availableGenerations.map((generation) => ({
-                label: formatPokemonText(generation),
-                value: generation,
-              })),
-            ]}
-            value={generationFilter}
-          />
-
-          <FilterSelect
-            label="Game / Set"
-            onChange={(value) => startTransition(() => setSetFilter(value))}
-            options={[
-              { label: "All games and sets", value: "all" },
-              ...availableSets.map((set) => ({
-                label: formatPokemonText(set),
-                value: set,
-              })),
-            ]}
-            value={setFilter}
-          />
-
           <FilterSelect
             label="Variant"
             onChange={(value) => startTransition(() => setVariantFilter(value))}
@@ -524,20 +407,6 @@ export default function SpritesComponent({
             ]}
             value={mediaFilter}
           />
-
-          <FilterSelect
-            label="Sort"
-            onChange={(value) => startTransition(() => setSortBy(value))}
-            options={[
-              { label: "Game / Set", value: "game" },
-              { label: "Source", value: "source" },
-              { label: "Generation oldest", value: "generation-asc" },
-              { label: "Generation newest", value: "generation-desc" },
-              { label: "Variant", value: "variant" },
-              { label: "Media type", value: "media" },
-            ]}
-            value={sortBy}
-          />
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-2">
@@ -547,11 +416,6 @@ export default function SpritesComponent({
           {setFilter !== "all" ? (
             <Badge variant="secondary" className="px-2 py-1 text-[10px]">
               Set: {formatPokemonText(setFilter)}
-            </Badge>
-          ) : null}
-          {generationFilter !== "all" ? (
-            <Badge variant="secondary" className="px-2 py-1 text-[10px]">
-              {formatPokemonText(generationFilter)}
             </Badge>
           ) : null}
           {variantFilter !== "all" ? (

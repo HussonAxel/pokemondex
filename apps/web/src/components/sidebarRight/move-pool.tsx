@@ -309,32 +309,6 @@ export default function MovePoolComponent() {
             value={versionFilter}
           />
 
-          <FilterSelect
-            label="Acquisition"
-            onChange={(value) =>
-              startTransition(() => setAcquisitionFilter(value))
-            }
-            options={[
-              { label: "All moves", value: "all" },
-              { label: "Level-up only", value: "level-up" },
-              { label: "Non level-up", value: "non-level-up" },
-            ]}
-            value={acquisitionFilter}
-          />
-
-          <FilterSelect
-            label="Sort"
-            onChange={(value) => startTransition(() => setSortBy(value))}
-            options={[
-              { label: "Level ascending", value: "level-asc" },
-              { label: "Level descending", value: "level-desc" },
-              { label: "Name A-Z", value: "name-asc" },
-              { label: "Name Z-A", value: "name-desc" },
-              { label: "Fewest methods", value: "methods-asc" },
-              { label: "Most methods", value: "methods-desc" },
-            ]}
-            value={sortBy}
-          />
         </div>
 
         {activeFilters.length > 0 ? (

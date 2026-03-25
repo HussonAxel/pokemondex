@@ -32,20 +32,20 @@ import { pokemonCollectionFilters } from "@/data/data";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   AudioWaveform,
-  Bot,
+  BookOpen,
   ChevronRight,
   ChevronsUpDown,
   Command,
+  Compass,
   Filter,
   Folder,
   Forward,
-  Frame,
   GalleryVerticalEnd,
-  Map,
   MoreHorizontal,
-  PieChart,
+  Search,
+  Shield,
+  Sparkles,
   Plus,
-  SquareTerminal,
   Trash2,
 } from "lucide-react";
 import { Route } from "@/routes";
@@ -60,38 +60,38 @@ const DATA = {
   },
   teams: [
     {
-      name: "Acme Inc",
+      name: "National Dex",
       logo: GalleryVerticalEnd,
-      plan: "Enterprise",
+      plan: "Pokemon Explorer",
     },
     {
-      name: "Acme Corp.",
+      name: "Shiny Tracker",
       logo: AudioWaveform,
-      plan: "Startup",
+      plan: "Collection View",
     },
     {
-      name: "Evil Corp.",
+      name: "Battle Notes",
       logo: Command,
-      plan: "Free",
+      plan: "Training View",
     },
   ],
   navMain: [
     {
-      title: "Favorites",
+      title: "Browse",
       url: "#",
-      icon: SquareTerminal,
+      icon: Search,
       isActive: false,
       items: [
         {
-          title: "All Pokémons",
+          title: "National Dex",
           url: "#",
         },
         {
-          title: "Recent Pokémons",
+          title: "Latest Forms",
           url: "#",
         },
         {
-          title: "Active Pokémons",
+          title: "Pinned Pokemon",
           url: "#",
         },
       ],
@@ -175,26 +175,26 @@ const DATA = {
     {
       title: "Collections",
       url: "#",
-      icon: Bot,
+      icon: BookOpen,
       items: [
         {
-          title: "Competitive Pokémons",
+          title: "Competitive Core",
           url: "#",
         },
         {
-          title: "Shinies Pokémons",
+          title: "Shiny Watchlist",
           url: "#",
         },
         {
-          title: "Legendaries Pokémons",
+          title: "Legendary Vault",
           url: "#",
         },
         {
-          title: "Mythicals Pokémons",
+          title: "Mythical Archive",
           url: "#",
         },
         {
-          title: "Breeding Pokémons",
+          title: "Breeding Targets",
           url: "#",
         },
       ],
@@ -202,21 +202,29 @@ const DATA = {
   ],
   projects: [
     {
-      name: "Design Engineering",
+      name: "Type Matchups",
       url: "#",
-      icon: Frame,
+      icon: Shield,
     },
     {
-      name: "Sales & Marketing",
+      name: "Route Planner",
       url: "#",
-      icon: PieChart,
+      icon: Compass,
     },
     {
-      name: "Travel",
+      name: "Shiny Hunt",
       url: "#",
-      icon: Map,
+      icon: Sparkles,
     },
   ],
+};
+
+type NavSection = {
+  title: string;
+  url: string;
+  icon: React.ComponentType<{ className?: string }>;
+  isActive?: boolean;
+  items?: Array<{ title: string; url: string }>;
 };
 
 const SidebarLeftContent = () => {
@@ -225,6 +233,35 @@ const SidebarLeftContent = () => {
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
   const activeCollection = searchParams.collection;
+  const activePokemon = searchParams.activePokemon;
+
+  const navMain = React.useMemo(() => {
+    return DATA.navMain.map((section) => {
+      if (section.title !== "Browse") {
+        return section;
+      }
+
+      return {
+        ...section,
+        items: [
+          {
+            title: "National Dex",
+            url: "#",
+          },
+          {
+            title: activePokemon
+              ? `Pinned #${activePokemon.toString().padStart(3, "0")}`
+              : "Pinned Pokemon",
+            url: "#",
+          },
+          {
+            title: "Latest Forms",
+            url: "#",
+          },
+        ],
+      };
+    }) as NavSection[];
+  }, [activePokemon]);
 
   if (!activeTeam) return null;
 
@@ -263,7 +300,7 @@ const SidebarLeftContent = () => {
                 sideOffset={4}
               >
                 <DropdownMenuLabel className="text-xs text-muted-foreground">
-                  Teams
+                  Modes
                 </DropdownMenuLabel>
                 {DATA.teams.map((team, index) => (
                   <DropdownMenuItem
@@ -284,7 +321,7 @@ const SidebarLeftContent = () => {
                     <Plus className="size-4" />
                   </div>
                   <div className="font-medium text-muted-foreground">
-                    Add team
+                    Add workspace
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -297,9 +334,9 @@ const SidebarLeftContent = () => {
       <SidebarContent>
         {/* Nav Main */}
         <SidebarGroup>
-          <SidebarGroupLabel>Platform</SidebarGroupLabel>
+          <SidebarGroupLabel>Pokedex</SidebarGroupLabel>
           <SidebarMenu>
-            {DATA.navMain.map((item) => (
+            {navMain.map((item) => (
               <Collapsible
                 key={item.title}
                 asChild
@@ -368,7 +405,7 @@ const SidebarLeftContent = () => {
 
         {/* Nav Project */}
         <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-          <SidebarGroupLabel>Projects</SidebarGroupLabel>
+          <SidebarGroupLabel>Utilities</SidebarGroupLabel>
           <SidebarMenu>
             {DATA.projects.map((item) => (
               <SidebarMenuItem key={item.name}>
@@ -392,16 +429,16 @@ const SidebarLeftContent = () => {
                   >
                     <DropdownMenuItem>
                       <Folder className="text-muted-foreground" />
-                      <span>View Project</span>
+                      <span>Open Utility</span>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                       <Forward className="text-muted-foreground" />
-                      <span>Share Project</span>
+                      <span>Pin Shortcut</span>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <Trash2 className="text-muted-foreground" />
-                      <span>Delete Project</span>
+                      <span>Remove Shortcut</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

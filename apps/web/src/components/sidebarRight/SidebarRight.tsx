@@ -18,7 +18,7 @@ export const SidebarRight = () => {
       className="hidden xl:block"
       style={
         {
-          "--sidebar-width": "26rem",
+          "--sidebar-width": "28rem",
         } as React.CSSProperties
       }
     >

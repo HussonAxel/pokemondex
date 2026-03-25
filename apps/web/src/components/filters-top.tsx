@@ -7,7 +7,7 @@ export const FiltersTop = () => {
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
 
-  const activePokemon = searchParams.activePokemon
+  const activePokemon = searchParams.activePokemon;
   const types = searchParams.type ?? [];
   const abilities = searchParams.ability ?? [];
   const activeCollection = searchParams.collection
@@ -15,12 +15,11 @@ export const FiltersTop = () => {
     : undefined;
 
   return (
-    <div className="w-full rounded-sm mx-auto p-2 gap-3 border border-border flex flex-wrap min-h-[46px]">
-
+    <div className="mx-auto flex min-h-[46px] w-full flex-wrap items-center gap-2 rounded-sm border border-border bg-muted/20 px-2 py-2">
       {activePokemon ? (
         <FilterTag
-          className="bg-muted/40 border-dashed border-border text-muted-foreground hover:bg-muted/60 cursor-pointer"
-          label="SELECTED"
+          className="border-primary/40 bg-primary/5 shadow-sm shadow-primary/5 hover:bg-primary/10 cursor-pointer"
+          label="PINNED"
           onRemove={() =>
             navigate({
               search: {
@@ -31,7 +30,7 @@ export const FiltersTop = () => {
             })
           }
           value={`#${activePokemon}`}
-          valueClassName="font-mono text-foreground"
+          valueClassName="font-mono text-foreground tracking-wide"
         />
       ) : null}
       {activeCollection ? (

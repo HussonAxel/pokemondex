@@ -50,6 +50,7 @@ export default function FlexiFilterTable() {
   const queryClient = useQueryClient();
 
   const currentPage = searchParams.page || 1;
+  const activePokemon = searchParams.activePokemon;
   const searchTypes = searchParams.type ?? [];
   const searchAbilities = searchParams.ability ?? [];
   const isShinyView = searchParams.shinyView;
@@ -155,15 +156,15 @@ export default function FlexiFilterTable() {
       <FiltersTop />
 
       {/* TABLE */}
-      <div className="flex-1 overflow-auto rounded-sm border border-border scroll-smooth overscroll-x-contain">
+      <div className="flex-1 overflow-auto rounded-sm border border-border bg-background scroll-smooth overscroll-x-contain">
         <div className="min-w-[900px]">
           <Table className="w-full">
-            <TableHeader className="sticky top-0 bg-background z-10">
-              <TableRow>
-                <TableHead className="min-w-[240px]">Name</TableHead>
-                <TableHead className="min-w-[180px]">Type(s)</TableHead>
-                <TableHead className="min-w-[260px]">Abilities</TableHead>
-                <TableHead className="min-w-[160px]">Stats</TableHead>
+            <TableHeader className="sticky top-0 z-10 bg-muted/35 backdrop-blur supports-[backdrop-filter]:bg-background/95">
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="min-w-[240px] text-foreground/80">Name</TableHead>
+                <TableHead className="min-w-[180px] text-foreground/80">Type(s)</TableHead>
+                <TableHead className="min-w-[260px] text-foreground/80">Abilities</TableHead>
+                <TableHead className="min-w-[160px] text-foreground/80">Stats</TableHead>
                 <TableHead className="min-w-[80px] text-right">
                   Actions
                 </TableHead>
@@ -176,7 +177,10 @@ export default function FlexiFilterTable() {
                   <TableRow
                     key={pokemon.id}
                     className={cn(
-                      "hover:bg-muted/30 cursor-pointer",
+                      "group cursor-pointer border-l-2 border-l-transparent transition-colors",
+                      "hover:bg-muted/25",
+                      activePokemon === pokemon.id &&
+                        "border-l-primary bg-primary/[0.045] shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]",
                       isCatchedView && "opacity-30",
                     )}
                     onMouseEnter={() => {
@@ -196,7 +200,15 @@ export default function FlexiFilterTable() {
                     {/* NAME */}
                     <TableCell className="min-w-[240px]">
                       <div className="flex items-center gap-3">
-                        <Pokeball className="w-4 h-4" stroke="red" />
+                        <Pokeball
+                          className={cn(
+                            "h-4 w-4 transition-opacity",
+                            activePokemon === pokemon.id
+                              ? "text-primary"
+                              : "opacity-65 group-hover:opacity-100",
+                          )}
+                          stroke="currentColor"
+                        />
                         <img
                           src={`sprites/${
                             isShinyView
@@ -213,7 +225,7 @@ export default function FlexiFilterTable() {
                           className="w-12 h-12 sm:w-16 sm:h-16 rounded-sm bg-sidebar-accent p-1 sm:p-2"
                         />
                         <div className="truncate">
-                          <p className="capitalize font-semibold truncate">
+                          <p className="truncate capitalize font-semibold">
                             {pokemon.name.replace("-", " ")}
                           </p>
                           <p className="text-xs text-muted-foreground">
@@ -306,18 +318,25 @@ export default function FlexiFilterTable() {
 
                     {/* STATS */}
                     <TableCell className="min-w-[160px]">
-                      <Progress
-                        className="h-2"
-                        max={800}
-                        value={Object.values(pokemon.stats || {}).reduce(
+                      {(() => {
+                        const bst = Object.values(pokemon.stats || {}).reduce(
                           (sum, stat) => sum + (stat as number),
                           0,
-                        )}
-                      >
-                        <ProgressTrack>
-                          <ProgressIndicator className="bg-sidebar-primary" />
-                        </ProgressTrack>
-                      </Progress>
+                        );
+
+                        return (
+                          <div className="flex min-w-[180px] items-center gap-3">
+                            <span className="w-9 text-xs font-semibold text-foreground/80">
+                              {bst}
+                            </span>
+                            <Progress className="h-2.5 flex-1" max={800} value={bst}>
+                              <ProgressTrack>
+                                <ProgressIndicator className="bg-sidebar-primary" />
+                              </ProgressTrack>
+                            </Progress>
+                          </div>
+                        );
+                      })()}
                     </TableCell>
 
                     {/* ACTIONS */}
@@ -327,7 +346,11 @@ export default function FlexiFilterTable() {
                     >
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button size="icon" variant="ghost">
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="opacity-70 transition-opacity group-hover:opacity-100"
+                          >
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
