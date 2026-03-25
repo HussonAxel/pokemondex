@@ -101,7 +101,7 @@ export default function FlexiFilterTable() {
     ? Pokemons.results.filter((pokemon) =>
         collectionPokemonIds.includes(pokemon.id),
       )
-    : Pokemons.results.filter((pokemon) => pokemon.isDefault);
+    : Pokemons.results;
 
   if (searchParams.search) {
     const terms = searchParams.search
@@ -214,7 +214,7 @@ export default function FlexiFilterTable() {
                         />
                         <div className="truncate">
                           <p className="capitalize font-semibold truncate">
-                            {pokemon.name}
+                            {pokemon.name.replace("-", " ")}
                           </p>
                           <p className="text-xs text-muted-foreground">
                             #{pokemon.id.toString().padStart(3, "0")}

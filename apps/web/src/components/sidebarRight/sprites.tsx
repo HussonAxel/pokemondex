@@ -40,15 +40,15 @@ type SpritesComponentProps = {
 };
 
 const GENERATION_ORDER: Record<string, number> = {
-  "generation-i": 1,
-  "generation-ii": 2,
-  "generation-iii": 3,
-  "generation-iv": 4,
-  "generation-v": 5,
-  "generation-vi": 6,
-  "generation-vii": 7,
-  "generation-viii": 8,
-  "generation-ix": 9,
+  "GEN-I": 1,
+  "GEN-II": 2,
+  "GEN-III": 3,
+  "GEN-IV": 4,
+  "GEN-V": 5,
+  "GEN-VI": 6,
+  "GEN-VII": 7,
+  "GEN-VIII": 8,
+  "GEN-IX": 9,
 };
 
 function FilterSelect({ label, onChange, options, value }: SelectProps) {
@@ -474,10 +474,10 @@ export default function SpritesComponent({
           />
 
           <FilterSelect
-            label="Generation"
+            label="GEN"
             onChange={(value) => startTransition(() => setGenerationFilter(value))}
             options={[
-              { label: "All generations", value: "all" },
+              { label: "ALL GEN", value: "all" },
               ...availableGenerations.map((generation) => ({
                 label: formatPokemonText(generation),
                 value: generation,

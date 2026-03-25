@@ -194,7 +194,7 @@ export default function MovePoolComponent() {
         }
 
         if (normalizedSearch) {
-          const haystack = [move.name, methods.join(" "), versions.join(" ")]
+          const haystack = [move.name]
             .join(" ")
             .toLowerCase();
 

@@ -22,3 +22,8 @@ export function formatStatName(value: string | null | undefined) {
       return formatPokemonText(value);
   }
 }
+
+export function getPokemonIdFromUrl(url: string) {
+  const match = url.match(/\/(\d+)\/?$/);
+  return match ? Number(match[1]) : null;
+}

@@ -3,11 +3,14 @@ import { Separator } from "@/components/ui/separator";
 import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
-import { useSearch } from "@tanstack/react-router";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { getPokemonIdFromUrl } from "./utils";
 
 import { formatPokemonText, formatStatName } from "./utils";
 
 export default function TrainingRelationsComponent() {
+  const navigate = useNavigate({ from: Route.id });
+
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
 
@@ -29,7 +32,7 @@ export default function TrainingRelationsComponent() {
     }));
   const totalEvYield = evYield.reduce((sum, stat) => sum + stat.value, 0);
   const heldItems = pokemon.heldItems ?? [];
-  const forms = pokemon.forms ?? [];
+  const varieties = pokemon.varieties ?? [];
   const versionPresence = Array.from(
     new Set(
       (pokemon.gameIndices ?? []).map((entry) =>
@@ -39,7 +42,7 @@ export default function TrainingRelationsComponent() {
   );
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-4">
+    <div className="flex h-full min-h-0 flex-col gap-5 overflow-y-auto overflow-x-hidden px-4 py-4">
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-md border border-border px-3 py-3 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
@@ -59,10 +62,10 @@ export default function TrainingRelationsComponent() {
         </div>
         <div className="rounded-md border border-border px-3 py-3 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
-            Forms
+            Varieties
           </p>
           <p className="mt-1 text-sm font-semibold text-foreground">
-            {forms.length}
+            {varieties.length}
           </p>
         </div>
         <div className="rounded-md border border-border px-3 py-3 text-center">
@@ -98,19 +101,32 @@ export default function TrainingRelationsComponent() {
 
       <div className="flex flex-col gap-2">
         <h2 className="text-base font-semibold text-foreground tracking-tight">
-          Related Forms
+          Related Varieties
         </h2>
-        {forms.length > 0 ? (
+        {varieties.length > 0 ? (
           <div className="flex flex-wrap gap-2">
-            {forms.map((form) => (
-              <Badge key={form.name} variant="outline" className="px-3 py-1.5">
-                {formatPokemonText(form.name)}
+            {varieties.map((variety) => (
+              <Badge
+                key={variety.pokemon.name}
+                variant="outline"
+                className="px-3 py-1.5 cursor-pointer"
+                onClick={() =>
+                  navigate({
+                    to: ".",
+                    search: {
+                      ...searchParams,
+                      activePokemon: getPokemonIdFromUrl(variety.pokemon.url),
+                    },
+                  })
+                }
+              >
+                {formatPokemonText(variety.pokemon.name)}
               </Badge>
             ))}
           </div>
         ) : (
           <p className="text-sm text-muted-foreground">
-            No alternate forms are linked to this Pokemon.
+            No alternate varieties are linked to this Pokemon.
           </p>
         )}
       </div>

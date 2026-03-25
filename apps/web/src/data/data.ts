@@ -707,6 +707,21 @@ export const megaEvolutions = [
   { name: "Lopunny (Mega)", id: 10088 },
   { name: "Salamence (Mega)", id: 10089 },
   { name: "Beedrill (Mega)", id: 10090 },
+  { name: "Victreebel (Mega)", id: 10279 },
+  { name: "Dragonite (Mega)", id: 10281 },
+  { name: "Meganium (Mega)", id: 10282 },
+  { name: "Feraligatr (Mega)", id: 10283 },
+  { name: "Emboar (Mega)", id: 10286 },
+  { name: "Eelektross (Mega)", id: 10290 },
+  { name: "Chesnaught (Mega)", id: 10292 },
+  { name: "Delphox (Mega)", id: 10293 },
+  { name: "Greninja (Mega)", id: 10294 },
+  { name: "Malamar (Mega)", id: 10297 },
+  { name: "Hawlucha (Mega)", id: 10300 },
+  { name: "Raichu (Mega X)", id: 10304 },
+  { name: "Raichu (Mega Y)", id: 10305 },
+  { name: "Chimecho (Mega)", id: 10306 },
+  { name: "Baxcalibur (Mega)", id: 10325 },
 ];
 
 // ==================================================
@@ -878,6 +893,7 @@ export const boxLegendary = [
 
   { name: "Xerneas", id: 716 },
   { name: "Yveltal", id: 717 },
+  { name: "Zygarde", id: 718 },
 
   { name: "Solgaleo", id: 791 },
   { name: "Lunala", id: 792 },

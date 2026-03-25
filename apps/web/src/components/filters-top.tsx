@@ -1,12 +1,13 @@
-import { useSearch, useNavigate } from "@tanstack/react-router";
-import { Route } from "@/routes";
 import { getTypeClasses, pokemonCollectionFilterMap } from "@/data/data";
+import { Route } from "@/routes";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 import { FilterTag } from "./ui/filter-tag";
 
 export const FiltersTop = () => {
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
 
+  const activePokemon = searchParams.activePokemon
   const types = searchParams.type ?? [];
   const abilities = searchParams.ability ?? [];
   const activeCollection = searchParams.collection
@@ -15,6 +16,24 @@ export const FiltersTop = () => {
 
   return (
     <div className="w-full rounded-sm mx-auto p-2 gap-3 border border-border flex flex-wrap min-h-[46px]">
+
+      {activePokemon ? (
+        <FilterTag
+          className="bg-muted/40 border-dashed border-border text-muted-foreground hover:bg-muted/60 cursor-pointer"
+          label="SELECTED"
+          onRemove={() =>
+            navigate({
+              search: {
+                ...searchParams,
+                activePokemon: undefined,
+                page: 1,
+              },
+            })
+          }
+          value={`#${activePokemon}`}
+          valueClassName="font-mono text-foreground"
+        />
+      ) : null}
       {activeCollection ? (
         <FilterTag
           className="bg-sidebar-accent border-sidebar-border hover:bg-sidebar-accent/80 cursor-pointer"

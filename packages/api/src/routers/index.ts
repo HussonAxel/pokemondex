@@ -1,12 +1,39 @@
 import type { RouterClient } from "@orpc/server";
 import { eq } from "drizzle-orm";
 
-import { protectedProcedure, publicProcedure } from "../index";
 import { db, pokemon } from "@my-better-t-app/db";
 import z from "zod";
+import { protectedProcedure, publicProcedure } from "../index";
 
 const DEFAULT_POKEAPI_URL = "https://pokeapi.co/api/v2";
 const DEFAULT_POKEAPI_LIMIT = "pokemon?limit=-1&offset=0";
+
+type PokemonVariety = {
+  is_default: boolean;
+  pokemon: {
+    name: string;
+    url: string;
+  };
+};
+
+async function getSpeciesVarieties(speciesUrl?: string | null) {
+  if (!speciesUrl) {
+    return [] as PokemonVariety[];
+  }
+
+  const response = await fetch(speciesUrl);
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch Pokémon species data: ${response.statusText}`,
+    );
+  }
+
+  const data = (await response.json()) as {
+    varieties?: PokemonVariety[];
+  };
+
+  return data.varieties ?? [];
+}
 
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => {
@@ -105,6 +132,8 @@ export const appRouter = {
       }
 
       const p = pokemonData[0]!;
+      const varieties = await getSpeciesVarieties(p.species?.url);
+      console.log(varieties)
 
       return {
         id: p.id,
@@ -125,6 +154,7 @@ export const appRouter = {
         pastAbilities: p.pastAbilities || [],
         moves: p.moves || [],
         forms: p.forms || [],
+        varieties,
         gameIndices: p.gameIndices || [],
         heldItems: p.heldItems || [],
         species: p.species,
