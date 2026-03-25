@@ -32,16 +32,21 @@
   },
   "dependencies": {
     "@my-better-t-app/env": "workspace:*",
+    "@tanstack/react-form": "^1.28.5",
+    "@tanstack/react-query": "^5.95.2",
+    "@tanstack/react-router": "^1.168.3",
+    "@tanstack/react-start": "^1.167.6",
+    "@tanstack/react-table": "^8.21.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "dotenv": "catalog:",
+    "dotenv": "^17.3.1",
     "get-db": "^0.11.0",
-    "nitro": "^3.0.1-alpha.1",
-    "zod": "catalog:"
+    "nitro": "^3.0.1-alpha.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "turbo": "^2.6.3",
-    "typescript": "catalog:",
-    "@types/node": "catalog:",
+    "turbo": "^2.8.20",
+    "typescript": "^5.9.3",
+    "@types/node": "^22.19.15",
     "@my-better-t-app/config": "workspace:*"
   },
   "packageManager": "bun@1.3.5"

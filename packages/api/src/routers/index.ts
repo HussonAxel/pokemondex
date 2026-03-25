@@ -16,6 +16,75 @@ type PokemonVariety = {
   };
 };
 
+type PokeApiLanguageEntry = {
+  name: string;
+};
+
+type PokeApiVerboseEffectEntry = {
+  effect?: string;
+  short_effect?: string;
+  language?: PokeApiLanguageEntry;
+};
+
+type PokeApiAbilityPayload = {
+  name?: string;
+  effect_entries?: PokeApiVerboseEffectEntry[];
+  flavor_text_entries?: Array<{
+    flavor_text?: string;
+    language?: PokeApiLanguageEntry;
+  }>;
+  generation?: {
+    name?: string;
+  };
+};
+
+function getLocalizedAbilityText(
+  entries: PokeApiVerboseEffectEntry[] | undefined,
+  key: "effect" | "short_effect",
+) {
+  if (!entries?.length) {
+    return null;
+  }
+
+  const preferredLanguages = ["fr", "en"];
+
+  for (const language of preferredLanguages) {
+    const match = entries.find(
+      (entry) => entry.language?.name === language && entry[key],
+    );
+
+    if (match?.[key]) {
+      return match[key]!.replace(/\s+/g, " ").trim();
+    }
+  }
+
+  const fallback = entries.find((entry) => entry[key]);
+  return fallback?.[key]?.replace(/\s+/g, " ").trim() ?? null;
+}
+
+function getLocalizedFlavorText(
+  entries: PokeApiAbilityPayload["flavor_text_entries"],
+) {
+  if (!entries?.length) {
+    return null;
+  }
+
+  const preferredLanguages = ["fr", "en"];
+
+  for (const language of preferredLanguages) {
+    const match = entries.find(
+      (entry) => entry.language?.name === language && entry.flavor_text,
+    );
+
+    if (match?.flavor_text) {
+      return match.flavor_text.replace(/\s+/g, " ").trim();
+    }
+  }
+
+  const fallback = entries.find((entry) => entry.flavor_text);
+  return fallback?.flavor_text?.replace(/\s+/g, " ").trim() ?? null;
+}
+
 async function getSpeciesVarieties(speciesUrl?: string | null) {
   if (!speciesUrl) {
     return [] as PokemonVariety[];
@@ -181,8 +250,38 @@ export const appRouter = {
       const data = await response.json();
       return data;
     }),
+  getPokemonAbilityData: publicProcedure
+    .input(
+      z.object({
+        url: z.string().url(),
+      }),
+    )
+    .handler(async ({ input }) => {
+      const response = await fetch(input.url);
+      if (!response.ok) {
+        throw new Error(
+          `Failed to fetch Pokemon ability data: ${response.statusText}`,
+        );
+      }
 
-    getPokemonGrowthRateData: publicProcedure
+      const data = (await response.json()) as PokeApiAbilityPayload;
+      const shortEffect = getLocalizedAbilityText(
+        data.effect_entries,
+        "short_effect",
+      );
+      const effect = getLocalizedAbilityText(data.effect_entries, "effect");
+      const flavorText = getLocalizedFlavorText(data.flavor_text_entries);
+
+      return {
+        name: data.name ?? "",
+        shortEffect,
+        effect,
+        flavorText,
+        generation: data.generation?.name ?? null,
+      };
+    }),
+
+  getPokemonGrowthRateData: publicProcedure
     .input( 
       z.object({
         url: z.string()
