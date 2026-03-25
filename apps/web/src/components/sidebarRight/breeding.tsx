@@ -9,20 +9,26 @@ import { Button } from "@/components/ui/button";
 export default function BreedingComponent() {
   const searchParams = useSearch({ from: Route.id });
   const activePokemon = searchParams.activePokemon;
-  const pokemonSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${activePokemon}/`;
+  const pokemonSpeciesUrl = activePokemon
+    ? `https://pokeapi.co/api/v2/pokemon-species/${activePokemon}/`
+    : "";
 
-  const species = useQuery(
-    orpc.getPokemonSpeciesData.queryOptions({
+  const species = useQuery({
+    ...orpc.getPokemonSpeciesData.queryOptions({
       input: { url: pokemonSpeciesUrl },
     }),
-  ).data;
-  if (!species) return null;
+    enabled: Boolean(activePokemon),
+  }).data;
 
-  const growthRate = useQuery(
-    orpc.getPokemonGrowthRateData.queryOptions({
-      input: { url: species.growth_rate.url },
+  const growthRateUrl = species?.growth_rate.url ?? "";
+  const growthRate = useQuery({
+    ...orpc.getPokemonGrowthRateData.queryOptions({
+      input: { url: growthRateUrl },
     }),
-  ).data;
+    enabled: Boolean(growthRateUrl),
+  }).data;
+
+  if (!species) return null;
 
   if (!growthRate) return null;
 
@@ -45,9 +51,9 @@ export default function BreedingComponent() {
         </h2>
         <div className="flex flex-wrap gap-2">
           {species.egg_groups && species.egg_groups.length > 0 ? (
-            species.egg_groups.map((group: any, index: number) => (
+            species.egg_groups.map((group: any) => (
               <Badge
-                key={`${group.name}-${index}`}
+                key={group.name}
                 variant="secondary"
                 className="text-xs font-medium px-3 py-1.5 capitalize"
               >
@@ -138,7 +144,7 @@ export default function BreedingComponent() {
       <Separator />
 
       <div className="flex justify-center">
-        <Button variant="primary" size="default" className="w-full rounded-sm">
+        <Button variant="default" size="default" className="w-full rounded-sm">
           Breeding Calculator
         </Button>
       </div>

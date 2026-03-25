@@ -139,7 +139,6 @@ export default function BadgeTypes({
               "px-4 py-2",
               "text-[10px] uppercase tracking-wider text-[11px]",
               typeClasses.bg,
-              typeClasses.text,
               typeClasses.border,
               typeClasses.hover,
               classNameBadge,

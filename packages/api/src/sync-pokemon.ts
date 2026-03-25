@@ -3,6 +3,11 @@ import { eq } from "drizzle-orm";
 
 const POKEAPI_URL = "https://pokeapi.co/api/v2";
 
+type SpriteValue = string | null | undefined | SpriteMap;
+type SpriteMap = {
+  [key: string]: SpriteValue;
+};
+
 interface PokeAPIPokemon {
   id: number;
   name: string;
@@ -15,21 +20,8 @@ interface PokeAPIPokemon {
     front_female: string | null;
     front_shiny: string | null;
     front_shiny_female: string | null;
-    other: {
-      "official-artwork": {
-        front_default: string | null;
-      };
-      dream_world?: {
-        front_default: string | null;
-      };
-      home?: {
-        front_default: string | null;
-        front_female: string | null;
-        front_shiny: string | null;
-        front_shiny_female: string | null;
-      };
-    };
-    versions?: Record<string, any>;
+    other: SpriteMap;
+    versions?: SpriteMap;
   };
   height: number;
   weight: number;
@@ -254,13 +246,25 @@ export async function syncPokemon() {
             );
           }
 
+          const officialArtwork =
+            pokemon.sprites?.other &&
+            typeof pokemon.sprites.other === "object" &&
+            !Array.isArray(pokemon.sprites.other)
+              ? (pokemon.sprites.other["official-artwork"] as SpriteMap | undefined)
+              : undefined;
+          const officialArtworkUrl =
+            officialArtwork &&
+            typeof officialArtwork === "object" &&
+            !Array.isArray(officialArtwork) &&
+            typeof officialArtwork.front_default === "string"
+              ? officialArtwork.front_default
+              : null;
+
           return {
             id: pokemon.id,
             name: pokemon.name,
             spriteUrl: pokemon.sprites?.front_default || null,
-            officialArtworkUrl:
-              pokemon.sprites?.other?.["official-artwork"]?.front_default ||
-              null,
+            officialArtworkUrl,
             height: pokemon.height || 0,
             weight: pokemon.weight || 0,
             baseExperience: pokemon.base_experience ?? null,

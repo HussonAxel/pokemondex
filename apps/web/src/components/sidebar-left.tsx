@@ -1,3 +1,4 @@
+import * as React from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +28,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/animate-ui/primitives/radix/collapsible";
+import { pokemonCollectionFilters } from "@/data/data";
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
   AudioWaveform,
@@ -46,8 +48,6 @@ import {
   SquareTerminal,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
-
 import { Route } from "@/routes";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 
@@ -221,13 +221,10 @@ const DATA = {
 
 const SidebarLeftContent = () => {
   const isMobile = useIsMobile();
-  const [activeTeam, setActiveTeam] = useState(DATA.teams[0]);
+  const [activeTeam, setActiveTeam] = React.useState(DATA.teams[0]);
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
-
-  const searchFilters = searchParams.filters ?? [];
-
-
+  const activeCollection = searchParams.collection;
 
   if (!activeTeam) return null;
 
@@ -306,7 +303,10 @@ const SidebarLeftContent = () => {
               <Collapsible
                 key={item.title}
                 asChild
-                defaultOpen={item.isActive}
+                defaultOpen={
+                  item.isActive ||
+                  (item.title === "Filters" && Boolean(activeCollection))
+                }
                 className="group/collapsible"
               >
                 <SidebarMenuItem>
@@ -319,35 +319,44 @@ const SidebarLeftContent = () => {
                   </CollapsibleTrigger>
                   <CollapsibleContent>
                     <SidebarMenuSub>
-                      {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
-                          <SidebarMenuSubButton asChild>
-                            <a href={subItem.url}>
-                              <span
-                                onClick={(e) => {
-                                  e.stopPropagation();
+                      {item.title === "Filters"
+                        ? pokemonCollectionFilters.map((subItem) => {
+                            const isActive =
+                              activeCollection === subItem.key;
 
-                                  const has = searchFilters.includes(subItem.title);
-                                  const next = has
-                                    ? searchFilters.filter((f) => f !== subItem.title)
-                                    : [...searchFilters, subItem.title];
-
-                                  navigate({
-                                    to: ".",
-                                    search: {
-                                      ...searchParams,
-                                      filters: next.length ? next : undefined,
-                                      page: 1,
-                                    },
-                                  });
-                                }}
-                              >
-                                {subItem.title}
-                              </span>
-                            </a>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
+                            return (
+                              <SidebarMenuSubItem key={subItem.key}>
+                                <SidebarMenuSubButton asChild isActive={isActive}>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      navigate({
+                                        to: ".",
+                                        search: {
+                                          ...searchParams,
+                                          collection: isActive
+                                            ? undefined
+                                            : subItem.key,
+                                          page: 1,
+                                        },
+                                      })
+                                    }
+                                  >
+                                    <span>{subItem.title}</span>
+                                  </button>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            );
+                          })
+                        : item.items?.map((subItem) => (
+                            <SidebarMenuSubItem key={subItem.title}>
+                              <SidebarMenuSubButton asChild>
+                                <a href={subItem.url}>
+                                  <span>{subItem.title}</span>
+                                </a>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
                     </SidebarMenuSub>
                   </CollapsibleContent>
                 </SidebarMenuItem>

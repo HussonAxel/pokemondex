@@ -55,11 +55,11 @@ export function GridTemplateView({ columns = 6 }) {
           onClick={() =>
             navigate({
               to: ".",
-              search: {
-                ...searchParams,
-                activePokemon: row.name,
-              },
-            })
+                    search: {
+                      ...searchParams,
+                      activePokemon: row.id,
+                    },
+                  })
           }
         >
           <img

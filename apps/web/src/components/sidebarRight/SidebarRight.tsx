@@ -23,9 +23,9 @@ export const SidebarRight = () => {
       }
     >
       <Sidebar collapsible="icon" side="right">
-        <SidebarContent>
+        <SidebarContent className="min-h-0">
           <div
-            className={`transition-opacity duration-300 ease-in-out border rounded-sm my-auto h-full ${
+            className={`transition-opacity duration-300 ease-in-out border rounded-sm my-auto h-full min-h-0 overflow-hidden ${
               activePokemon ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
           >

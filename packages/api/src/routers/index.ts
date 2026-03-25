@@ -85,11 +85,14 @@ export const appRouter = {
           generation: pokemon.generation,
           abilities: pokemon.abilities,
           pastAbilities: pokemon.pastAbilities,
+          moves: pokemon.moves,
           forms: pokemon.forms,
+          gameIndices: pokemon.gameIndices,
           heldItems: pokemon.heldItems,
           species: pokemon.species,
           cries: pokemon.cries,
           locationAreaEncounters: pokemon.locationAreaEncounters,
+          sprites: pokemon.sprites,
         })
         .from(pokemon)
         .where(eq(pokemon.id, input.id || 0))
@@ -120,11 +123,14 @@ export const appRouter = {
         generation: p.generation,
         abilities: p.abilities || [],
         pastAbilities: p.pastAbilities || [],
+        moves: p.moves || [],
         forms: p.forms || [],
+        gameIndices: p.gameIndices || [],
         heldItems: p.heldItems || [],
         species: p.species,
         cries: p.cries,
         locationAreaEncounters: p.locationAreaEncounters,
+        sprites: p.sprites,
       };
     }),
   getPokemonSpeciesData: publicProcedure 

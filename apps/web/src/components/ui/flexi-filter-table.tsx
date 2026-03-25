@@ -29,6 +29,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { pokemonCollectionFilterMap } from "@/data/data";
 import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { Route } from "@/routes";
@@ -38,7 +39,6 @@ import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
 import { Moon, MoreVertical, Sparkles, Sun } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
 import Pokeball from "./svg/pokeball";
-
 
 const ITEMS_PER_PAGE = 30;
 
@@ -51,10 +51,13 @@ export default function FlexiFilterTable() {
 
   const currentPage = searchParams.page || 1;
   const searchTypes = searchParams.type ?? [];
-  const searchFilters = searchParams.filters ?? [];
   const searchAbilities = searchParams.ability ?? [];
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
+  const activeCollection = searchParams.collection
+    ? pokemonCollectionFilterMap[searchParams.collection]
+    : undefined;
+  const collectionPokemonIds = activeCollection?.pokemonIds ?? [];
 
   const fallBackImage =
     "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755";
@@ -94,7 +97,11 @@ export default function FlexiFilterTable() {
     }
   };
 
-  let PokemonsFiltered = Pokemons.results.filter((p) => p.isDefault);
+  let PokemonsFiltered = activeCollection
+    ? Pokemons.results.filter((pokemon) =>
+        collectionPokemonIds.includes(pokemon.id),
+      )
+    : Pokemons.results.filter((pokemon) => pokemon.isDefault);
 
   if (searchParams.search) {
     const terms = searchParams.search

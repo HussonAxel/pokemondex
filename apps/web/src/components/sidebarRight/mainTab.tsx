@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 import TabsComponent from "@/components/sidebarRight/tabs";
 import BadgeTypes from "@/components/ui/badge-type";
 import { Route } from "@/routes/index";
@@ -14,14 +16,28 @@ export default function MainTab() {
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   }).data;
+
+  const [selectedSprite, setSelectedSprite] = useState<{
+    alt: string;
+    src: string;
+  } | null>(null);
+
+  useEffect(() => {
+    setSelectedSprite(null);
+  }, [activePokemon]);
+
   if (!pokemon) return null;
+
+  const previewSprite = selectedSprite?.src || pokemon.spriteUrl || "";
+  const previewAlt = selectedSprite?.alt || `${pokemon.name} Pokemon sprite`;
+
   return (
-    <div>
-      <div className="flex flex-row gap-2 h-full max-h-[300px] p-4 justify-center items-center">
+    <div className="flex h-full min-h-0 flex-col">
+      <div className="flex max-h-[300px] shrink-0 flex-row items-center justify-center gap-2 p-4">
         <div className="flex flex-col gap-2 text-center">
           <img
-            src={pokemon.spriteUrl || ""}
-            alt={`${pokemon.name} Pokémon sprite`}
+            src={previewSprite}
+            alt={previewAlt}
             width={160}
             height={160}
             fetchPriority="high"
@@ -34,7 +50,7 @@ export default function MainTab() {
             <p className="text-[24px] font-bold">
               {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
             </p>
-            <div className="flex items-center gap-2 justify-center mt-2">
+            <div className="mt-2 flex items-center justify-center gap-2">
               <BadgeTypes
                 pokemonTypes={
                   pokemon.types.length > 1
@@ -49,7 +65,12 @@ export default function MainTab() {
           </div>
         </div>
       </div>
-      <TabsComponent />
+      <div className="min-h-0 flex-1">
+        <TabsComponent
+          onSelectSprite={(src, alt) => setSelectedSprite({ alt, src })}
+          selectedSpriteSrc={selectedSprite?.src ?? null}
+        />
+      </div>
     </div>
   );
 }

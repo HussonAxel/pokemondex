@@ -6,7 +6,7 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
-  useSearch,
+  useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
@@ -67,8 +67,10 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
-  const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
+  const activePokemon = useRouterState({
+    select: (state) =>
+      new URLSearchParams(state.location.searchStr).get("activePokemon"),
+  });
   return (
     <html lang="fr" className="dark">
       <head>
