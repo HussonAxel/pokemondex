@@ -14,6 +14,7 @@ export const Route = createFileRoute("/")({
     page: z.number().optional(),
     type: z.array(z.string().optional()).max(2).optional(),
     ability: z.array(z.string().optional()).max(3).optional(),
+    filters: z.array(z.string().optional()).optional(),
   }),
   loader: async ({ context }) => {
     const Pokemons = await context.queryClient.ensureQueryData(

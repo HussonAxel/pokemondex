@@ -1,26 +1,12 @@
-import { Moon, Sun, MoreVertical, Sparkles } from "lucide-react";
-import { useTheme } from "@/hooks/use-theme";
-import { Button } from "@/components/ui/button";
 import { FiltersTop } from "@/components/filters-top";
+import BadgeTypes from "@/components/ui/badge-type";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Progress,
-  ProgressIndicator,
-  ProgressTrack,
-} from "@/components/ui/progress";
 import {
   Pagination,
   PaginationContent,
@@ -30,14 +16,29 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+  Progress,
+  ProgressIndicator,
+  ProgressTrack,
+} from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useTheme } from "@/hooks/use-theme";
 import { cn } from "@/lib/utils";
 import { Route } from "@/routes";
-import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
-import BadgeTypes from "@/components/ui/badge-type";
-import Pokeball from "./svg/pokeball";
 import { orpc } from "@/utils/orpc";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
+import { Moon, MoreVertical, Sparkles, Sun } from "lucide-react";
 import { useHotkeys } from "react-hotkeys-hook";
+import Pokeball from "./svg/pokeball";
+
 
 const ITEMS_PER_PAGE = 30;
 
@@ -50,6 +51,7 @@ export default function FlexiFilterTable() {
 
   const currentPage = searchParams.page || 1;
   const searchTypes = searchParams.type ?? [];
+  const searchFilters = searchParams.filters ?? [];
   const searchAbilities = searchParams.ability ?? [];
   const isShinyView = searchParams.shinyView;
   const isCatchedView = searchParams.catchedView;
@@ -122,7 +124,7 @@ export default function FlexiFilterTable() {
       ),
     );
   }
-
+  
   const totalPages = Math.ceil(PokemonsFiltered.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const PokemonsPaginated = PokemonsFiltered.slice(

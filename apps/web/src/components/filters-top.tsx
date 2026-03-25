@@ -1,8 +1,8 @@
-import { X } from "lucide-react";
-import { useSearch, useNavigate } from "@tanstack/react-router";
-import { Route } from "@/routes";
-import { cn } from "@/lib/utils";
 import { getTypeClasses } from "@/data/data";
+import { cn } from "@/lib/utils";
+import { Route } from "@/routes";
+import { useNavigate, useSearch } from "@tanstack/react-router";
+import { X } from "lucide-react";
 
 export const FiltersTop = () => {
   const searchParams = useSearch({ from: Route.id });
@@ -10,6 +10,7 @@ export const FiltersTop = () => {
 
   const types = searchParams.type ?? [];
   const abilities = searchParams.ability ?? [];
+  const filters = searchParams.filters ?? [];
 
   return (
     <div className="w-full rounded-sm mx-auto p-2 gap-3 border border-border flex flex-wrap min-h-[46px]">
@@ -53,7 +54,6 @@ export const FiltersTop = () => {
         );
       })}
 
-      {/* ABILITIES */}
       {abilities.map((ability) => (
         <div
           key={ability}
@@ -86,6 +86,41 @@ export const FiltersTop = () => {
           </button>
         </div>
       ))}
+
+      {filters.map((filter) => {
+        return (
+          <div
+            key={filter}
+            className={cn(
+              "group flex items-center gap-2 rounded-md px-2 py-1",
+              "border transition-all duration-200 cursor-pointer",
+              "bg-primary/10 border-primary/60 hover:bg-primary/20",
+            )}
+            onClick={() =>
+              navigate({
+                search: {
+                  ...searchParams,
+                  filters:
+                    filters.length > 1
+                      ? filters.filter((f) => f !== filter)
+                      : undefined,
+                  page: 1,
+                },
+              })
+            }
+          >
+            <p className="font-mono text-[10px] text-foreground/80 px-1 border rounded-[2px] border-foreground/30">
+              FILTER
+            </p>
+
+            <span className="capitalize text-[12px] font-medium">{filter}</span>
+
+            <button className="p-0.5 rounded-sm opacity-60 group-hover:opacity-100">
+              <X size={14} />
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 };

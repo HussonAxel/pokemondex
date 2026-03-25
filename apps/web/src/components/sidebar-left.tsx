@@ -1,33 +1,6 @@
-"use client";
-
-import * as React from "react";
-
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarRail,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-  SidebarMenuAction,
-} from "@/components/animate-ui/components/radix/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/animate-ui/primitives/radix/collapsible";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -35,30 +8,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/animate-ui/components/radix/dropdown-menu";
 import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+} from "@/components/animate-ui/components/radix/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/animate-ui/primitives/radix/collapsible";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
   AudioWaveform,
-  BadgeCheck,
-  Bell,
   Bot,
   ChevronRight,
   ChevronsUpDown,
   Command,
-  CreditCard,
+  Filter,
   Folder,
   Forward,
   Frame,
   GalleryVerticalEnd,
-  LogOut,
   Map,
   MoreHorizontal,
   PieChart,
   Plus,
-  Sparkles,
   SquareTerminal,
   Trash2,
-  Filter,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
+
+import { Route } from "@/routes";
+import { useNavigate, useSearch } from "@tanstack/react-router";
 
 const DATA = {
   user: {
@@ -230,7 +221,13 @@ const DATA = {
 
 const SidebarLeftContent = () => {
   const isMobile = useIsMobile();
-  const [activeTeam, setActiveTeam] = React.useState(DATA.teams[0]);
+  const [activeTeam, setActiveTeam] = useState(DATA.teams[0]);
+  const searchParams = useSearch({ from: Route.id });
+  const navigate = useNavigate({ from: Route.id });
+
+  const searchFilters = searchParams.filters ?? [];
+
+
 
   if (!activeTeam) return null;
 
@@ -326,7 +323,27 @@ const SidebarLeftContent = () => {
                         <SidebarMenuSubItem key={subItem.title}>
                           <SidebarMenuSubButton asChild>
                             <a href={subItem.url}>
-                              <span>{subItem.title}</span>
+                              <span
+                                onClick={(e) => {
+                                  e.stopPropagation();
+
+                                  const has = searchFilters.includes(subItem.title);
+                                  const next = has
+                                    ? searchFilters.filter((f) => f !== subItem.title)
+                                    : [...searchFilters, subItem.title];
+
+                                  navigate({
+                                    to: ".",
+                                    search: {
+                                      ...searchParams,
+                                      filters: next.length ? next : undefined,
+                                      page: 1,
+                                    },
+                                  });
+                                }}
+                              >
+                                {subItem.title}
+                              </span>
                             </a>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
