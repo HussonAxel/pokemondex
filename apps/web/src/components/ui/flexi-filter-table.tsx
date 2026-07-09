@@ -118,7 +118,9 @@ export default function FlexiFilterTable() {
     preloadedImageUrlsRef.current.add(src);
 
     const image = new window.Image();
+    image.decoding = "async";
     image.src = src;
+    void image.decode().catch(() => undefined);
   };
 
   const preloadSpritesForItems = (
@@ -229,7 +231,7 @@ export default function FlexiFilterTable() {
                           stroke="currentColor"
                         />
                         <img
-                          src={`sprites/${
+                          src={`/sprites/${
                             isShinyView
                               ? `shiny/${pokemon.id}.webp`
                               : `base/${pokemon.id}.webp`
@@ -239,9 +241,11 @@ export default function FlexiFilterTable() {
                             if (img.src !== fallBackImage)
                               img.src = fallBackImage;
                           }}
-                          alt={pokemon.name}
-                          loading="lazy"
-                          className="w-12 h-12 sm:w-16 sm:h-16 rounded-sm bg-sidebar-accent p-1 sm:p-2"
+                          alt=""
+                          aria-hidden="true"
+                          loading="eager"
+                          decoding="async"
+                          className="w-12 h-12 sm:w-16 sm:h-16 rounded-sm bg-sidebar-accent object-contain p-1 sm:p-2"
                         />
                         <div className="truncate">
                           <p className="truncate capitalize font-semibold">
