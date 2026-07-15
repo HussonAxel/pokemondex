@@ -28,6 +28,7 @@ type CatalogClientState =
   | { status: "error"; error: Error };
 
 let collection: Collection<PokemonCatalogItem, number> | undefined;
+let catalogItems: PokemonCatalogItem[] | undefined;
 let initialization: Promise<Collection<PokemonCatalogItem, number>> | undefined;
 let state: CatalogClientState = { status: "idle" };
 const listeners = new Set<() => void>();
@@ -173,6 +174,7 @@ export function startPokemonCatalogClient() {
         }),
       );
       await nextCollection.preload();
+      catalogItems = items;
       collection = nextCollection;
       setState({ status: "ready" });
       return nextCollection;
@@ -190,11 +192,12 @@ export function startPokemonCatalogClient() {
 
 export async function queryClientPokemonCatalog(input: PokemonCatalogInput) {
   const catalogCollection = await startPokemonCatalogClient();
-  return queryPokemonCatalog(catalogCollection.toArray, input);
+  return queryPokemonCatalog(catalogItems ?? catalogCollection.toArray, input);
 }
 
 export function retryPokemonCatalogClient() {
   initialization = undefined;
   collection = undefined;
+  catalogItems = undefined;
   return startPokemonCatalogClient();
 }
