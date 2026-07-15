@@ -2,6 +2,7 @@ import { lazy, Suspense, useState } from "react";
 
 import Loader from "@/components/demo/loader";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
+import { Activity, Dna, Images, Info, Swords } from "lucide-react";
 
 const OverviewComponent = lazy(() => import("@/components/sidebarRight/overview"));
 const BreedingComponent = lazy(() => import("@/components/sidebarRight/breeding"));
@@ -24,21 +25,36 @@ export default function TabsComponent({
 
   return (
     <Tabs
-      className="flex h-full min-h-0 flex-col"
+      className="flex h-full min-h-0 flex-col gap-0"
       defaultValue="tab-1"
       value={activeTab}
       onValueChange={setActiveTab}
     >
-      <div className="shrink-0 border-b px-4 md:px-8">
+      <div className="shrink-0 border-b bg-background px-2 md:px-6">
         <TabsList
           variant="underline"
-          className="flex w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto"
+          className="scrollbar-hide flex w-full flex-nowrap items-center justify-start gap-1 overflow-x-auto py-2"
         >
-          <TabsTab value="tab-1">Overview</TabsTab>
-          <TabsTab value="tab-2">Breeding</TabsTab>
-          <TabsTab value="tab-3">Training & Relations</TabsTab>
-          <TabsTab value="tab-4">Sprites</TabsTab>
-          <TabsTab value="tab-5">Move Pool</TabsTab>
+          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-1">
+            <Info />
+            Overview
+          </TabsTab>
+          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-2">
+            <Dna />
+            Breeding
+          </TabsTab>
+          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-3">
+            <Activity />
+            Training & Relations
+          </TabsTab>
+          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-4">
+            <Images />
+            Sprites
+          </TabsTab>
+          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-5">
+            <Swords />
+            Move Pool
+          </TabsTab>
         </TabsList>
       </div>
       <TabsPanel className="min-h-0 overflow-y-auto" value="tab-1">
