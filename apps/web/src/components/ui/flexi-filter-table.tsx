@@ -149,8 +149,8 @@ export default function FlexiFilterTable() {
     const nearbyPages = [
       currentPage + 1,
       currentPage + 2,
+      currentPage + 3,
       currentPage - 1,
-      currentPage - 2,
     ].filter(
       (page) => page >= 1 && page <= totalPages,
     );
