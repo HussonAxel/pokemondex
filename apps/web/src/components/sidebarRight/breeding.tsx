@@ -37,10 +37,11 @@ export default function BreedingComponent() {
   const genderInfo = getGenderRate(species.gender_rate);
   const hatchSteps = (species.hatch_counter + 1) * 255;
   const maxLevelXP = growthRate.levels[99]?.experience || 0;
+  const numberFormatter = new Intl.NumberFormat("en-US");
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-6 md:px-8 md:py-8 lg:px-10">
-      <div>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
+      <div className="border-b border-border pb-6">
         <p className="font-mono text-[10px] font-medium uppercase text-muted-foreground">
           Nursery data
         </p>
@@ -75,8 +76,8 @@ export default function BreedingComponent() {
 
       <Separator />
 
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
+      <div className="grid grid-cols-2 overflow-hidden rounded-md border border-border bg-card lg:grid-cols-4">
+        <div className="relative flex min-h-28 flex-col items-center justify-center border-b border-r border-border px-3 py-4 lg:border-b-0">
           {genderInfo.genderless ? (
             <>
               <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
@@ -114,7 +115,7 @@ export default function BreedingComponent() {
           )}
         </div>
 
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
+        <div className="relative flex min-h-28 flex-col items-center justify-center border-b border-border px-3 py-4 lg:border-b-0 lg:border-r">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Egg Cycles
           </p>
@@ -122,11 +123,11 @@ export default function BreedingComponent() {
             {species.hatch_counter} cycles
           </p>
           <p className="text-xs text-muted-foreground/80 mt-1 relative z-10">
-            ~{hatchSteps.toLocaleString()} steps
+            ~{numberFormatter.format(hatchSteps)} steps
           </p>
         </div>
 
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
+        <div className="relative flex min-h-28 flex-col items-center justify-center border-r border-border px-3 py-4">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Growth Rate
           </p>
@@ -134,11 +135,11 @@ export default function BreedingComponent() {
             {species.growth_rate.name}
           </p>
           <p className="text-xs text-muted-foreground/80 mt-1 relative z-10">
-            {maxLevelXP.toLocaleString()} XP
+            {numberFormatter.format(maxLevelXP)} XP
           </p>
         </div>
 
-        <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
+        <div className="relative flex min-h-28 flex-col items-center justify-center px-3 py-4">
           <p className="text-[10px] font-medium uppercase tracking-wider text-muted-foreground/70 mb-1.5 relative z-10">
             Habitat
           </p>

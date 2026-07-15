@@ -1,5 +1,6 @@
 import { db, pokemon, pokemonSync } from "@my-better-t-app/db";
 import { eq } from "drizzle-orm";
+import { syncPokemonMoves } from "./sync-moves";
 
 const POKEAPI_URL = "https://pokeapi.co/api/v2";
 
@@ -390,7 +391,10 @@ export async function syncPokemon() {
       saved++;
     }
 
-    // 4. Mettre à jour le statut de synchronisation
+    // 4. Synchroniser le referentiel global des attaques
+    const moveSyncResult = await syncPokemonMoves();
+
+    // 5. Mettre à jour le statut de synchronisation
     await db
       .update(pokemonSync)
       .set({
@@ -402,7 +406,7 @@ export async function syncPokemon() {
       .where(eq(pokemonSync.id, 1));
 
     console.log(`✅ Synchronisation terminée: ${saved} Pokémon sauvegardés`);
-    return { success: true, total: saved };
+    return { success: true, total: saved, moves: moveSyncResult.total };
   } catch (error) {
     console.error("❌ Erreur lors de la synchronisation:", error);
 

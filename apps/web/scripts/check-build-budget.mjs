@@ -10,39 +10,52 @@ const candidateDirs = [
   join(scriptDir, "../.vercel/output/static"),
 ];
 
-async function findMainChunk(dir) {
+async function findEntryChunks(dir) {
   let entries;
 
   try {
     entries = await readdir(dir, { withFileTypes: true });
   } catch {
-    return null;
+    return [];
   }
+
+  const chunks = [];
 
   for (const entry of entries) {
     const fullPath = join(dir, entry.name);
 
     if (entry.isDirectory()) {
-      const nestedMainChunk = await findMainChunk(fullPath);
-      if (nestedMainChunk) {
-        return nestedMainChunk;
-      }
+      chunks.push(...(await findEntryChunks(fullPath)));
       continue;
     }
 
-    if (entry.name.startsWith("main-") && entry.name.endsWith(".js")) {
-      return fullPath;
+    if (
+      (entry.name.startsWith("main-") || entry.name.startsWith("index-")) &&
+      entry.name.endsWith(".js")
+    ) {
+      chunks.push(fullPath);
     }
   }
 
-  return null;
+  return chunks;
 }
 
 let mainChunkPath = null;
 
 for (const candidateDir of candidateDirs) {
-  mainChunkPath = await findMainChunk(candidateDir);
-  if (mainChunkPath) {
+  const entryChunks = await findEntryChunks(candidateDir);
+
+  if (entryChunks.length > 0) {
+    const chunksBySize = await Promise.all(
+      entryChunks.map(async (path) => ({
+        contents: await readFile(path),
+        path,
+      })),
+    );
+    chunksBySize.sort(
+      (left, right) => right.contents.byteLength - left.contents.byteLength,
+    );
+    mainChunkPath = chunksBySize[0]?.path ?? null;
     break;
   }
 }

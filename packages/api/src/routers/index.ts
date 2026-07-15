@@ -1,7 +1,7 @@
 import type { RouterClient } from "@orpc/server";
-import { eq } from "drizzle-orm";
+import { eq, inArray } from "drizzle-orm";
 
-import { db, pokemon } from "@my-better-t-app/db";
+import { db, pokemon, pokemonMove } from "@my-better-t-app/db";
 import z from "zod";
 import { fetchPokeApiJson } from "../pokeapi";
 import { protectedProcedure, publicProcedure } from "../index";
@@ -37,6 +37,21 @@ type PokeApiAbilityPayload = {
   generation?: {
     name?: string;
   };
+};
+
+type PokeApiSpeciesPayload = {
+  color?: { name: string; url: string } | null;
+  egg_groups?: Array<{ name: string; url: string }>;
+  flavor_text_entries?: Array<{
+    flavor_text?: string;
+    language?: PokeApiLanguageEntry;
+    version?: { name: string; url: string };
+  }>;
+  gender_rate: number;
+  growth_rate: { name: string; url: string };
+  habitat?: { name: string; url: string } | null;
+  hatch_counter: number;
+  shape?: { name: string; url: string } | null;
 };
 
 function getLocalizedAbilityText(
@@ -236,7 +251,7 @@ export const appRouter = {
     .handler( async ({
       input
     }) => {
-      const data = await fetchPokeApiJson(input.url);
+      const data = await fetchPokeApiJson<PokeApiSpeciesPayload>(input.url);
       return data;
     }),
   getPokemonAbilityData: publicProcedure
@@ -261,6 +276,42 @@ export const appRouter = {
         flavorText,
         generation: data.generation?.name ?? null,
       };
+    }),
+
+  getPokemonMoveData: publicProcedure
+    .input(z.object({ id: z.number().int().positive() }))
+    .handler(async ({ input }) => {
+      const rows = await db
+        .select({ moves: pokemon.moves })
+        .from(pokemon)
+        .where(eq(pokemon.id, input.id))
+        .limit(1);
+      const moves = rows[0]?.moves ?? [];
+      const names = Array.from(
+        new Set(moves.map((entry) => entry.move.name)),
+      );
+
+      if (names.length === 0) {
+        return [];
+      }
+
+      const moveRows = await db
+        .select()
+        .from(pokemonMove)
+        .where(inArray(pokemonMove.name, names));
+
+      return moveRows.map((move) => ({
+        accuracy: move.accuracy,
+        category: move.damageClass,
+        effect: move.effect,
+        generation: move.generation,
+        id: move.id,
+        name: move.name,
+        power: move.power,
+        pp: move.pp,
+        priority: move.priority,
+        type: move.type,
+      }));
     }),
 
   getPokemonGrowthRateData: publicProcedure

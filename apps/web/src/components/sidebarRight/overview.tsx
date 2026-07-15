@@ -1,15 +1,11 @@
-import {
-  Tooltip,
-  TooltipPopup,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
+
 import { orpc } from "@/utils/orpc";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { usePokemonDetailId } from "./pokemon-detail-context";
 import { formatPokemonText } from "./utils";
+import { usePokemonDetailId } from "./pokemon-detail-context";
+
+import TooltipTalent from "../Tooltip";
 
 export default function OverviewComponent() {
   const pokemonId = usePokemonDetailId();
@@ -117,27 +113,7 @@ export default function OverviewComponent() {
           </h2>
         </div>
         <div className="grid grid-cols-1 gap-2.5">
-          <TooltipProvider>
-            {abilities.length > 0 ? (
-              abilities.map((ability, index) => {
-                const abilityName = ability.ability.name;
-                const isHidden = ability.is_hidden;
-
-                return (
-                  <AbilityTooltip
-                    key={`${abilityName}-${index}`}
-                    abilityName={abilityName}
-                    isHidden={isHidden}
-                    url={ability.ability.url}
-                  />
-                );
-              })
-            ) : (
-              <div className="text-sm text-muted-foreground text-center py-4">
-                Aucune capacité disponible
-              </div>
-            )}
-          </TooltipProvider>
+          <TooltipTalent />
         </div>
       </div>
     </div>
@@ -181,59 +157,51 @@ function AbilityTooltip({
     }
   };
 
-  return (
-    <Tooltip open={open} onOpenChange={setOpen}>
-      <TooltipTrigger
-        className={cn(
-          "group relative flex flex-col items-center justify-center rounded-md border py-2 transition-colors hover:bg-accent/40",
-          isHidden ? "!border-primary/60" : "",
-        )}
-        onFocus={prefetchAbility}
-        onMouseEnter={prefetchAbility}
-      >
-        <p className="relative z-10 text-sm font-semibold text-foreground">
-          {formatPokemonText(abilityName)}
-        </p>
-      </TooltipTrigger>
-      <TooltipPopup className="mx-auto w-80 max-w-[min(20rem,calc(100vw-2rem))]" align="center">
-        <div className="space-y-2">
-          <div className="space-y-1 border-b border-border/60 pb-2">
-            <p className="text-sm font-semibold text-foreground">
-              {formatPokemonText(abilityName)}
-            </p>
-            <p className="text-[11px] uppercase tracking-wide text-muted-foreground">
-              {isHidden ? "Hidden ability" : "Ability"}
-            </p>
-          </div>
-          {!url ? (
-            <p className="text-sm text-muted-foreground">No detail available.</p>
-          ) : !ability ? (
-            <p className="text-sm text-muted-foreground">
-              Loading ability details...
-            </p>
-          ) : (
-            <div className="space-y-2 text-left">
-              {ability.shortEffect ? (
-                <p className="text-sm font-medium leading-relaxed text-foreground">
-                  {ability.shortEffect}
-                </p>
-              ) : null}
+  // return (
+    // <Tooltip open={open} onOpenChange={setOpen}>
+    //   <TooltipTrigger
+    //     className={cn(
+    //       "group relative flex flex-col items-center justify-center rounded-md border py-2 transition-colors hover:bg-accent/40",
+    //       isHidden ? "!border-primary/60" : "",
+    //     )}
+    //     onFocus={prefetchAbility}
+    //     onMouseEnter={prefetchAbility}
+    //   >
+    //     <p className="relative z-10 text-sm font-semibold text-foreground">
+    //       {formatPokemonText(abilityName)}
+    //     </p>
+    //   </TooltipTrigger>
+    //   <TooltipPopup className="mx-auto w-80 max-w-[min(20rem,calc(100vw-2rem))]" align="center">
+    //     <div className="space-y-2">
+    //       <div className="space-y-1 border-b border-border/60 pb-2">
+    //         <p className="text-sm font-semibold text-foreground">
+    //           {formatPokemonText(abilityName)}
+    //         </p>
+    //       </div>
+    //       {!url ? (
+    //         <p className="text-sm text-muted-foreground">No detail available.</p>
+    //       ) : !ability ? (
+    //         <p className="text-sm text-muted-foreground">
+    //           Loading ability details...
+    //         </p>
+    //       ) : (
+    //         <div className="space-y-2 text-left">
+    //           {ability.shortEffect ? (
+    //             <p className="text-sm font-medium leading-relaxed text-foreground">
+    //               {ability.shortEffect}
+    //             </p>
+    //           ) : null}
 
-              <p className="text-xs leading-relaxed text-muted-foreground">
-                {ability.effect ??
-                  ability.flavorText ??
-                  "No detailed description is available for this ability."}
-              </p>
-
-              {ability.generation ? (
-                <p className="text-[11px] uppercase tracking-wide text-muted-foreground/80">
-                  Introduced in {formatPokemonText(ability.generation)}
-                </p>
-              ) : null}
-            </div>
-          )}
-        </div>
-      </TooltipPopup>
-    </Tooltip>
-  );
+    //           {ability.generation ? (
+    //             <p className="text-[11px] uppercase tracking-wide text-muted-foreground/80">
+    //               Introduced in {formatPokemonText(ability.generation)}
+    //             </p>
+    //           ) : null}
+    //         </div>
+    //       )}
+    //     </div>
+    //   </TooltipPopup>
+    // </Tooltip>
+    <TooltipTalent/>
+  // );
 }

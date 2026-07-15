@@ -10,6 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  getPokemonTypeStyle,
+  pokemonTypeSurfaceClassName,
+} from "@/lib/pokemon-type-styles";
+import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
 import { usePokemonDetailId } from "./pokemon-detail-context";
@@ -25,11 +30,26 @@ type MoveDetail = {
 type MoveRow = {
   details: MoveDetail[];
   name: string;
+  rawName: string;
+};
+
+type MoveMetadata = {
+  accuracy: number | null;
+  category: string;
+  effect: string | null;
+  generation: string;
+  id: number;
+  name: string;
+  power: number | null;
+  pp: number | null;
+  priority: number;
+  type: string;
 };
 
 type DisplayMoveRow = {
   level: number | null;
   methods: string[];
+  metadata: MoveMetadata | null;
   name: string;
   versions: string[];
 };
@@ -64,6 +84,11 @@ function FilterSelect({ label, onChange, options, value }: SelectProps) {
 
 function uniqueLabels(values: string[]) {
   return Array.from(new Set(values));
+}
+
+function formatGeneration(value: string) {
+  const numeral = value.match(/^generation-(i+)$/i)?.[1];
+  return numeral ? `Generation ${numeral.toUpperCase()}` : formatPokemonText(value);
 }
 
 function sortMoves(moves: DisplayMoveRow[], sortBy: string) {
@@ -102,7 +127,7 @@ export default function MovePoolComponent() {
   const [methodFilter, setMethodFilter] = useState("all");
   const [versionFilter, setVersionFilter] = useState("all");
   const [acquisitionFilter, setAcquisitionFilter] = useState("all");
-  const [sortBy, setSortBy] = useState("level-asc");
+  const sortBy = "level-asc";
   const deferredSearch = useDeferredValue(search);
 
   const pokemon = useQuery({
@@ -110,18 +135,24 @@ export default function MovePoolComponent() {
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;
+  const moveMetadataQuery = useQuery({
+    ...orpc.getPokemonMoveData.queryOptions({ input: { id: pokemonId } }),
+    staleTime: 24 * 60 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
+  });
 
-  if (!pokemon) {
-    return null;
-  }
+  const metadataByName = new Map(
+    (moveMetadataQuery.data ?? []).map((move) => [move.name, move]),
+  );
 
-  const allMoves = (pokemon.moves ?? []).map<MoveRow>((entry) => ({
+  const allMoves = (pokemon?.moves ?? []).map<MoveRow>((entry) => ({
     details: (entry.version_group_details ?? []).map((detail) => ({
       level: detail.level_learned_at,
       method: formatPokemonText(detail.move_learn_method.name),
       version: formatPokemonText(detail.version_group.name),
     })),
     name: formatPokemonText(entry.move.name),
+    rawName: entry.move.name,
   }));
 
   const allMethods = uniqueLabels(
@@ -148,6 +179,10 @@ export default function MovePoolComponent() {
       setVersionFilter("all");
     }
   }, [allVersions, versionFilter]);
+
+  if (!pokemon) {
+    return null;
+  }
 
   const normalizedSearch = deferredSearch.trim().toLowerCase();
 
@@ -192,7 +227,13 @@ export default function MovePoolComponent() {
         }
 
         if (normalizedSearch) {
-          const haystack = [move.name]
+          const metadata = metadataByName.get(move.rawName);
+          const haystack = [
+            move.name,
+            metadata?.type,
+            metadata?.category,
+            metadata?.effect,
+          ]
             .join(" ")
             .toLowerCase();
 
@@ -204,6 +245,8 @@ export default function MovePoolComponent() {
         return {
           level,
           methods,
+          metadata:
+            metadataByName.get(move.rawName) ?? null,
           name: move.name,
           versions,
         };
@@ -236,8 +279,8 @@ export default function MovePoolComponent() {
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-3 overflow-hidden px-3 py-3">
-      <div className="shrink-0 rounded-xl border border-border bg-card/20 p-3">
+    <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden px-4 py-4 md:px-6 md:py-5">
+      <div className="shrink-0 rounded-md border border-border bg-card p-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="rounded-lg border border-border bg-background/55 px-2 py-1 text-center">
             <p className="text-[9px] uppercase tracking-wider text-muted-foreground/70">
@@ -264,7 +307,9 @@ export default function MovePoolComponent() {
             </p>
           </div>
           <p className="ml-auto text-[11px] font-medium text-muted-foreground">
-            Showing {filteredMoves.length} / {allMoves.length}
+            {moveMetadataQuery.isPending
+              ? "Loading battle data..."
+              : `Showing ${filteredMoves.length} / ${allMoves.length}`}
           </p>
         </div>
 
@@ -274,11 +319,13 @@ export default function MovePoolComponent() {
               Search
             </span>
             <Input
+              autoComplete="off"
               className="h-8 px-2.5 py-1.5 text-[13px]"
+              name="move-search"
               onChange={(event) =>
                 startTransition(() => setSearch(event.target.value))
               }
-              placeholder="Search move or method"
+              placeholder="Search moves…"
               type="search"
               value={search}
             />
@@ -337,35 +384,78 @@ export default function MovePoolComponent() {
       </div>
 
       {filteredMoves.length > 0 ? (
-        <div className="min-h-0 flex-1 overflow-hidden rounded-xl border border-border bg-card/10">
-          <div className="h-full overflow-y-auto overflow-x-hidden">
-            <Table className="table-fixed">
+        <div className="min-h-0 flex-1 overflow-hidden rounded-md border border-border bg-card">
+          <div className="h-full overflow-auto">
+            <Table className="min-w-[1040px] table-fixed">
               <TableHeader className="sticky top-0 z-10">
                 <TableRow>
-                  <TableHead className="w-[44%]">Move</TableHead>
-                  <TableHead className="w-[38%]">Learn</TableHead>
-                  <TableHead className="w-[18%] text-right">Lv</TableHead>
+                  <TableHead className="w-[72px]">Lv</TableHead>
+                  <TableHead className="w-[150px]">Move</TableHead>
+                  <TableHead className="w-[92px]">Type</TableHead>
+                  <TableHead className="w-[300px]">Effect</TableHead>
+                  <TableHead className="w-[100px]">Category</TableHead>
+                  <TableHead className="w-[72px] text-right">Power</TableHead>
+                  <TableHead className="w-[60px] text-right">PP</TableHead>
+                  <TableHead className="w-[84px] text-right">Accuracy</TableHead>
+                  <TableHead className="w-[72px] text-right">Priority</TableHead>
+                  <TableHead className="w-[110px]">Introduced</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredMoves.map((move) => (
                   <TableRow key={move.name}>
+                    <TableCell className="py-3 align-top font-mono text-xs font-semibold tabular-nums">
+                      {move.level ?? "-"}
+                    </TableCell>
                     <TableCell className="py-3 align-top">
                       <div className="flex flex-col gap-1">
                         <p className="font-semibold text-foreground">{move.name}</p>
                         <p className="text-[11px] text-muted-foreground">
-                          {move.versions.length} version
-                          {move.versions.length > 1 ? " groups" : " group"}
+                          {move.methods.join(", ")}
                         </p>
                       </div>
                     </TableCell>
                     <TableCell className="py-3 align-top">
-                      <p className="text-sm text-foreground">
-                        {move.methods.join(", ")}
-                      </p>
+                      {move.metadata?.type ? (
+                        <span
+                          className={cn(
+                            "inline-flex rounded-[4px] border px-2 py-1 text-[10px] font-semibold uppercase",
+                            pokemonTypeSurfaceClassName,
+                          )}
+                          style={getPokemonTypeStyle(move.metadata.type)}
+                        >
+                          {formatPokemonText(move.metadata.type)}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">-</span>
+                      )}
                     </TableCell>
-                    <TableCell className="py-3 text-right align-top text-sm font-semibold text-foreground">
-                      {move.level ?? "-"}
+                    <TableCell className="py-3 align-top text-xs leading-5 text-foreground/80">
+                      {move.metadata?.effect ?? "-"}
+                    </TableCell>
+                    <TableCell className="py-3 align-top text-xs font-medium">
+                      {move.metadata?.category
+                        ? formatPokemonText(move.metadata.category)
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="py-3 text-right align-top font-mono text-xs tabular-nums">
+                      {move.metadata?.power ?? "-"}
+                    </TableCell>
+                    <TableCell className="py-3 text-right align-top font-mono text-xs tabular-nums">
+                      {move.metadata?.pp ?? "-"}
+                    </TableCell>
+                    <TableCell className="py-3 text-right align-top font-mono text-xs tabular-nums">
+                      {move.metadata?.accuracy != null
+                        ? `${move.metadata.accuracy}%`
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="py-3 text-right align-top font-mono text-xs tabular-nums">
+                      {move.metadata?.priority ?? "-"}
+                    </TableCell>
+                    <TableCell className="py-3 align-top text-xs">
+                      {move.metadata?.generation
+                        ? formatGeneration(move.metadata.generation)
+                        : "-"}
                     </TableCell>
                   </TableRow>
                 ))}

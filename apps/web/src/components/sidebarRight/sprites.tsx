@@ -190,7 +190,7 @@ function SpriteCard({
   return (
     <div
       className={cn(
-        "flex flex-col gap-3 rounded-xl border bg-card/60 p-3 shadow-sm shadow-black/10 transition-colors",
+        "flex flex-col gap-3 rounded-md border bg-card p-3 shadow-sm shadow-black/10 transition-colors motion-reduce:transition-none",
         isSelected ? "border-primary bg-primary/5" : "border-border/80",
       )}
     >
@@ -198,7 +198,7 @@ function SpriteCard({
         type="button"
         onClick={() => onSelect(asset)}
         className={cn(
-          "flex min-h-32 items-center justify-center rounded-lg bg-[linear-gradient(45deg,hsl(var(--muted))_25%,transparent_25%,transparent_75%,hsl(var(--muted))_75%),linear-gradient(45deg,hsl(var(--muted))_25%,transparent_25%,transparent_75%,hsl(var(--muted))_75%)] bg-[length:16px_16px] bg-[position:0_0,8px_8px] p-2 outline-none transition-[transform,box-shadow] hover:scale-[1.01] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "flex min-h-32 items-center justify-center rounded-md bg-[linear-gradient(45deg,hsl(var(--muted))_25%,transparent_25%,transparent_75%,hsl(var(--muted))_75%),linear-gradient(45deg,hsl(var(--muted))_25%,transparent_25%,transparent_75%,hsl(var(--muted))_75%)] bg-[length:16px_16px] bg-[position:0_0,8px_8px] p-2 outline-none transition-[transform,box-shadow] hover:scale-[1.01] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none",
           isSelected ? "ring-2 ring-primary ring-offset-2" : "",
         )}
         aria-label={`Select sprite ${asset.label}`}
@@ -207,6 +207,8 @@ function SpriteCard({
         <img
           src={asset.src}
           alt={asset.label}
+          width={112}
+          height={112}
           className="h-28 w-28 object-contain"
           loading="lazy"
         />
@@ -339,7 +341,7 @@ export default function SpritesComponent({
   const cryCount = [pokemon.cries?.latest, pokemon.cries?.legacy].filter(Boolean).length;
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-5 overflow-y-auto overflow-x-hidden px-4 py-4">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-7xl flex-col gap-5 overflow-y-auto overflow-x-hidden px-4 py-4 md:px-6 md:py-5">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-md border border-border px-3 py-3 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">

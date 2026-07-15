@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
@@ -40,8 +41,8 @@ export default function TrainingRelationsComponent() {
   );
 
   return (
-    <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-6 md:px-8 md:py-8 lg:px-10">
-      <div>
+    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
+      <div className="border-b border-border pb-6">
         <p className="font-mono text-[10px] font-medium uppercase text-muted-foreground">
           Battle preparation
         </p>
@@ -53,36 +54,36 @@ export default function TrainingRelationsComponent() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-md border border-border px-3 py-3 text-center">
+      <div className="grid grid-cols-2 overflow-hidden rounded-md border border-border bg-card sm:grid-cols-4">
+        <div className="border-b border-r border-border px-3 py-4 text-center sm:border-b-0">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
             Base XP
           </p>
-          <p className="mt-1 text-sm font-semibold text-foreground">
+          <p className="mt-1 font-mono text-base font-semibold tabular-nums text-foreground">
             {pokemon.baseExperience ?? 0}
           </p>
         </div>
-        <div className="rounded-md border border-border px-3 py-3 text-center">
+        <div className="border-b border-border px-3 py-4 text-center sm:border-b-0 sm:border-r">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
             EV Yield
           </p>
-          <p className="mt-1 text-sm font-semibold text-foreground">
+          <p className="mt-1 font-mono text-base font-semibold tabular-nums text-foreground">
             {totalEvYield}
           </p>
         </div>
-        <div className="rounded-md border border-border px-3 py-3 text-center">
+        <div className="border-r border-border px-3 py-4 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
             Varieties
           </p>
-          <p className="mt-1 text-sm font-semibold text-foreground">
+          <p className="mt-1 font-mono text-base font-semibold tabular-nums text-foreground">
             {varieties.length}
           </p>
         </div>
-        <div className="rounded-md border border-border px-3 py-3 text-center">
+        <div className="px-3 py-4 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
             Held Items
           </p>
-          <p className="mt-1 text-sm font-semibold text-foreground">
+          <p className="mt-1 font-mono text-base font-semibold tabular-nums text-foreground">
             {heldItems.length}
           </p>
         </div>
@@ -120,10 +121,10 @@ export default function TrainingRelationsComponent() {
         {varieties.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {varieties.map((variety) => (
-              <Badge
+              <Button
                 key={variety.pokemon.name}
+                size="sm"
                 variant="outline"
-                className="px-3 py-1.5 cursor-pointer"
                 onClick={() =>
                   navigate({
                     to: "/pokemon/$pokemonId",
@@ -136,7 +137,7 @@ export default function TrainingRelationsComponent() {
                 }
               >
                 {formatPokemonText(variety.pokemon.name)}
-              </Badge>
+              </Button>
             ))}
           </div>
         ) : (
@@ -191,7 +192,7 @@ export default function TrainingRelationsComponent() {
 
       <div className="flex flex-col gap-2">
         <h2 className="text-base font-semibold text-foreground tracking-tight">
-          Game availability
+          Game Availability
         </h2>
         {versionPresence.length > 0 ? (
           <div className="flex flex-wrap gap-2">

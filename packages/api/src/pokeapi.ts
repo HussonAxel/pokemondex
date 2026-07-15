@@ -1,8 +1,8 @@
 const POKEAPI_HOSTNAME = "pokeapi.co";
 const POKEAPI_PATH_PREFIX = "/api/v2/";
 const POKEAPI_TIMEOUT_MS = 3_000;
-const POKEAPI_CACHE_TTL_MS = 30 * 60 * 1_000;
-const POKEAPI_CACHE_MAX_ENTRIES = 256;
+const POKEAPI_CACHE_TTL_MS = 24 * 60 * 60 * 1_000;
+const POKEAPI_CACHE_MAX_ENTRIES = 2_048;
 
 type CacheEntry = {
   expiresAt: number;
@@ -10,21 +10,17 @@ type CacheEntry = {
 };
 
 const cache = new Map<string, CacheEntry>();
+const pendingRequests = new Map<string, Promise<unknown>>();
 
-function evictExpiredEntry(url: string) {
+function getCachedEntry(url: string) {
   const entry = cache.get(url);
   if (!entry) {
     return null;
   }
 
-  if (entry.expiresAt <= Date.now()) {
-    cache.delete(url);
-    return null;
-  }
-
   cache.delete(url);
   cache.set(url, entry);
-  return entry.value;
+  return entry;
 }
 
 function setCachedValue(url: string, value: unknown) {
@@ -70,23 +66,40 @@ function normalizePokeApiUrl(url: string) {
 
 export async function fetchPokeApiJson<T>(url: string): Promise<T> {
   const normalizedUrl = normalizePokeApiUrl(url);
-  const cachedValue = evictExpiredEntry(normalizedUrl);
+  const cachedEntry = getCachedEntry(normalizedUrl);
 
-  try {
-    const response = await fetch(normalizedUrl, {
-      signal: AbortSignal.timeout(POKEAPI_TIMEOUT_MS),
+  if (cachedEntry && cachedEntry.expiresAt > Date.now()) {
+    return cachedEntry.value as T;
+  }
+
+  const pendingRequest = pendingRequests.get(normalizedUrl);
+  if (pendingRequest) {
+    return pendingRequest as Promise<T>;
+  }
+
+  const request = fetch(normalizedUrl, {
+    signal: AbortSignal.timeout(POKEAPI_TIMEOUT_MS),
+  })
+    .then(async (response) => {
+      if (!response.ok) {
+        throw new Error(`PokeAPI request failed with status ${response.status}`);
+      }
+
+      const data = (await response.json()) as T;
+      setCachedValue(normalizedUrl, data);
+      return data;
+    })
+    .finally(() => {
+      pendingRequests.delete(normalizedUrl);
     });
 
-    if (!response.ok) {
-      throw new Error(`PokeAPI request failed with status ${response.status}`);
-    }
+  pendingRequests.set(normalizedUrl, request);
 
-    const data = (await response.json()) as T;
-    setCachedValue(normalizedUrl, data);
-    return data;
+  try {
+    return await request;
   } catch (error) {
-    if (cachedValue) {
-      return cachedValue as T;
+    if (cachedEntry) {
+      return cachedEntry.value as T;
     }
 
     if (

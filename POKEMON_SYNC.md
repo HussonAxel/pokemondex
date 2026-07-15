@@ -2,6 +2,14 @@
 
 Ce système permet de **cache les données Pokémon dans votre base de données locale** au lieu de faire des requêtes constantes à PokeAPI. Cela améliore considérablement les performances de votre application.
 
+Les métadonnées des attaques sont également stockées dans la table
+`pokemon_move`. Elles sont mises à jour automatiquement par `pokemon:refresh`.
+Pour ne rafraîchir que ce référentiel :
+
+```bash
+bun run pokemon:moves
+```
+
 ## 📋 Architecture
 
 ### Avantages

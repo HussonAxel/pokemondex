@@ -6,14 +6,24 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
-import { Volume2 } from "lucide-react";
 import { PokemonDetailProvider } from "./pokemon-detail-context";
+import { formatPokemonText } from "./utils";
 
 export default function MainTab({ pokemonId }: { pokemonId: number }) {
-  const pokemon = useQuery({
+  const pokemonQuery = useQuery({
     ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
+  });
+  const pokemon = pokemonQuery.data;
+  const speciesUrl = pokemon?.species?.url ?? "";
+  const species = useQuery({
+    ...orpc.getPokemonSpeciesData.queryOptions({
+      input: { url: speciesUrl },
+    }),
+    enabled: Boolean(speciesUrl),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 24 * 60 * 60 * 1000,
   }).data;
 
   const [selectedSprite, setSelectedSprite] = useState<{
@@ -33,31 +43,55 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
     pokemon.spriteUrl ||
     "";
   const previewAlt = selectedSprite?.alt || `${pokemon.name} official artwork`;
-  const baseStatTotal = (pokemon.statsDetails ?? []).reduce(
-    (total, stat) => total + stat.base_stat,
-    0,
-  );
-  const quickFacts = [
-    { label: "Base stats", value: baseStatTotal.toString() },
-    { label: "Abilities", value: pokemon.abilities.length.toString() },
-    { label: "Moves", value: pokemon.moves.length.toString() },
-    { label: "Forms", value: pokemon.varieties.length.toString() },
+  const pokemonName = formatPokemonText(pokemon.name);
+  const pokedexEntry = [...(species?.flavor_text_entries ?? [])]
+    .reverse()
+    .find((entry) => entry.language?.name === "en")
+    ?.flavor_text?.replace(/[\n\f\r]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+  const physicalProfile = [
+    {
+      label: "Height",
+      value: pokemon.height ? `${(pokemon.height / 10).toFixed(1)} m` : "—",
+    },
+    {
+      label: "Weight",
+      value: pokemon.weight ? `${(pokemon.weight / 10).toFixed(1)} kg` : "—",
+    },
+    {
+      label: "Shape",
+      value: species?.shape?.name
+        ? formatPokemonText(species.shape.name)
+        : "Unknown",
+    },
+    {
+      label: "Color",
+      value: species?.color?.name
+        ? formatPokemonText(species.color.name)
+        : "Unknown",
+    },
   ];
-
-  const playLatestCry = () => {
-    if (!pokemon.cries?.latest) return;
-
-    const audio = new Audio(pokemon.cries.latest);
-    audio.volume = 0.45;
-    void audio.play().catch(() => undefined);
-  };
 
   return (
     <PokemonDetailProvider pokemonId={pokemonId}>
-      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_19rem] md:grid-rows-1 lg:grid-cols-[minmax(0,1fr)_22rem]">
-        <aside className="min-h-0 overflow-y-auto border-b border-border bg-muted/10 px-4 py-5 md:order-2 md:border-b-0 md:border-l md:px-7 md:py-7 lg:px-8">
-          <div className="flex items-center gap-5 md:flex-col md:items-stretch md:gap-6">
-            <div className="flex size-32 shrink-0 items-center justify-center rounded-md border border-border/70 bg-background/55 md:aspect-square md:size-auto md:w-full">
+      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_20rem] md:grid-rows-1 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <aside className="min-h-0 overflow-y-auto border-b border-border bg-card px-4 py-5 md:order-2 md:border-b-0 md:border-l md:px-6 md:py-6 lg:px-7">
+          <div className="flex flex-col gap-5">
+            <header className="min-w-0">
+              <h1 className="truncate text-2xl font-bold text-foreground">
+                {pokemonName}
+                <span className="font-mono text-base font-medium text-muted-foreground">
+                  {" "}- #{pokemonId.toString().padStart(4, "0")}
+                </span>
+              </h1>
+            </header>
+
+            <div className="grid grid-cols-[8rem_minmax(0,1fr)] gap-4 md:grid-cols-1 md:gap-5">
+              <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-md border border-border bg-muted/25">
+              <span className="absolute left-3 top-3 hidden font-mono text-[9px] font-medium uppercase text-muted-foreground md:block">
+                Official artwork
+              </span>
               <img
                 src={previewSprite}
                 alt={previewAlt}
@@ -65,19 +99,21 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
                 height={256}
                 fetchPriority="high"
                 className={cn(
-                  "size-28 object-contain md:size-52",
+                  "size-28 object-contain md:size-48",
                   selectedSprite && "[image-rendering:pixelated]",
                 )}
               />
-            </div>
-            <div className="flex min-w-0 flex-col md:px-1">
-              <p className="font-mono text-xs font-medium uppercase text-muted-foreground">
-                National Dex #{pokemonId.toString().padStart(4, "0")}
-              </p>
-              <h1 className="mt-1 truncate text-3xl font-bold text-foreground md:text-4xl">
-                {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-              </h1>
-              <div className="mt-3 flex items-center gap-2">
+              </div>
+
+              <div className="flex min-w-0 flex-col gap-4 md:px-1">
+                <section aria-labelledby="pokemon-types-title">
+                  <h2
+                    id="pokemon-types-title"
+                    className="font-mono text-[10px] font-medium uppercase text-muted-foreground"
+                  >
+                    Types
+                  </h2>
+                  <div className="mt-2 flex flex-wrap items-center gap-2">
                 <BadgeTypes
                   pokemonTypes={
                     pokemon.types.length > 1
@@ -88,30 +124,52 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
                       : [pokemon.types[0].toLowerCase()]
                   }
                 />
+                  </div>
+                </section>
+
+                <section aria-labelledby="pokemon-abilities-title">
+                  <h2
+                    id="pokemon-abilities-title"
+                    className="font-mono text-[10px] font-medium uppercase text-muted-foreground"
+                  >
+                    Abilities
+                  </h2>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {pokemon.abilities.map((entry) => (
+                      <span
+                        key={`${entry.ability.name}-${entry.slot}`}
+                        className="rounded-[4px] border border-border bg-background px-2 py-1 text-xs font-medium text-foreground"
+                      >
+                        {formatPokemonText(entry.ability.name)}
+                      </span>
+                    ))}
+                  </div>
+                </section>
               </div>
-              {pokemon.cries?.latest ? (
-                <Button
-                  className="mt-4 w-fit md:w-full"
-                  onClick={playLatestCry}
-                  size="sm"
-                  variant="outline"
-                >
-                  <Volume2 />
-                  Play latest cry
-                </Button>
-              ) : null}
             </div>
 
-            <dl className="hidden grid-cols-2 border-y border-border md:grid">
-              {quickFacts.map((fact, index) => (
+            <section aria-labelledby="pokedex-entry-title" className="md:px-1">
+              <h2
+                id="pokedex-entry-title"
+                className="font-mono text-[10px] font-medium uppercase text-muted-foreground"
+              >
+                Pokedex Entry
+              </h2>
+              <p className="mt-2 text-sm leading-6 text-foreground/80">
+                {pokedexEntry ?? "No Pokedex entry is available for this form."}
+              </p>
+            </section>
+
+            <dl className="grid grid-cols-2 overflow-hidden rounded-md border border-border bg-background">
+              {physicalProfile.map((fact, index) => (
                 <div
                   key={fact.label}
-                  className={`py-4 ${index % 2 === 0 ? "border-r pr-4" : "pl-4"} ${index > 1 ? "border-t" : ""}`}
+                  className={`px-4 py-3.5 ${index % 2 === 0 ? "border-r" : ""} ${index > 1 ? "border-t" : ""}`}
                 >
                   <dt className="text-xs font-medium text-muted-foreground">
                     {fact.label}
                   </dt>
-                  <dd className="mt-1 font-mono text-sm font-semibold text-foreground">
+                  <dd className="mt-1 text-sm font-semibold text-foreground">
                     {fact.value}
                   </dd>
                 </div>

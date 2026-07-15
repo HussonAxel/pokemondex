@@ -14,9 +14,17 @@ export const Route = createFileRoute("/pokemon/$pokemonId")({
     const pokemonId = Number(params.pokemonId);
     if (!Number.isInteger(pokemonId) || pokemonId <= 0) throw notFound();
 
-    await context.queryClient.ensureQueryData(
+    const pokemon = await context.queryClient.ensureQueryData(
       orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
     );
+
+    if (pokemon.species?.url) {
+      await context.queryClient.ensureQueryData(
+        orpc.getPokemonSpeciesData.queryOptions({
+          input: { url: pokemon.species.url },
+        }),
+      );
+    }
 
     return { pokemonId };
   },
@@ -39,14 +47,33 @@ function PokemonDetailPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
-      <header className="flex h-14 shrink-0 items-center justify-between border-b px-3 sm:h-16 sm:px-6">
-        <Button size="sm" variant="ghost" onClick={returnToPokedex}>
-          <ArrowLeft />
-          Back to Pokedex
-        </Button>
-        <p className="font-mono text-xs font-medium uppercase text-muted-foreground">
-          Profile #{pokemonId.toString().padStart(4, "0")}
-        </p>
+      <header className="flex h-16 shrink-0 items-center justify-between border-b bg-card px-3 sm:px-6">
+        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <Button
+            aria-label="Back to Pokedex"
+            size="icon"
+            variant="ghost"
+            onClick={returnToPokedex}
+          >
+            <ArrowLeft />
+          </Button>
+          <div className="min-w-0 border-l border-border pl-3">
+            <p className="truncate text-sm font-semibold text-foreground">
+              Pokemon Explorer
+            </p>
+            <p className="truncate text-xs text-muted-foreground">
+              National Pokedex
+            </p>
+          </div>
+        </div>
+        <div className="flex items-baseline gap-2">
+          <span className="hidden text-[10px] font-medium uppercase text-muted-foreground sm:inline">
+            Profile
+          </span>
+          <span className="font-mono text-xs font-semibold tabular-nums text-foreground">
+            #{pokemonId.toString().padStart(4, "0")}
+          </span>
+        </div>
       </header>
       <main className="min-h-0 w-full flex-1 overflow-hidden">
         <MainTab pokemonId={pokemonId} />

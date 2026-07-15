@@ -2,7 +2,10 @@ import { lazy, Suspense, useState } from "react";
 
 import Loader from "@/components/demo/loader";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
+import { orpc } from "@/utils/orpc";
+import { useQueryClient } from "@tanstack/react-query";
 import { Activity, BookOpen, Dna, Images, Swords } from "lucide-react";
+import { usePokemonDetailId } from "./pokemon-detail-context";
 
 const PokedexProfile = lazy(
   () => import("@/components/sidebarRight/pokedex-profile"),
@@ -16,9 +19,9 @@ const TrainingRelationsComponent = lazy(
 const SpritesComponent = lazy(
   () => import("@/components/sidebarRight/sprites"),
 );
-const MovePoolComponent = lazy(
-  () => import("@/components/sidebarRight/move-pool"),
-);
+const loadMovePoolComponent = () =>
+  import("@/components/sidebarRight/move-pool");
+const MovePoolComponent = lazy(loadMovePoolComponent);
 
 type TabsComponentProps = {
   onSelectSprite: (src: string, alt: string) => void;
@@ -30,6 +33,16 @@ export default function TabsComponent({
   selectedSpriteSrc,
 }: TabsComponentProps) {
   const [activeTab, setActiveTab] = useState("tab-1");
+  const pokemonId = usePokemonDetailId();
+  const queryClient = useQueryClient();
+
+  const prefetchMovePool = () => {
+    void loadMovePoolComponent();
+    void queryClient.prefetchQuery({
+      ...orpc.getPokemonMoveData.queryOptions({ input: { id: pokemonId } }),
+      staleTime: 24 * 60 * 60 * 1000,
+    });
+  };
 
   return (
     <Tabs
@@ -38,33 +51,40 @@ export default function TabsComponent({
       value={activeTab}
       onValueChange={setActiveTab}
     >
-      <div className="shrink-0 border-b bg-background px-2 md:px-6">
+      <nav
+        aria-label="Pokemon profile sections"
+        className="shrink-0 border-b bg-card px-2 md:px-5"
+      >
         <TabsList
           variant="underline"
           className="scrollbar-hide flex w-full flex-nowrap items-center justify-start gap-1 overflow-x-auto py-2"
         >
-          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-1">
+          <TabsTab className="h-10 grow-0 px-3.5" value="tab-1">
             <BookOpen />
             Pokédex
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-2">
+          <TabsTab className="h-10 grow-0 px-3.5" value="tab-2">
             <Activity />
             Training
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-3">
+          <TabsTab className="h-10 grow-0 px-3.5" value="tab-3">
             <Dna />
             Breeding
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-4">
+          <TabsTab
+            className="h-10 grow-0 px-3.5"
+            onMouseEnter={prefetchMovePool}
+            value="tab-4"
+          >
             <Swords />
             Moves
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3 md:grow" value="tab-5">
+          <TabsTab className="h-10 grow-0 px-3.5" value="tab-5">
             <Images />
             Gallery
           </TabsTab>
         </TabsList>
-      </div>
+      </nav>
       <TabsPanel className="min-h-0 overflow-y-auto" value="tab-1">
         {activeTab === "tab-1" ? (
           <Suspense fallback={<Loader />}>

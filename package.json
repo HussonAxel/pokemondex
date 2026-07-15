@@ -31,25 +31,26 @@
     "db:migrate": "turbo -F @my-better-t-app/db db:migrate",
     "pokemon:catalog": "bun run packages/api/src/scripts/generate-pokemon-catalog.ts",
     "pokemon:catalog:check": "bun run packages/api/src/scripts/check-pokemon-catalog-parity.ts",
-    "pokemon:refresh": "bun run packages/api/src/scripts/refresh-pokemon.ts"
+    "pokemon:refresh": "bun run db:push && bun run packages/api/src/scripts/refresh-pokemon.ts",
+    "pokemon:moves": "bun run db:push && bun run packages/api/src/scripts/sync-moves.ts"
   },
   "dependencies": {
     "@my-better-t-app/env": "workspace:*",
-    "@tanstack/react-form": "^1.28.5",
-    "@tanstack/react-query": "^5.95.2",
-    "@tanstack/react-router": "^1.168.3",
-    "@tanstack/react-start": "^1.167.6",
+    "@tanstack/react-form": "^1.33.2",
+    "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-router": "^1.170.18",
+    "@tanstack/react-start": "^1.168.28",
     "@tanstack/react-table": "^8.21.3",
     "babel-plugin-react-compiler": "^1.0.0",
-    "dotenv": "^17.3.1",
+    "dotenv": "^17.4.2",
     "get-db": "^0.11.0",
     "nitro": "^3.0.1-alpha.2",
-    "zod": "^4.3.6"
+    "zod": "^4.4.3"
   },
   "devDependencies": {
-    "turbo": "^2.8.20",
+    "turbo": "^2.10.5",
     "typescript": "^5.9.3",
-    "@types/node": "^22.19.15",
+    "@types/node": "^22.20.1",
     "@my-better-t-app/config": "workspace:*"
   },
   "packageManager": "bun@1.3.5"
