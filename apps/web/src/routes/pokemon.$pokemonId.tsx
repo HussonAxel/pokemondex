@@ -1,8 +1,12 @@
 import MainTab from "@/components/sidebarRight/mainTab";
-import { buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { orpc } from "@/utils/orpc";
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  notFound,
+  useCanGoBack,
+  useRouter,
+} from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/pokemon/$pokemonId")({
@@ -21,17 +25,25 @@ export const Route = createFileRoute("/pokemon/$pokemonId")({
 
 function PokemonDetailPage() {
   const { pokemonId } = Route.useLoaderData();
+  const router = useRouter();
+  const canGoBack = useCanGoBack();
+
+  const returnToPokedex = () => {
+    if (canGoBack) {
+      router.history.back();
+      return;
+    }
+
+    router.navigate({ to: "/" });
+  };
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
       <header className="flex h-14 shrink-0 items-center border-b px-3 sm:h-16 sm:px-6">
-        <Link
-          to="/"
-          className={cn(buttonVariants({ size: "sm", variant: "ghost" }))}
-        >
+        <Button size="sm" variant="ghost" onClick={returnToPokedex}>
           <ArrowLeft />
           Back to Pokedex
-        </Link>
+        </Button>
       </header>
       <main className="min-h-0 w-full flex-1 overflow-hidden">
         <MainTab pokemonId={pokemonId} />
