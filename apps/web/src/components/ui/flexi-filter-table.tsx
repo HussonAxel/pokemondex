@@ -32,11 +32,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { pokemonCollectionFilterMap } from "@/data/data";
+import { queryPokemonCatalogIsomorphic } from "@/features/pokemon-catalog/isomorphic";
 import { cn } from "@/lib/utils";
 import {
   HOME_CATALOG_PAGE_SIZE,
   Route,
-  getHomeCatalogQueryOptions,
+  getHomeCatalogInput,
   getHomeLoaderDeps,
 } from "@/routes";
 import { orpc } from "@/utils/orpc";
@@ -146,12 +147,7 @@ export default function FlexiFilterTable() {
   }
 
   useEffect(() => {
-    const nearbyPages = [
-      currentPage + 1,
-      currentPage + 2,
-      currentPage + 3,
-      currentPage - 1,
-    ].filter(
+    const nearbyPages = [currentPage + 1, currentPage - 1].filter(
       (page) => page >= 1 && page <= totalPages,
     );
 
@@ -163,17 +159,12 @@ export default function FlexiFilterTable() {
         },
       });
 
-      void queryClient
-        .ensureQueryData(
-          getHomeCatalogQueryOptions(deps),
-        )
+      void queryPokemonCatalogIsomorphic(getHomeCatalogInput(deps))
         .then((nextCatalog) => {
-          if (Math.abs(page - currentPage) === 1) {
-            preloadSpritesForItems(nextCatalog.items, Boolean(isShinyView));
-          }
+          preloadSpritesForItems(nextCatalog.items, Boolean(isShinyView));
         });
     }
-  }, [currentPage, isShinyView, queryClient, searchParams, totalPages]);
+  }, [currentPage, isShinyView, searchParams, totalPages]);
 
   return (
     <div className="bg-background h-full flex flex-col gap-2 p-2 pl-4">

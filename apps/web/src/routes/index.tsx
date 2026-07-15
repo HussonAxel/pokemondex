@@ -1,9 +1,10 @@
 import { ListTemplateView } from "@/components/ListTemplateView.tsx";
+import { Button } from "@/components/ui/button";
 import {
   pokemonCollectionFilterKeys,
   pokemonCollectionFilterMap,
 } from "@/data/data";
-import { orpc } from "@/utils/orpc";
+import { queryPokemonCatalogIsomorphic } from "@/features/pokemon-catalog/isomorphic";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
@@ -48,31 +49,50 @@ export function getHomeCatalogInput(deps: ReturnType<typeof getHomeLoaderDeps>) 
   };
 }
 
-export function getHomeCatalogQueryOptions(
-  deps: ReturnType<typeof getHomeLoaderDeps>,
-) {
-  return {
-    ...orpc.getPokemonsCatalog.queryOptions({
-      input: getHomeCatalogInput(deps),
-    }),
-    staleTime: HOME_CATALOG_STALE_TIME,
-    gcTime: HOME_CATALOG_GC_TIME,
-  };
-}
-
 export const Route = createFileRoute("/")({
   component: HomeComponent,
+  errorComponent: CatalogErrorComponent,
   validateSearch: homeSearchSchema,
   loaderDeps: getHomeLoaderDeps,
   staleTime: HOME_CATALOG_STALE_TIME,
   gcTime: HOME_CATALOG_GC_TIME,
-  loader: async ({ context, deps }) => {
-    const catalog = await context.queryClient.ensureQueryData(
-      getHomeCatalogQueryOptions(deps),
+  loader: async ({ deps }) => {
+    const catalog = await queryPokemonCatalogIsomorphic(
+      getHomeCatalogInput(deps),
     );
     return { catalog } as const;
   },
 });
+
+function CatalogErrorComponent({
+  error,
+  reset,
+}: {
+  error: Error;
+  reset: () => void;
+}) {
+  const retry = async () => {
+    if (typeof window !== "undefined") {
+      const { retryPokemonCatalogClient } = await import(
+        "@/features/pokemon-catalog/client"
+      );
+      await retryPokemonCatalogClient();
+    }
+    reset();
+  };
+
+  return (
+    <div className="flex h-full items-center justify-center p-6">
+      <div className="flex max-w-sm flex-col items-center gap-3 text-center">
+        <p className="font-medium">The Pokemon catalog could not be loaded.</p>
+        <p className="text-sm text-muted-foreground">{error.message}</p>
+        <Button type="button" onClick={() => void retry()}>
+          Retry
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 function HomeComponent() {
   return (

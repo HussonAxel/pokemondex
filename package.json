@@ -28,7 +28,10 @@
     "db:push": "turbo -F @my-better-t-app/db db:push",
     "db:studio": "turbo -F @my-better-t-app/db db:studio",
     "db:generate": "turbo -F @my-better-t-app/db db:generate",
-    "db:migrate": "turbo -F @my-better-t-app/db db:migrate"
+    "db:migrate": "turbo -F @my-better-t-app/db db:migrate",
+    "pokemon:catalog": "bun run packages/api/src/scripts/generate-pokemon-catalog.ts",
+    "pokemon:catalog:check": "bun run packages/api/src/scripts/check-pokemon-catalog-parity.ts",
+    "pokemon:refresh": "bun run packages/api/src/scripts/refresh-pokemon.ts"
   },
   "dependencies": {
     "@my-better-t-app/env": "workspace:*",

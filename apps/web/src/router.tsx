@@ -3,6 +3,7 @@ import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { ThemeProvider } from "next-themes";
 
 import "./index.css";
+import { PokemonCatalogBootstrap } from "./features/pokemon-catalog/catalog-bootstrap";
 import Loader from "./components/demo/loader";
 import { routeTree } from "./routeTree.gen";
 import { createQueryClient, orpc } from "./utils/orpc";
@@ -26,6 +27,7 @@ export const getRouter = () => {
           enableSystem
           disableTransitionOnChange
         >
+          <PokemonCatalogBootstrap />
           {children}
         </ThemeProvider>
       </QueryClientProvider>

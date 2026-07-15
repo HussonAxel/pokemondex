@@ -20,6 +20,7 @@
     "drizzle-orm": "^0.45.1",
     "@my-better-t-app/env": "workspace:*",
     "@my-better-t-app/auth": "workspace:*",
+    "@my-better-t-app/catalog": "workspace:*",
     "@my-better-t-app/db": "workspace:*"
   },
   "devDependencies": {
