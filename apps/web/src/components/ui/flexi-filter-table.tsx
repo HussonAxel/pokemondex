@@ -49,7 +49,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import Pokeball from "./svg/pokeball";
 
 export default function FlexiFilterTable() {
-  const { theme, toggleTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
   const navigate = useNavigate({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
   const { catalog } = useLoaderData({ from: Route.id });
@@ -441,14 +441,17 @@ export default function FlexiFilterTable() {
           </Pagination>
         )}
         <div className="flex gap-4">
-          {theme === "light" ? (
-            <Moon className="w-4 h-4 cursor-pointer" onClick={toggleTheme} />
-          ) : (
-            <Sun
-              className="w-4 h-4 cursor-pointer text-yellow-500"
-              onClick={toggleTheme}
-            />
-          )}
+          <button
+            type="button"
+            className="text-muted-foreground hover:text-foreground cursor-pointer transition-colors"
+            aria-label="Changer de theme"
+            onClick={() =>
+              setTheme(resolvedTheme === "dark" ? "light" : "dark")
+            }
+          >
+            <Moon className="size-4 dark:hidden" />
+            <Sun className="hidden size-4 text-yellow-500 dark:block" />
+          </button>
 
           <Sparkles
             className={cn(
