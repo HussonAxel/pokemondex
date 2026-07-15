@@ -54,8 +54,8 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
 
   return (
     <PokemonDetailProvider pokemonId={pokemonId}>
-      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[19rem_minmax(0,1fr)] md:grid-rows-1 lg:grid-cols-[22rem_minmax(0,1fr)]">
-        <aside className="min-h-0 overflow-y-auto border-b border-border bg-muted/10 px-4 py-5 md:border-r md:border-b-0 md:px-7 md:py-7 lg:px-8">
+      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[minmax(0,1fr)_19rem] md:grid-rows-1 lg:grid-cols-[minmax(0,1fr)_22rem]">
+        <aside className="min-h-0 overflow-y-auto border-b border-border bg-muted/10 px-4 py-5 md:order-2 md:border-b-0 md:border-l md:px-7 md:py-7 lg:px-8">
           <div className="flex items-center gap-5 md:flex-col md:items-stretch md:gap-6">
             <div className="flex size-32 shrink-0 items-center justify-center rounded-md border border-border/70 bg-background/55 md:aspect-square md:size-auto md:w-full">
               <img
@@ -119,7 +119,7 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
             </dl>
           </div>
         </aside>
-        <section className="min-h-0 min-w-0 bg-background">
+        <section className="min-h-0 min-w-0 bg-background md:order-1">
           <TabsComponent
             onSelectSprite={(src, alt) => setSelectedSprite({ alt, src })}
             selectedSpriteSrc={selectedSprite?.src ?? null}
