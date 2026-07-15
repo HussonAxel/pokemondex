@@ -36,7 +36,7 @@ import { cn } from "@/lib/utils";
 import {
   HOME_CATALOG_PAGE_SIZE,
   Route,
-  getHomeCatalogInput,
+  getHomeCatalogQueryOptions,
   getHomeLoaderDeps,
 } from "@/routes";
 import { orpc } from "@/utils/orpc";
@@ -127,10 +127,10 @@ export default function FlexiFilterTable() {
     items: Array<{
       id: number;
     }>,
+    shiny: boolean,
   ) => {
     for (const item of items) {
-      preloadSprite(`/sprites/base/${item.id}.webp`);
-      preloadSprite(`/sprites/shiny/${item.id}.webp`);
+      preloadSprite(`/sprites/${shiny ? "shiny" : "base"}/${item.id}.webp`);
     }
   };
 
@@ -146,13 +146,16 @@ export default function FlexiFilterTable() {
   }
 
   useEffect(() => {
-    preloadSpritesForItems(PokemonsPaginated);
-
-    const adjacentPages = [currentPage - 1, currentPage + 1].filter(
+    const nearbyPages = [
+      currentPage + 1,
+      currentPage + 2,
+      currentPage - 1,
+      currentPage - 2,
+    ].filter(
       (page) => page >= 1 && page <= totalPages,
     );
 
-    for (const page of adjacentPages) {
+    for (const page of nearbyPages) {
       const deps = getHomeLoaderDeps({
         search: {
           ...searchParams,
@@ -162,15 +165,15 @@ export default function FlexiFilterTable() {
 
       void queryClient
         .ensureQueryData(
-          orpc.getPokemonsCatalog.queryOptions({
-            input: getHomeCatalogInput(deps),
-          }),
+          getHomeCatalogQueryOptions(deps),
         )
         .then((nextCatalog) => {
-          preloadSpritesForItems(nextCatalog.items);
+          if (Math.abs(page - currentPage) === 1) {
+            preloadSpritesForItems(nextCatalog.items, Boolean(isShinyView));
+          }
         });
     }
-  }, [PokemonsPaginated, currentPage, queryClient, searchParams, totalPages]);
+  }, [currentPage, isShinyView, queryClient, searchParams, totalPages]);
 
   return (
     <div className="bg-background h-full flex flex-col gap-2 p-2 pl-4">

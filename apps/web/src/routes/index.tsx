@@ -8,6 +8,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
 export const HOME_CATALOG_PAGE_SIZE = 30;
+export const HOME_CATALOG_STALE_TIME = 30 * 60 * 1000;
+export const HOME_CATALOG_GC_TIME = 24 * 60 * 60 * 1000;
 
 const homeSearchSchema = z.object({
   view: z.enum(["grid", "list"]).optional(),
@@ -28,11 +30,9 @@ export function getHomeLoaderDeps({
 }) {
   return {
     ability: search.ability ?? [],
-    catchedView: search.catchedView ?? false,
     collection: search.collection,
     page: search.page ?? 1,
     search: search.search?.trim() || undefined,
-    shinyView: search.shinyView ?? false,
     type: search.type ?? [],
   };
 }
@@ -48,15 +48,27 @@ export function getHomeCatalogInput(deps: ReturnType<typeof getHomeLoaderDeps>) 
   };
 }
 
+export function getHomeCatalogQueryOptions(
+  deps: ReturnType<typeof getHomeLoaderDeps>,
+) {
+  return {
+    ...orpc.getPokemonsCatalog.queryOptions({
+      input: getHomeCatalogInput(deps),
+    }),
+    staleTime: HOME_CATALOG_STALE_TIME,
+    gcTime: HOME_CATALOG_GC_TIME,
+  };
+}
+
 export const Route = createFileRoute("/")({
   component: HomeComponent,
   validateSearch: homeSearchSchema,
   loaderDeps: getHomeLoaderDeps,
+  staleTime: HOME_CATALOG_STALE_TIME,
+  gcTime: HOME_CATALOG_GC_TIME,
   loader: async ({ context, deps }) => {
     const catalog = await context.queryClient.ensureQueryData(
-      orpc.getPokemonsCatalog.queryOptions({
-        input: getHomeCatalogInput(deps),
-      }),
+      getHomeCatalogQueryOptions(deps),
     );
     return { catalog } as const;
   },
