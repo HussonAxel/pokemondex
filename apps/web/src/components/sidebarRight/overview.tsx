@@ -48,9 +48,9 @@ export default function OverviewComponent() {
   })();
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-4">
+    <div className="grid gap-6 px-4 py-5 md:px-8 md:py-8 xl:grid-cols-2">
       {/* Habitat Section */}
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-3 xl:col-span-2">
         <div className="flex items-center gap-3">
           <h2 className="text-base font-semibold text-foreground tracking-tight">
             Habitat

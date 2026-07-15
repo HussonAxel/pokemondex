@@ -29,10 +29,10 @@ export default function TabsComponent({
       value={activeTab}
       onValueChange={setActiveTab}
     >
-      <div className="shrink-0 border-b">
+      <div className="shrink-0 border-b px-4 md:px-8">
         <TabsList
           variant="underline"
-          className="flex w-full flex-wrap items-center justify-center gap-2 border-t border-sidebar-border px-2"
+          className="flex w-full flex-nowrap items-center justify-start gap-2 overflow-x-auto"
         >
           <TabsTab value="tab-1">Overview</TabsTab>
           <TabsTab value="tab-2">Breeding</TabsTab>

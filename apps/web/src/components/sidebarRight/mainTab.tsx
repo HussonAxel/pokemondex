@@ -29,25 +29,27 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
 
   return (
     <PokemonDetailProvider pokemonId={pokemonId}>
-      <div className="flex h-full min-h-0 flex-col">
-        <div className="flex max-h-[300px] shrink-0 flex-row items-center justify-center gap-2 p-4">
-          <div className="flex flex-col gap-2 text-center">
-            <img
-              src={previewSprite}
-              alt={previewAlt}
-              width={160}
-              height={160}
-              fetchPriority="high"
-              className="w-32 h-32"
-            />
+      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[18rem_minmax(0,1fr)] md:grid-rows-1 lg:grid-cols-[21rem_minmax(0,1fr)]">
+        <aside className="border-b border-border bg-muted/10 px-4 py-5 md:border-r md:border-b-0 md:px-7 md:py-9 lg:px-9">
+          <div className="flex items-center gap-5 md:flex-col md:items-start md:gap-7">
+            <div className="flex size-32 shrink-0 items-center justify-center bg-muted/25 md:size-56 lg:size-64">
+              <img
+                src={previewSprite}
+                alt={previewAlt}
+                width={256}
+                height={256}
+                fetchPriority="high"
+                className="size-28 object-contain [image-rendering:pixelated] md:size-48 lg:size-56"
+              />
+            </div>
             <div className="flex flex-col">
-              <p className="text-[10px] text-accent-foreground/60 font-normal">
-                NATIONAL DEX #{pokemon.order?.toString().padStart(3, "0")}
+              <p className="font-mono text-xs font-medium uppercase text-muted-foreground">
+                National Dex #{pokemonId.toString().padStart(4, "0")}
               </p>
-              <p className="text-[24px] font-bold">
+              <h1 className="mt-1 text-3xl font-bold text-foreground md:text-4xl">
                 {pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}
-              </p>
-              <div className="mt-2 flex items-center justify-center gap-2">
+              </h1>
+              <div className="mt-3 flex items-center gap-2">
                 <BadgeTypes
                   pokemonTypes={
                     pokemon.types.length > 1
@@ -61,13 +63,13 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
               </div>
             </div>
           </div>
-        </div>
-        <div className="min-h-0 flex-1">
+        </aside>
+        <section className="min-h-0 min-w-0 bg-background">
           <TabsComponent
             onSelectSprite={(src, alt) => setSelectedSprite({ alt, src })}
             selectedSpriteSrc={selectedSprite?.src ?? null}
           />
-        </div>
+        </section>
       </div>
     </PokemonDetailProvider>
   );
