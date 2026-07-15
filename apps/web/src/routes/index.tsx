@@ -15,7 +15,6 @@ export const HOME_CATALOG_GC_TIME = 24 * 60 * 60 * 1000;
 const homeSearchSchema = z.object({
   view: z.enum(["grid", "list"]).optional(),
   search: z.string().optional(),
-  activePokemon: z.number().optional(),
   shinyView: z.boolean().optional(),
   catchedView: z.boolean().optional(),
   page: z.number().optional(),

@@ -1,23 +1,19 @@
-import { useSearch } from "@tanstack/react-router";
-import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { usePokemonDetailId } from "./pokemon-detail-context";
 
 export default function BreedingComponent() {
-  const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
-  const pokemonSpeciesUrl = activePokemon
-    ? `https://pokeapi.co/api/v2/pokemon-species/${activePokemon}/`
-    : "";
+  const pokemonId = usePokemonDetailId();
+  const pokemonSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
 
   const species = useQuery({
     ...orpc.getPokemonSpeciesData.queryOptions({
       input: { url: pokemonSpeciesUrl },
     }),
-    enabled: Boolean(activePokemon),
+    enabled: true,
   }).data;
 
   const growthRateUrl = species?.growth_rate.url ?? "";

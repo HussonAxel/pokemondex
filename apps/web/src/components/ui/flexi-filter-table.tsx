@@ -57,7 +57,6 @@ export default function FlexiFilterTable() {
   const preloadedImageUrlsRef = useRef(new Set<string>());
 
   const currentPage = catalog.page;
-  const activePokemon = searchParams.activePokemon;
   const searchTypes = searchParams.type ?? [];
   const searchAbilities = searchParams.ability ?? [];
   const isShinyView = searchParams.shinyView;
@@ -194,8 +193,6 @@ export default function FlexiFilterTable() {
                     className={cn(
                       "group cursor-pointer border-l-2 border-l-transparent transition-colors",
                       "hover:bg-muted/25",
-                      activePokemon === pokemon.id &&
-                        "border-l-primary bg-primary/[0.045] shadow-[inset_0_1px_0_rgba(0,0,0,0.03)]",
                       isCatchedView && "opacity-30",
                     )}
                     onMouseEnter={() => {
@@ -204,10 +201,9 @@ export default function FlexiFilterTable() {
                     }}
                     onClick={() =>
                       navigate({
-                        to: ".",
-                        search: {
-                          ...searchParams,
-                          activePokemon: pokemon.id,
+                        to: "/pokemon/$pokemonId",
+                        params: {
+                          pokemonId: String(pokemon.id),
                         },
                       })
                     }
@@ -218,9 +214,7 @@ export default function FlexiFilterTable() {
                         <Pokeball
                           className={cn(
                             "h-4 w-4 transition-opacity",
-                            activePokemon === pokemon.id
-                              ? "text-primary"
-                              : "opacity-65 group-hover:opacity-100",
+                            "opacity-65 group-hover:opacity-100",
                           )}
                           stroke="currentColor"
                         />

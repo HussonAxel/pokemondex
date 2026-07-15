@@ -11,18 +11,11 @@ import {
 
 import type { orpc } from "@/utils/orpc";
 
-import Loader from "@/components/demo/loader";
 import { Toaster } from "@/components/ui/sonner";
 
 import { SidebarLeft } from "@/components/sidebar-left";
 import appCss from "../index.css?url";
 
-const SidebarRight = lazy(() =>
-  import("@/components/sidebarRight/SidebarRight").then((module) => ({
-    default: module.SidebarRight,
-  })),
-);
-const SidebarMobile = lazy(() => import("@/components/sidebarRight/SidebarMobile"));
 const RouterDevtools = import.meta.env.DEV
   ? lazy(() =>
       import("@tanstack/react-router-devtools").then((module) => ({
@@ -92,9 +85,8 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
-  const activePokemon = useRouterState({
-    select: (state) =>
-      new URLSearchParams(state.location.searchStr).get("activePokemon"),
+  const isCatalogRoute = useRouterState({
+    select: (state) => state.location.pathname === "/",
   });
   return (
     <html lang="fr" suppressHydrationWarning>
@@ -102,17 +94,15 @@ function RootDocument() {
         <HeadContent />
       </head>
       <body>
-        <div className="grid grid-cols-[auto_1fr_auto] h-full">
-          <SidebarLeft />
+        <div
+          className={
+            isCatalogRoute ? "grid h-full grid-cols-[auto_1fr]" : "h-full"
+          }
+        >
+          {isCatalogRoute ? <SidebarLeft /> : null}
           <div className="h-full overflow-hidden">
             <Outlet />
           </div>
-          {activePokemon && (
-            <Suspense fallback={<Loader />}>
-              <SidebarRight />
-              <SidebarMobile />
-            </Suspense>
-          )}
         </div>
         <Toaster richColors />
         {RouterDevtools ? (

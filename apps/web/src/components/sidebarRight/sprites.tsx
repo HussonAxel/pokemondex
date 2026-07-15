@@ -2,10 +2,9 @@ import { startTransition, useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
-import { useSearch } from "@tanstack/react-router";
+import { usePokemonDetailId } from "./pokemon-detail-context";
 
 import { formatPokemonText } from "./utils";
 
@@ -240,8 +239,7 @@ export default function SpritesComponent({
   onSelectSprite,
   selectedSpriteSrc,
 }: SpritesComponentProps) {
-  const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
+  const pokemonId = usePokemonDetailId();
 
   const [sourceFilter, setSourceFilter] = useState("all");
   const [setFilter, setSetFilter] = useState("all");
@@ -249,7 +247,7 @@ export default function SpritesComponent({
   const [mediaFilter, setMediaFilter] = useState("all");
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } }),
+    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;

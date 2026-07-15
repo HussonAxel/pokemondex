@@ -5,19 +5,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useSearch } from "@tanstack/react-router";
 import { useState } from "react";
+import { usePokemonDetailId } from "./pokemon-detail-context";
 import { formatPokemonText } from "./utils";
 
 export default function OverviewComponent() {
-  const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
+  const pokemonId = usePokemonDetailId();
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } }),
+    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   }).data;

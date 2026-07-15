@@ -1,21 +1,19 @@
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate, useSearch } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { getPokemonIdFromUrl } from "./utils";
+import { usePokemonDetailId } from "./pokemon-detail-context";
 
 import { formatPokemonText, formatStatName } from "./utils";
 
 export default function TrainingRelationsComponent() {
-  const navigate = useNavigate({ from: Route.id });
-
-  const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
+  const navigate = useNavigate({ from: "/pokemon/$pokemonId" });
+  const pokemonId = usePokemonDetailId();
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } }),
+    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;
@@ -112,10 +110,11 @@ export default function TrainingRelationsComponent() {
                 className="px-3 py-1.5 cursor-pointer"
                 onClick={() =>
                   navigate({
-                    to: ".",
-                    search: {
-                      ...searchParams,
-                      activePokemon: getPokemonIdFromUrl(variety.pokemon.url),
+                    to: "/pokemon/$pokemonId",
+                    params: {
+                      pokemonId: String(
+                        getPokemonIdFromUrl(variety.pokemon.url),
+                      ),
                     },
                   })
                 }

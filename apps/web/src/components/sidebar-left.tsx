@@ -90,10 +90,6 @@ const DATA = {
           title: "Latest Forms",
           url: "#",
         },
-        {
-          title: "Pinned Pokemon",
-          url: "#",
-        },
       ],
     },
     {
@@ -233,35 +229,7 @@ const SidebarLeftContent = () => {
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
   const activeCollection = searchParams.collection;
-  const activePokemon = searchParams.activePokemon;
-
-  const navMain = React.useMemo(() => {
-    return DATA.navMain.map((section) => {
-      if (section.title !== "Browse") {
-        return section;
-      }
-
-      return {
-        ...section,
-        items: [
-          {
-            title: "National Dex",
-            url: "#",
-          },
-          {
-            title: activePokemon
-              ? `Pinned #${activePokemon.toString().padStart(3, "0")}`
-              : "Pinned Pokemon",
-            url: "#",
-          },
-          {
-            title: "Latest Forms",
-            url: "#",
-          },
-        ],
-      };
-    }) as NavSection[];
-  }, [activePokemon]);
+  const navMain = DATA.navMain as NavSection[];
 
   if (!activeTeam) return null;
 

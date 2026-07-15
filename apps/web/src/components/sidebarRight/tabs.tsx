@@ -41,28 +41,28 @@ export default function TabsComponent({
           <TabsTab value="tab-5">Move Pool</TabsTab>
         </TabsList>
       </div>
-      <TabsPanel className="min-h-0" value="tab-1">
+      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-1">
         {activeTab === "tab-1" ? (
           <Suspense fallback={<Loader />}>
             <OverviewComponent />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0" value="tab-2">
+      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-2">
         {activeTab === "tab-2" ? (
           <Suspense fallback={<Loader />}>
             <BreedingComponent />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0" value="tab-3">
+      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-3">
         {activeTab === "tab-3" ? (
           <Suspense fallback={<Loader />}>
             <TrainingRelationsComponent />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0" value="tab-4">
+      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-4">
         {activeTab === "tab-4" ? (
           <Suspense fallback={<Loader />}>
             <SpritesComponent
@@ -72,7 +72,7 @@ export default function TabsComponent({
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0" value="tab-5">
+      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-5">
         {activeTab === "tab-5" ? (
           <Suspense fallback={<Loader />}>
             <MovePoolComponent />

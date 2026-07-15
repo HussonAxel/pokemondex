@@ -10,10 +10,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Route } from "@/routes/index";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
-import { useSearch } from "@tanstack/react-router";
+import { usePokemonDetailId } from "./pokemon-detail-context";
 
 import { formatPokemonText } from "./utils";
 
@@ -97,8 +96,7 @@ function sortMoves(moves: DisplayMoveRow[], sortBy: string) {
 }
 
 export default function MovePoolComponent() {
-  const searchParams = useSearch({ from: Route.id });
-  const activePokemon = searchParams.activePokemon;
+  const pokemonId = usePokemonDetailId();
 
   const [search, setSearch] = useState("");
   const [methodFilter, setMethodFilter] = useState("all");
@@ -108,7 +106,7 @@ export default function MovePoolComponent() {
   const deferredSearch = useDeferredValue(search);
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: activePokemon } }),
+    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;

@@ -13,6 +13,7 @@ import { Route as PerformanceRouteImport } from './routes/performance'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PokemonPokemonIdRouteImport } from './routes/pokemon.$pokemonId'
 import { Route as ApiRpcSplatRouteImport } from './routes/api/rpc/$'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PokemonPokemonIdRoute = PokemonPokemonIdRouteImport.update({
+  id: '/pokemon/$pokemonId',
+  path: '/pokemon/$pokemonId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiRpcSplatRoute = ApiRpcSplatRouteImport.update({
   id: '/api/rpc/$',
   path: '/api/rpc/$',
@@ -52,6 +58,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/performance': typeof PerformanceRoute
+  '/pokemon/$pokemonId': typeof PokemonPokemonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
@@ -60,6 +67,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/performance': typeof PerformanceRoute
+  '/pokemon/$pokemonId': typeof PokemonPokemonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
@@ -69,6 +77,7 @@ export interface FileRoutesById {
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
   '/performance': typeof PerformanceRoute
+  '/pokemon/$pokemonId': typeof PokemonPokemonIdRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/rpc/$': typeof ApiRpcSplatRoute
 }
@@ -79,6 +88,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/performance'
+    | '/pokemon/$pokemonId'
     | '/api/auth/$'
     | '/api/rpc/$'
   fileRoutesByTo: FileRoutesByTo
@@ -87,6 +97,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/performance'
+    | '/pokemon/$pokemonId'
     | '/api/auth/$'
     | '/api/rpc/$'
   id:
@@ -95,6 +106,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/login'
     | '/performance'
+    | '/pokemon/$pokemonId'
     | '/api/auth/$'
     | '/api/rpc/$'
   fileRoutesById: FileRoutesById
@@ -104,6 +116,7 @@ export interface RootRouteChildren {
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
   PerformanceRoute: typeof PerformanceRoute
+  PokemonPokemonIdRoute: typeof PokemonPokemonIdRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiRpcSplatRoute: typeof ApiRpcSplatRoute
 }
@@ -138,6 +151,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pokemon/$pokemonId': {
+      id: '/pokemon/$pokemonId'
+      path: '/pokemon/$pokemonId'
+      fullPath: '/pokemon/$pokemonId'
+      preLoaderRoute: typeof PokemonPokemonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/rpc/$': {
       id: '/api/rpc/$'
       path: '/api/rpc/$'
@@ -160,6 +180,7 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
   PerformanceRoute: PerformanceRoute,
+  PokemonPokemonIdRoute: PokemonPokemonIdRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiRpcSplatRoute: ApiRpcSplatRoute,
 }
