@@ -68,6 +68,10 @@ export default function FlexiFilterTable() {
   const fallBackImage =
     "https://static.wikia.nocookie.net/bec6f033-936d-48c5-9c1e-7fb7207e28af/scale-to-width/755";
 
+  useEffect(() => {
+    void import("cuelume").then(({ bind }) => bind());
+  }, []);
+
   useHotkeys("arrowleft", () => handlePageChange(currentPage - 1));
   useHotkeys("arrowright", () => handlePageChange(currentPage + 1));
 
@@ -190,6 +194,7 @@ export default function FlexiFilterTable() {
                 PokemonsPaginated.map((pokemon) => (
                   <TableRow
                     key={pokemon.id}
+                    data-cuelume-hover="release"
                     className={cn(
                       "group cursor-pointer border-l-2 border-l-transparent transition-colors",
                       "hover:bg-muted/25",
