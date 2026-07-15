@@ -2,7 +2,6 @@ import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
 import { usePokemonDetailId } from "./pokemon-detail-context";
 
 export default function BreedingComponent() {
@@ -40,9 +39,21 @@ export default function BreedingComponent() {
   const maxLevelXP = growthRate.levels[99]?.experience || 0;
 
   return (
-    <div className="flex flex-col gap-4 px-4 py-4">
-      <div className="flex flex-col gap-2">
-        <h2 className="text-base font-medium text-foreground tracking-tight">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-6 md:px-8 md:py-8 lg:px-10">
+      <div>
+        <p className="font-mono text-[10px] font-medium uppercase text-muted-foreground">
+          Nursery data
+        </p>
+        <h2 className="mt-1 text-lg font-semibold text-foreground">
+          Breeding profile
+        </h2>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+          Egg compatibility, hatch requirements and species growth pattern.
+        </p>
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <h2 className="text-base font-semibold text-foreground tracking-tight">
           Egg Groups
         </h2>
         <div className="flex flex-wrap gap-2">
@@ -64,7 +75,7 @@ export default function BreedingComponent() {
 
       <Separator />
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <div className="group relative flex flex-col items-center justify-center ring ring-1 ring-border rounded-md py-3 cursor-pointer">
           {genderInfo.genderless ? (
             <>
@@ -135,14 +146,6 @@ export default function BreedingComponent() {
             {species.habitat?.name || "Unknown"}
           </p>
         </div>
-      </div>
-
-      <Separator />
-
-      <div className="flex justify-center">
-        <Button variant="default" size="default" className="w-full rounded-sm">
-          Breeding Calculator
-        </Button>
       </div>
     </div>
   );

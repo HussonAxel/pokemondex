@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 
 import TabsComponent from "@/components/sidebarRight/tabs";
 import BadgeTypes from "@/components/ui/badge-type";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
+import { Volume2 } from "lucide-react";
 import { PokemonDetailProvider } from "./pokemon-detail-context";
 
 export default function MainTab({ pokemonId }: { pokemonId: number }) {
@@ -24,40 +27,47 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
 
   if (!pokemon) return null;
 
-  const previewSprite = selectedSprite?.src || pokemon.spriteUrl || "";
-  const previewAlt = selectedSprite?.alt || `${pokemon.name} Pokemon sprite`;
-  const heightInMeters = pokemon.height
-    ? `${(pokemon.height / 10).toFixed(1)} m`
-    : "Unknown";
-  const weightInKilograms = pokemon.weight
-    ? `${(pokemon.weight / 10).toFixed(1)} kg`
-    : "Unknown";
+  const previewSprite =
+    selectedSprite?.src ||
+    pokemon.officialArtworkUrl ||
+    pokemon.spriteUrl ||
+    "";
+  const previewAlt = selectedSprite?.alt || `${pokemon.name} official artwork`;
+  const baseStatTotal = (pokemon.statsDetails ?? []).reduce(
+    (total, stat) => total + stat.base_stat,
+    0,
+  );
   const quickFacts = [
-    { label: "Height", value: heightInMeters },
-    { label: "Weight", value: weightInKilograms },
-    {
-      label: "Generation",
-      value: pokemon.generation ? `Gen ${pokemon.generation}` : "Unknown",
-    },
-    {
-      label: "Base XP",
-      value: pokemon.baseExperience?.toString() ?? "Unknown",
-    },
+    { label: "Base stats", value: baseStatTotal.toString() },
+    { label: "Abilities", value: pokemon.abilities.length.toString() },
+    { label: "Moves", value: pokemon.moves.length.toString() },
+    { label: "Forms", value: pokemon.varieties.length.toString() },
   ];
+
+  const playLatestCry = () => {
+    if (!pokemon.cries?.latest) return;
+
+    const audio = new Audio(pokemon.cries.latest);
+    audio.volume = 0.45;
+    void audio.play().catch(() => undefined);
+  };
 
   return (
     <PokemonDetailProvider pokemonId={pokemonId}>
-      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[18rem_minmax(0,1fr)] md:grid-rows-1 lg:grid-cols-[21rem_minmax(0,1fr)]">
-        <aside className="min-h-0 overflow-y-auto border-b border-border bg-muted/10 px-4 py-5 md:border-r md:border-b-0 md:px-7 md:py-6 lg:px-8">
+      <div className="grid h-full min-h-0 grid-rows-[auto_minmax(0,1fr)] md:grid-cols-[19rem_minmax(0,1fr)] md:grid-rows-1 lg:grid-cols-[22rem_minmax(0,1fr)]">
+        <aside className="min-h-0 overflow-y-auto border-b border-border bg-muted/10 px-4 py-5 md:border-r md:border-b-0 md:px-7 md:py-7 lg:px-8">
           <div className="flex items-center gap-5 md:flex-col md:items-stretch md:gap-6">
-            <div className="flex size-32 shrink-0 items-center justify-center rounded-lg border border-border/70 bg-muted/35 md:aspect-square md:size-auto md:w-full">
+            <div className="flex size-32 shrink-0 items-center justify-center rounded-md border border-border/70 bg-background/55 md:aspect-square md:size-auto md:w-full">
               <img
                 src={previewSprite}
                 alt={previewAlt}
                 width={256}
                 height={256}
                 fetchPriority="high"
-                className="size-28 object-contain [image-rendering:pixelated] md:size-48 lg:size-52"
+                className={cn(
+                  "size-28 object-contain md:size-52",
+                  selectedSprite && "[image-rendering:pixelated]",
+                )}
               />
             </div>
             <div className="flex min-w-0 flex-col md:px-1">
@@ -79,9 +89,20 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
                   }
                 />
               </div>
+              {pokemon.cries?.latest ? (
+                <Button
+                  className="mt-4 w-fit md:w-full"
+                  onClick={playLatestCry}
+                  size="sm"
+                  variant="outline"
+                >
+                  <Volume2 />
+                  Play latest cry
+                </Button>
+              ) : null}
             </div>
 
-            <dl className="hidden grid-cols-2 border-t border-border md:grid">
+            <dl className="hidden grid-cols-2 border-y border-border md:grid">
               {quickFacts.map((fact, index) => (
                 <div
                   key={fact.label}

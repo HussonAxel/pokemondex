@@ -39,11 +39,14 @@ function PokemonDetailPage() {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-background">
-      <header className="flex h-14 shrink-0 items-center border-b px-3 sm:h-16 sm:px-6">
+      <header className="flex h-14 shrink-0 items-center justify-between border-b px-3 sm:h-16 sm:px-6">
         <Button size="sm" variant="ghost" onClick={returnToPokedex}>
           <ArrowLeft />
           Back to Pokedex
         </Button>
+        <p className="font-mono text-xs font-medium uppercase text-muted-foreground">
+          Profile #{pokemonId.toString().padStart(4, "0")}
+        </p>
       </header>
       <main className="min-h-0 w-full flex-1 overflow-hidden">
         <MainTab pokemonId={pokemonId} />

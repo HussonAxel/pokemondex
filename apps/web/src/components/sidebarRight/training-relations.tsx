@@ -40,8 +40,20 @@ export default function TrainingRelationsComponent() {
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-5 overflow-y-auto overflow-x-hidden px-4 py-4">
-      <div className="grid grid-cols-2 gap-3">
+    <div className="mx-auto flex w-full max-w-6xl flex-col gap-7 px-4 py-6 md:px-8 md:py-8 lg:px-10">
+      <div>
+        <p className="font-mono text-[10px] font-medium uppercase text-muted-foreground">
+          Battle preparation
+        </p>
+        <h2 className="mt-1 text-lg font-semibold text-foreground">
+          Training profile
+        </h2>
+        <p className="mt-1 max-w-2xl text-sm leading-6 text-muted-foreground">
+          Experience, effort yield, forms and game-specific item data.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-md border border-border px-3 py-3 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
             Base XP
@@ -76,14 +88,18 @@ export default function TrainingRelationsComponent() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3">
         <h2 className="text-base font-semibold text-foreground tracking-tight">
           Effort Yield
         </h2>
         {evYield.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {evYield.map((stat) => (
-              <Badge key={stat.label} variant="secondary" className="px-3 py-1.5">
+              <Badge
+                key={stat.label}
+                variant="secondary"
+                className="px-3 py-1.5"
+              >
                 +{stat.value} {stat.label}
               </Badge>
             ))}
@@ -99,7 +115,7 @@ export default function TrainingRelationsComponent() {
 
       <div className="flex flex-col gap-2">
         <h2 className="text-base font-semibold text-foreground tracking-tight">
-          Related Varieties
+          Forms &amp; varieties
         </h2>
         {varieties.length > 0 ? (
           <div className="flex flex-wrap gap-2">
@@ -175,7 +191,7 @@ export default function TrainingRelationsComponent() {
 
       <div className="flex flex-col gap-2">
         <h2 className="text-base font-semibold text-foreground tracking-tight">
-          Version Presence
+          Game availability
         </h2>
         {versionPresence.length > 0 ? (
           <div className="flex flex-wrap gap-2">
