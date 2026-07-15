@@ -296,7 +296,7 @@ export default function FlexiFilterTable() {
                         />
 
                         <BadgeTypes
-                          classNameBadge="!border-primary/60 !bg-primary/10 flex-nowrap"
+                          classNameBadge="flex-nowrap !border-primary/40 !bg-primary/10 hover:!bg-primary/20 dark:!border-primary/40 dark:!bg-primary/10 dark:hover:!bg-primary/20"
                           pokemonTypes={pokemon.hiddenAbilityNames}
                           onClick={(e, ability) => {
                             e.stopPropagation();

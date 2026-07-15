@@ -1,4 +1,9 @@
-import { getTypeClasses, pokemonCollectionFilterMap } from "@/data/data";
+import { pokemonCollectionFilterMap } from "@/data/data";
+import {
+  getPokemonTypeStyle,
+  pokemonTypeHoverClassName,
+  pokemonTypeSurfaceClassName,
+} from "@/lib/pokemon-type-styles";
 import { Route } from "@/routes";
 import { useNavigate, useSearch } from "@tanstack/react-router";
 import { FilterTag } from "./ui/filter-tag";
@@ -17,7 +22,7 @@ export const FiltersTop = () => {
     <div className="mx-auto flex min-h-[46px] w-full flex-wrap items-center gap-2 rounded-sm border border-border bg-muted/20 px-2 py-2">
       {activeCollection ? (
         <FilterTag
-          className="bg-sidebar-accent border-sidebar-border hover:bg-sidebar-accent/80 cursor-pointer"
+          className="border-sidebar-border bg-sidebar-accent hover:bg-accent dark:hover:bg-accent"
           label="FILTER"
           onRemove={() =>
             navigate({
@@ -33,12 +38,12 @@ export const FiltersTop = () => {
       ) : null}
 
       {types.map((type) => {
-        const colors = getTypeClasses(type);
+        const typeStyle = getPokemonTypeStyle(type);
 
         return (
           <FilterTag
             key={type}
-            className={`${colors.bg} ${colors.border} ${colors.hover} cursor-pointer`}
+            className={`${pokemonTypeSurfaceClassName} ${pokemonTypeHoverClassName}`}
             label="TYPE"
             onRemove={() =>
               navigate({
@@ -53,6 +58,7 @@ export const FiltersTop = () => {
               })
             }
             value={type}
+            style={typeStyle}
           />
         );
       })}
@@ -60,7 +66,7 @@ export const FiltersTop = () => {
       {abilities.map((ability) => (
         <FilterTag
           key={ability}
-          className="bg-primary/10 border-primary/60 hover:bg-primary/20 cursor-pointer"
+          className="border-primary/40 bg-primary/10 hover:bg-primary/20 dark:border-primary/40 dark:bg-primary/10 dark:hover:bg-primary/20"
           label="ABILITY"
           onRemove={() =>
             navigate({

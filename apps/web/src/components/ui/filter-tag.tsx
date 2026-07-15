@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import type { CSSProperties } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -10,6 +11,7 @@ type FilterTagProps = {
   onRemove?: () => void;
   value: string;
   valueClassName?: string;
+  style?: CSSProperties;
 };
 
 export function FilterTag({
@@ -18,14 +20,16 @@ export function FilterTag({
   onRemove,
   value,
   valueClassName,
+  style,
 }: FilterTagProps) {
   return (
     <button
       className={cn(
-        "group flex items-center gap-2 rounded-md px-2 py-1 border transition-all duration-200 select-none",
+        "group flex cursor-pointer select-none items-center gap-2 rounded-md border px-2 py-1 transition-[background-color,border-color,color,transform] duration-150 active:scale-[0.97]",
         className,
       )}
       onClick={onRemove}
+      style={style}
       type="button"
     >
       <p className="font-mono text-[10px] text-foreground/80 px-1 border rounded-[2px] border-foreground/30">
