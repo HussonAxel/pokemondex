@@ -623,12 +623,18 @@ interface FilterRemoveButtonProps
   icon?: React.ReactNode;
 }
 
-function FilterRemoveButton({ className, icon = <X />, ...props }: FilterRemoveButtonProps) {
+function FilterRemoveButton({
+  className,
+  icon = <X />,
+  "aria-label": ariaLabel = "Remove filter",
+  ...props
+}: FilterRemoveButtonProps) {
   const context = useFilterContext();
 
   return (
     <button
       data-slot="filters-remove"
+      aria-label={ariaLabel}
       className={cn(
         filterRemoveButtonVariants({
           variant: context.variant,
@@ -1933,10 +1939,8 @@ export function Filters<T = unknown>({
               }
             }}
           >
-            <PopoverTrigger>
-              {addButton ? (
-                addButton
-              ) : (
+            <PopoverTrigger
+              render={addButton ? addButton : (
                 <button
                   className={cn(
                     filterAddButtonVariants({
@@ -1953,7 +1957,7 @@ export function Filters<T = unknown>({
                   {addButtonText || mergedI18n.addFilter}
                 </button>
               )}
-            </PopoverTrigger>
+            />
             <PopoverContent className={cn('w-[200px] p-0', popoverContentClassName)} align="start">
               <Command>
                 {selectedFieldForOptions ? (

@@ -16,7 +16,13 @@ const parityCases: PokemonCatalogInput[] = [
   { page: 1, pageSize: 30, search: "char, fire" },
   { page: 1, pageSize: 30, search: "mega, dragon" },
   { page: 1, pageSize: 30, type: ["grass", "poison"] },
+  { page: 1, pageSize: 30, type: ["grass", "poison"], typeOperator: "is_any_of" },
+  { page: 1, pageSize: 30, type: ["grass"], typeOperator: "is_not_any_of" },
   { page: 1, pageSize: 30, ability: ["chlorophyll"] },
+  { page: 1, pageSize: 30, generation: 1, generationOperator: "is_not" },
+  { page: 1, pageSize: 30, generation: 1, minBst: 500, maxBst: 650 },
+  { page: 1, pageSize: 30, minBst: 500, maxBst: 650, bstOperator: "not_between" },
+  { page: 1, pageSize: 30, type: ["fire"], generation: 1, filterJoin: "or" },
   { page: 2, pageSize: 2, pokemonIds: [1, 4, 7, 25, 150] },
 ];
 
@@ -28,15 +34,17 @@ function normalizeSearchTerms(search?: string) {
 }
 
 async function queryDatabaseCatalog(input: PokemonCatalogInput) {
-  const whereClauses = [];
+  const searchClauses = [];
+  const filterClauses = [];
 
   if (input.pokemonIds?.length) {
-    whereClauses.push(inArray(pokemon.id, input.pokemonIds));
+    const clause = inArray(pokemon.id, input.pokemonIds);
+    filterClauses.push(input.pokemonIdsOperator === "is_not" ? sql`NOT (${clause})` : clause);
   }
 
   for (const term of normalizeSearchTerms(input.search)) {
     const pattern = `%${term}%`;
-    whereClauses.push(sql`
+    searchClauses.push(sql`
       (
         CAST(${pokemon.id} AS text) ILIKE ${pattern}
         OR ${pokemon.name} ILIKE ${pattern}
@@ -55,21 +63,71 @@ async function queryDatabaseCatalog(input: PokemonCatalogInput) {
   }
 
   if (input.type?.length) {
-    whereClauses.push(
-      sql`COALESCE(${pokemon.types}, '[]'::jsonb) @> ${JSON.stringify(input.type)}::jsonb`,
+    const clauses = input.type.map((type) =>
+      sql`COALESCE(${pokemon.types}, '[]'::jsonb) @> ${JSON.stringify([type])}::jsonb`
+    );
+    const joined = sql.join(
+      clauses,
+      input.typeOperator === "includes_all" || !input.typeOperator ? sql` AND ` : sql` OR `,
+    );
+    filterClauses.push(input.typeOperator === "is_not_any_of" ? sql`NOT (${joined})` : sql`(${joined})`);
+  }
+
+  if (input.generation) {
+    filterClauses.push(
+      input.generationOperator === "is_not"
+        ? sql`${pokemon.generation} IS DISTINCT FROM ${input.generation}`
+        : sql`${pokemon.generation} = ${input.generation}`,
     );
   }
 
-  for (const ability of input.ability ?? []) {
-    whereClauses.push(sql`
+  const bstSql = sql<number>`(
+    COALESCE((${pokemon.stats}->>'hp')::int, 0) +
+    COALESCE((${pokemon.stats}->>'attack')::int, 0) +
+    COALESCE((${pokemon.stats}->>'defense')::int, 0) +
+    COALESCE((${pokemon.stats}->>'specialAttack')::int, 0) +
+    COALESCE((${pokemon.stats}->>'specialDefense')::int, 0) +
+    COALESCE((${pokemon.stats}->>'speed')::int, 0)
+  )`;
+  if (input.minBst !== undefined || input.maxBst !== undefined) {
+    const first = input.minBst;
+    const second = input.maxBst;
+    const operator = input.bstOperator ??
+      (first !== undefined && second !== undefined ? "between" : second !== undefined ? "less_than" : "greater_than");
+    if (operator === "between") {
+      filterClauses.push(sql`${bstSql} BETWEEN ${first ?? 0} AND ${second ?? 1200}`);
+    } else if (operator === "not_between") {
+      filterClauses.push(sql`${bstSql} NOT BETWEEN ${first ?? 0} AND ${second ?? 1200}`);
+    } else if (operator === "less_than") {
+      filterClauses.push(sql`${bstSql} <= ${second ?? first ?? 1200}`);
+    } else if (operator === "equals") {
+      filterClauses.push(sql`${bstSql} = ${first ?? 0}`);
+    } else if (operator === "not_equals") {
+      filterClauses.push(sql`${bstSql} <> ${first ?? 0}`);
+    } else {
+      filterClauses.push(sql`${bstSql} >= ${first ?? 0}`);
+    }
+  }
+
+  if (input.ability?.length) {
+    const clauses = input.ability.map((ability) => sql`
       EXISTS (
         SELECT 1
         FROM jsonb_array_elements(COALESCE(${pokemon.abilities}, '[]'::jsonb)) AS ability_elem
         WHERE ability_elem->'ability'->>'name' = ${ability}
       )
     `);
+    const joined = sql.join(
+      clauses,
+      input.abilityOperator === "includes_all" || !input.abilityOperator ? sql` AND ` : sql` OR `,
+    );
+    filterClauses.push(input.abilityOperator === "is_not_any_of" ? sql`NOT (${joined})` : sql`(${joined})`);
   }
 
+  const whereClauses = [...searchClauses];
+  if (filterClauses.length) {
+    whereClauses.push(sql`(${sql.join(filterClauses, input.filterJoin === "or" ? sql` OR ` : sql` AND `)})`);
+  }
   const whereSql = whereClauses.length
     ? sql`WHERE ${sql.join(whereClauses, sql` AND `)}`
     : sql``;

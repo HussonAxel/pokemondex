@@ -53,33 +53,33 @@ export default function TabsComponent({
     >
       <nav
         aria-label="Pokemon profile sections"
-        className="shrink-0 border-b bg-card px-2 md:px-5"
+        className="flex min-h-12 shrink-0 items-center border-b bg-muted/15 px-2"
       >
         <TabsList
           variant="underline"
-          className="scrollbar-hide flex w-full flex-nowrap items-center justify-start gap-1 overflow-x-auto py-2"
+          className="scrollbar-hide flex w-full flex-nowrap items-center justify-start gap-0.5 overflow-x-auto py-1"
         >
-          <TabsTab className="h-10 grow-0 px-3.5" value="tab-1">
+          <TabsTab className="h-8 grow-0 px-3" value="tab-1">
             <BookOpen />
             Pokédex
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3.5" value="tab-2">
+          <TabsTab className="h-8 grow-0 px-3" value="tab-2">
             <Activity />
             Training
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3.5" value="tab-3">
+          <TabsTab className="h-8 grow-0 px-3" value="tab-3">
             <Dna />
             Breeding
           </TabsTab>
           <TabsTab
-            className="h-10 grow-0 px-3.5"
+            className="h-8 grow-0 px-3"
             onMouseEnter={prefetchMovePool}
             value="tab-4"
           >
             <Swords />
             Moves
           </TabsTab>
-          <TabsTab className="h-10 grow-0 px-3.5" value="tab-5">
+          <TabsTab className="h-8 grow-0 px-3" value="tab-5">
             <Images />
             Gallery
           </TabsTab>
