@@ -55,6 +55,9 @@ type FileSystemProps = {
   toolbarTrailing?: React.ReactNode;
   filterBar?: React.ReactNode;
   footer?: React.ReactNode;
+  hasMore?: boolean;
+  isLoadingMore?: boolean;
+  onLoadMore?: () => void;
 };
 
 const viewOptions: Array<{
@@ -112,6 +115,9 @@ export function FileSystem({
   toolbarTrailing,
   filterBar,
   footer,
+  hasMore = false,
+  isLoadingMore = false,
+  onLoadMore,
 }: FileSystemProps) {
   const [internalView, setInternalView] = React.useState(defaultView);
   const [selectedPath, setSelectedPath] = React.useState<string | null>(null);
@@ -185,6 +191,18 @@ export function FileSystem({
     onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
     tabIndex: selectedPath === file.path || (!selectedPath && index === 0) ? 0 : -1,
   });
+
+  const loadMoreNearEnd = (
+    event: React.UIEvent<HTMLDivElement>,
+    direction: "horizontal" | "vertical",
+  ) => {
+    if (!hasMore || isLoadingMore || !onLoadMore) return;
+    const element = event.currentTarget;
+    const remaining = direction === "horizontal"
+      ? element.scrollWidth - element.scrollLeft - element.clientWidth
+      : element.scrollHeight - element.scrollTop - element.clientHeight;
+    if (remaining < 240) onLoadMore();
+  };
 
   return (
     <section
@@ -321,7 +339,11 @@ export function FileSystem({
           </div>
         ) : view === "columns" ? (
           <div className="grid h-full grid-cols-[42%_58%] divide-x md:grid-cols-[minmax(220px,1fr)_minmax(280px,1.35fr)]">
-            <div className="overflow-auto py-2">
+            <div
+              className="overflow-auto py-2"
+              data-infinite-scroll="vertical"
+              onScroll={(event) => loadMoreNearEnd(event, "vertical")}
+            >
               {files.map((file, index) => (
                 <button
                   key={file.path}
@@ -334,6 +356,11 @@ export function FileSystem({
                   <ChevronRight className="size-3.5 opacity-50" />
                 </button>
               ))}
+              {hasMore ? (
+                <div className="flex h-10 items-center justify-center px-3 text-[10px] text-muted-foreground" aria-live="polite">
+                  {isLoadingMore ? "Loading more Pokemon…" : "Scroll for more"}
+                </div>
+              ) : null}
             </div>
             <div className="overflow-auto bg-muted/10 p-3 md:p-5">
               {selected ? <div className="mx-auto max-w-3/4">{renderFileDetails?.(selected)}</div> : <EmptySelection />}
@@ -349,7 +376,11 @@ export function FileSystem({
                 </div>
               ) : <EmptySelection />}
             </div>
-            <div className="flex gap-2 overflow-x-auto border-t bg-background p-2">
+            <div
+              className="flex gap-2 overflow-x-auto border-t bg-background p-2"
+              data-infinite-scroll="horizontal"
+              onScroll={(event) => loadMoreNearEnd(event, "horizontal")}
+            >
               {files.map((file, index) => (
                 <button
                   key={file.path}
@@ -361,6 +392,11 @@ export function FileSystem({
                   <span className="w-full truncate">{displayName(file)}</span>
                 </button>
               ))}
+              {hasMore ? (
+                <div className="flex w-24 shrink-0 items-center justify-center px-2 text-center text-[10px] text-muted-foreground" aria-live="polite">
+                  {isLoadingMore ? "Loading…" : "Scroll for more"}
+                </div>
+              ) : null}
             </div>
           </div>
         )}
