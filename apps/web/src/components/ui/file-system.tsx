@@ -124,6 +124,7 @@ export function FileSystem({
   const [internalView, setInternalView] = React.useState(defaultView);
   const [selectedPath, setSelectedPath] = React.useState<string | null>(null);
   const iconGridRef = React.useRef<HTMLDivElement>(null);
+  const intentTimeoutsRef = React.useRef(new Map<string, number>());
   const view = controlledView ?? internalView;
   const files = items.filter(
     (item): item is FileSystemFileItem => item.kind === "file",
@@ -137,9 +138,41 @@ export function FileSystem({
     }
   }, [files, onSelectionChange, selectedPath]);
 
+  React.useEffect(() => {
+    const intentTimeouts = intentTimeoutsRef.current;
+
+    return () => {
+      for (const timeout of intentTimeouts.values()) {
+        window.clearTimeout(timeout);
+      }
+      intentTimeouts.clear();
+    };
+  }, []);
+
   const selectFile = (file: FileSystemFileItem) => {
     setSelectedPath(file.path);
     onSelectionChange?.(file);
+  };
+
+  const clearFileIntent = (file: FileSystemFileItem) => {
+    const timeout = intentTimeoutsRef.current.get(file.path);
+    if (timeout === undefined) return;
+    window.clearTimeout(timeout);
+    intentTimeoutsRef.current.delete(file.path);
+  };
+
+  const signalFileIntent = (file: FileSystemFileItem) => {
+    clearFileIntent(file);
+    onFileIntent?.(file);
+  };
+
+  const scheduleFileIntent = (file: FileSystemFileItem) => {
+    clearFileIntent(file);
+    const timeout = window.setTimeout(() => {
+      intentTimeoutsRef.current.delete(file.path);
+      onFileIntent?.(file);
+    }, 100);
+    intentTimeoutsRef.current.set(file.path, timeout);
   };
 
   const openSelected = (file: FileSystemFileItem) => {
@@ -185,11 +218,12 @@ export function FileSystem({
     "aria-selected": selectedPath === file.path,
     "data-file-index": index,
     "data-cuelume-hover": "release",
-    onFocus: () => onFileIntent?.(file),
+    onFocus: () => signalFileIntent(file),
     onClick: () => openSelected(file),
     onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
-    onPointerDown: () => onFileIntent?.(file),
-    onPointerEnter: () => onFileIntent?.(file),
+    onPointerDown: () => signalFileIntent(file),
+    onPointerEnter: () => scheduleFileIntent(file),
+    onPointerLeave: () => clearFileIntent(file),
     tabIndex: selectedPath === file.path || (!selectedPath && index === 0) ? 0 : -1,
   });
 

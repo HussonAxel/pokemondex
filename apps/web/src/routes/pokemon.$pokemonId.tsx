@@ -24,7 +24,7 @@ export const Route = createFileRoute("/pokemon/$pokemonId")({
 
     const pokemon = await context.queryClient.ensureQueryData(
       {
-        ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+        ...orpc.getPokemonSummary.queryOptions({ input: { id: pokemonId } }),
         staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
       },

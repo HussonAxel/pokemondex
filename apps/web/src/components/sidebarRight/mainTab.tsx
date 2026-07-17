@@ -11,14 +11,14 @@ import { formatPokemonText } from "./utils";
 
 export default function MainTab({ pokemonId }: { pokemonId: number }) {
   const pokemonQuery = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonSummary.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
   const pokemon = pokemonQuery.data;
   const speciesUrl = pokemon?.species?.url ?? "";
   const species = useQuery({
-    ...orpc.getPokemonSpeciesData.queryOptions({
+    ...orpc.getPokemonSpeciesSummary.queryOptions({
       input: { url: speciesUrl },
     }),
     enabled: Boolean(speciesUrl),

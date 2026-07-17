@@ -102,6 +102,25 @@ function getLocalizedFlavorText(
   return fallback?.flavor_text?.replace(/\s+/g, " ").trim() ?? null;
 }
 
+const pokemonIdInput = z.object({
+  id: z.number().int().positive(),
+});
+
+function formatMoveMetadata(move: typeof pokemonMove.$inferSelect) {
+  return {
+    accuracy: move.accuracy,
+    category: move.damageClass,
+    effect: move.effect,
+    generation: move.generation,
+    id: move.id,
+    name: move.name,
+    power: move.power,
+    pp: move.pp,
+    priority: move.priority,
+    type: move.type,
+  };
+}
+
 export const appRouter = {
   healthCheck: publicProcedure.handler(() => {
     return "OK";
@@ -152,6 +171,148 @@ export const appRouter = {
 
     return { results };
   }),
+  getPokemonSummary: publicProcedure
+    .input(pokemonIdInput)
+    .handler(async ({ input }) => {
+      const pokemonData = await db
+        .select({
+          id: pokemon.id,
+          name: pokemon.name,
+          spriteUrl: pokemon.spriteUrl,
+          officialArtworkUrl: pokemon.officialArtworkUrl,
+          height: pokemon.height,
+          weight: pokemon.weight,
+          baseExperience: pokemon.baseExperience,
+          order: pokemon.order,
+          isDefault: pokemon.isDefault,
+          types: pokemon.types,
+          stats: pokemon.stats,
+          statsDetails: pokemon.statsDetails,
+          generation: pokemon.generation,
+          abilities: pokemon.abilities,
+          forms: pokemon.forms,
+          species: pokemon.species,
+          locationAreaEncounters: pokemon.locationAreaEncounters,
+        })
+        .from(pokemon)
+        .where(eq(pokemon.id, input.id))
+        .limit(1);
+
+      if (!pokemonData || pokemonData.length === 0) {
+        throw new Error(`Pokemon not found with id: ${input.id}`);
+      }
+
+      const p = pokemonData[0]!;
+
+      return {
+        id: p.id,
+        name: p.name,
+        spriteUrl: p.spriteUrl,
+        officialArtworkUrl: p.officialArtworkUrl,
+        height: p.height,
+        weight: p.weight,
+        baseExperience: p.baseExperience,
+        order: p.order,
+        isDefault: p.isDefault,
+        types: p.types || [],
+        stats: p.stats,
+        statsDetails: p.statsDetails,
+        generation: p.generation,
+        abilities: p.abilities || [],
+        forms: p.forms || [],
+        species: p.species,
+        locationAreaEncounters: p.locationAreaEncounters,
+      };
+    }),
+  getPokemonTrainingData: publicProcedure
+    .input(pokemonIdInput)
+    .handler(async ({ input }) => {
+      const pokemonData = await db
+        .select({
+          id: pokemon.id,
+          baseExperience: pokemon.baseExperience,
+          statsDetails: pokemon.statsDetails,
+          gameIndices: pokemon.gameIndices,
+          heldItems: pokemon.heldItems,
+          species: pokemon.species,
+        })
+        .from(pokemon)
+        .where(eq(pokemon.id, input.id))
+        .limit(1);
+
+      if (!pokemonData || pokemonData.length === 0) {
+        throw new Error(`Pokemon not found with id: ${input.id}`);
+      }
+
+      const p = pokemonData[0]!;
+
+      return {
+        id: p.id,
+        baseExperience: p.baseExperience,
+        statsDetails: p.statsDetails,
+        gameIndices: p.gameIndices || [],
+        heldItems: p.heldItems || [],
+        species: p.species,
+      };
+    }),
+  getPokemonSpritesData: publicProcedure
+    .input(pokemonIdInput)
+    .handler(async ({ input }) => {
+      const pokemonData = await db
+        .select({
+          id: pokemon.id,
+          sprites: pokemon.sprites,
+          cries: pokemon.cries,
+        })
+        .from(pokemon)
+        .where(eq(pokemon.id, input.id))
+        .limit(1);
+
+      if (!pokemonData || pokemonData.length === 0) {
+        throw new Error(`Pokemon not found with id: ${input.id}`);
+      }
+
+      const p = pokemonData[0]!;
+
+      return {
+        id: p.id,
+        sprites: p.sprites,
+        cries: p.cries,
+      };
+    }),
+  getPokemonMovePoolData: publicProcedure
+    .input(pokemonIdInput)
+    .handler(async ({ input }) => {
+      const rows = await db
+        .select({ id: pokemon.id, moves: pokemon.moves })
+        .from(pokemon)
+        .where(eq(pokemon.id, input.id))
+        .limit(1);
+
+      if (!rows || rows.length === 0) {
+        throw new Error(`Pokemon not found with id: ${input.id}`);
+      }
+
+      const moves = rows[0]?.moves ?? [];
+      const names = Array.from(
+        new Set(moves.map((entry) => entry.move.name)),
+      );
+
+      if (names.length === 0) {
+        return { id: input.id, moves, metadata: [] };
+      }
+
+      const moveRows = await db
+        .select()
+        .from(pokemonMove)
+        .where(inArray(pokemonMove.name, names));
+
+      return {
+        id: input.id,
+        moves,
+        metadata: moveRows.map(formatMoveMetadata),
+      };
+    }),
   getPokemonOverview: publicProcedure
     .input(
       z.object({
@@ -241,6 +402,25 @@ export const appRouter = {
       const data = await fetchPokeApiJson<PokeApiSpeciesPayload>(input.url);
       return data;
     }),
+  getPokemonSpeciesSummary: publicProcedure
+    .input(z.object({ url: z.string().url() }))
+    .handler(async ({ input }) => {
+      const data = await fetchPokeApiJson<PokeApiSpeciesPayload>(input.url);
+
+      return {
+        color: data.color ?? null,
+        egg_groups: data.egg_groups ?? [],
+        flavor_text_entries: (data.flavor_text_entries ?? []).filter((entry) =>
+          entry.language?.name === "fr" || entry.language?.name === "en",
+        ),
+        gender_rate: data.gender_rate,
+        growth_rate: data.growth_rate,
+        habitat: data.habitat ?? null,
+        hatch_counter: data.hatch_counter,
+        shape: data.shape ?? null,
+        varieties: data.varieties ?? [],
+      };
+    }),
   getPokemonAbilityData: publicProcedure
     .input(
       z.object({
@@ -287,18 +467,7 @@ export const appRouter = {
         .from(pokemonMove)
         .where(inArray(pokemonMove.name, names));
 
-      return moveRows.map((move) => ({
-        accuracy: move.accuracy,
-        category: move.damageClass,
-        effect: move.effect,
-        generation: move.generation,
-        id: move.id,
-        name: move.name,
-        power: move.power,
-        pp: move.pp,
-        priority: move.priority,
-        type: move.type,
-      }));
+      return moveRows.map(formatMoveMetadata);
     }),
 
   getPokemonGrowthRateData: publicProcedure

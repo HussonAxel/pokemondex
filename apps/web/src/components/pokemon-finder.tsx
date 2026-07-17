@@ -168,7 +168,7 @@ export function PokemonFinder() {
     }).catch(() => undefined);
     void import("@/components/sidebarRight/pokedex-profile");
 
-    const overviewQueryOptions = orpc.getPokemonOverview.queryOptions({
+    const overviewQueryOptions = orpc.getPokemonSummary.queryOptions({
       input: { id },
     });
     void queryClient.ensureQueryData({
@@ -180,13 +180,6 @@ export function PokemonFinder() {
       const image = new Image();
       image.src = imageUrl;
     }).catch(() => undefined);
-    const speciesUrl = file.metadata?.speciesUrl;
-    if (speciesUrl) {
-      void queryClient.prefetchQuery({
-        ...orpc.getPokemonSpeciesData.queryOptions({ input: { url: speciesUrl } }),
-        staleTime: 5 * 60 * 1000,
-      });
-    }
     if (file.previewImageUrl) {
       const image = new Image();
       image.src = file.previewImageUrl;
@@ -433,12 +426,12 @@ function PokemonInspector({ file, onOpen, onTypeClick, onAbilityClick }: {
   const pokemonId = Number(file.key);
   const speciesUrl = file.metadata?.speciesUrl ?? "";
   const pokemonQuery = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonSummary.queryOptions({ input: { id: pokemonId } }),
     enabled: Number.isFinite(pokemonId),
     staleTime: 5 * 60 * 1000,
   });
   const speciesQuery = useQuery({
-    ...orpc.getPokemonSpeciesData.queryOptions({ input: { url: speciesUrl } }),
+    ...orpc.getPokemonSpeciesSummary.queryOptions({ input: { url: speciesUrl } }),
     enabled: Boolean(speciesUrl),
     staleTime: 5 * 60 * 1000,
   });

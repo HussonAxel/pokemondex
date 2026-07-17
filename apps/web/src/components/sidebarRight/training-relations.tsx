@@ -14,13 +14,13 @@ export default function TrainingRelationsComponent() {
   const pokemonId = usePokemonDetailId();
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonTrainingData.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;
   const speciesUrl = pokemon?.species?.url ?? "";
   const species = useQuery({
-    ...orpc.getPokemonSpeciesData.queryOptions({ input: { url: speciesUrl } }),
+    ...orpc.getPokemonSpeciesSummary.queryOptions({ input: { url: speciesUrl } }),
     enabled: Boolean(speciesUrl),
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
