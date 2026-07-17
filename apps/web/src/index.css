@@ -233,3 +233,54 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
 }
+
+@layer components {
+    .finder-icon-button {
+        @apply inline-flex size-8 shrink-0 items-center justify-center rounded-[4px] text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40 disabled:pointer-events-none disabled:opacity-30;
+    }
+
+    .finder-icon-button > svg {
+        @apply size-4;
+    }
+
+    .finder-source {
+        @apply flex h-8 w-full items-center gap-2 rounded-[4px] px-2 text-xs text-sidebar-foreground outline-none transition-colors hover:bg-sidebar-accent focus-visible:ring-2 focus-visible:ring-sidebar-ring/40;
+    }
+
+    .finder-source > svg {
+        @apply size-4 shrink-0 text-primary;
+    }
+
+    .finder-source > span:last-child:not(:first-child) {
+        @apply ml-auto font-mono text-[10px] text-muted-foreground;
+    }
+
+    .finder-label {
+        @apply mb-2 text-[10px] font-semibold uppercase text-muted-foreground;
+    }
+
+    .finder-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
+        grid-auto-rows: minmax(0, 1fr);
+        align-content: stretch;
+        gap: 0.25rem;
+        overflow: hidden;
+    }
+
+    @media (min-width: 48rem) {
+        .finder-grid {
+            grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+        }
+    }
+
+    @media (min-width: 96rem) {
+        .finder-grid {
+            grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+        }
+    }
+
+    .pixelated {
+        image-rendering: auto;
+    }
+}

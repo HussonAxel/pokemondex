@@ -1,4 +1,4 @@
-import { ListTemplateView } from "@/components/ListTemplateView.tsx";
+import { PokemonFinder } from "@/components/pokemon-finder";
 import { Button } from "@/components/ui/button";
 import {
   pokemonCollectionFilterKeys,
@@ -8,19 +8,28 @@ import { queryPokemonCatalogIsomorphic } from "@/features/pokemon-catalog/isomor
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
 
-export const HOME_CATALOG_PAGE_SIZE = 30;
+export const HOME_CATALOG_PAGE_SIZE = 36;
 export const HOME_CATALOG_STALE_TIME = 30 * 60 * 1000;
 export const HOME_CATALOG_GC_TIME = 24 * 60 * 60 * 1000;
 
 const homeSearchSchema = z.object({
-  view: z.enum(["grid", "list"]).optional(),
+  view: z.enum(["grid", "icons", "list", "columns", "gallery"]).optional(),
   search: z.string().optional(),
   shinyView: z.boolean().optional(),
   catchedView: z.boolean().optional(),
   page: z.number().optional(),
   type: z.array(z.string()).max(2).optional(),
+  typeOperator: z.enum(["is_any_of", "includes_all", "is_not_any_of"]).optional(),
   ability: z.array(z.string()).max(3).optional(),
+  abilityOperator: z.enum(["is_any_of", "includes_all", "is_not_any_of"]).optional(),
+  generation: z.number().int().min(1).max(9).optional(),
+  generationOperator: z.enum(["is", "is_not"]).optional(),
+  minBst: z.number().int().min(0).max(1200).optional(),
+  maxBst: z.number().int().min(0).max(1200).optional(),
+  bstOperator: z.enum(["greater_than", "less_than", "between", "not_between", "equals", "not_equals"]).optional(),
+  filterJoin: z.enum(["and", "or"]).optional(),
   collection: z.enum(pokemonCollectionFilterKeys).optional(),
+  collectionOperator: z.enum(["is", "is_not"]).optional(),
 });
 
 export function getHomeLoaderDeps({
@@ -30,10 +39,19 @@ export function getHomeLoaderDeps({
 }) {
   return {
     ability: search.ability ?? [],
+    abilityOperator: search.abilityOperator,
+    bstOperator: search.bstOperator,
     collection: search.collection,
+    collectionOperator: search.collectionOperator,
+    filterJoin: search.filterJoin,
+    generation: search.generation,
+    generationOperator: search.generationOperator,
+    maxBst: search.maxBst,
+    minBst: search.minBst,
     page: search.page ?? 1,
     search: search.search?.trim() || undefined,
     type: search.type ?? [],
+    typeOperator: search.typeOperator,
   };
 }
 
@@ -45,6 +63,7 @@ export function getHomeCatalogInput(deps: ReturnType<typeof getHomeLoaderDeps>) 
     pokemonIds: deps.collection
       ? pokemonCollectionFilterMap[deps.collection]?.pokemonIds
       : undefined,
+    pokemonIdsOperator: deps.collectionOperator,
   };
 }
 
@@ -94,11 +113,5 @@ function CatalogErrorComponent({
 }
 
 function HomeComponent() {
-  return (
-    <div className="flex flex-col h-full">
-      <div className="relative flex-1 min-h-0 overflow-hidden">
-        <ListTemplateView />
-      </div>
-    </div>
-  );
+  return <PokemonFinder />;
 }

@@ -1,5 +1,8 @@
 import MainTab from "@/components/sidebarRight/mainTab";
+import { PokemonBreadcrumb } from "@/components/pokemon-breadcrumb";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { formatPokemonText } from "@/components/sidebarRight/utils";
 import { orpc } from "@/utils/orpc";
 import {
   createFileRoute,
@@ -7,7 +10,8 @@ import {
   useCanGoBack,
   useRouter,
 } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 export const Route = createFileRoute("/pokemon/$pokemonId")({
   loader: async ({ context, params }) => {
@@ -26,15 +30,16 @@ export const Route = createFileRoute("/pokemon/$pokemonId")({
       );
     }
 
-    return { pokemonId };
+    return { pokemonId, pokemonName: formatPokemonText(pokemon.name) };
   },
   component: PokemonDetailPage,
 });
 
 function PokemonDetailPage() {
-  const { pokemonId } = Route.useLoaderData();
+  const { pokemonId, pokemonName } = Route.useLoaderData();
   const router = useRouter();
   const canGoBack = useCanGoBack();
+  const { resolvedTheme, setTheme } = useTheme();
 
   const returnToPokedex = () => {
     if (canGoBack) {
@@ -46,38 +51,43 @@ function PokemonDetailPage() {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col bg-background">
-      <header className="flex h-16 shrink-0 items-center justify-between border-b bg-card px-3 sm:px-6">
-        <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-          <Button
-            aria-label="Back to Pokedex"
-            size="icon"
-            variant="ghost"
-            onClick={returnToPokedex}
-          >
-            <ArrowLeft />
-          </Button>
-          <div className="min-w-0 border-l border-border pl-3">
-            <p className="truncate text-sm font-semibold text-foreground">
-              Pokemon Explorer
-            </p>
-            <p className="truncate text-xs text-muted-foreground">
-              National Pokedex
-            </p>
+    <main className="h-full bg-muted/25 p-2 sm:p-3">
+      <div className="mx-auto flex h-full max-w-[1800px] flex-col overflow-hidden rounded-md border bg-background shadow-sm">
+        <header className="flex min-h-14 shrink-0 items-center justify-between gap-3 border-b bg-muted/15 px-3">
+          <div className="flex min-w-0 items-center gap-2">
+            <Button
+              aria-label="Back to Pokedex"
+              size="icon-sm"
+              variant="ghost"
+              onClick={returnToPokedex}
+            >
+              <ArrowLeft />
+            </Button>
+            <Separator className="h-6" orientation="vertical" />
+            <PokemonBreadcrumb
+              pokemonId={pokemonId}
+              pokemonName={pokemonName}
+            />
           </div>
+          <div className="flex shrink-0 items-center gap-1">
+            <span className="hidden font-mono text-[10px] uppercase text-muted-foreground md:inline">
+              Profile
+            </span>
+            <Button
+              aria-label="Change theme"
+              size="icon-sm"
+              variant="ghost"
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+            >
+              <Moon className="dark:hidden" />
+              <Sun className="hidden dark:block" />
+            </Button>
+          </div>
+        </header>
+        <div className="min-h-0 w-full flex-1 overflow-auto md:overflow-hidden">
+          <MainTab pokemonId={pokemonId} />
         </div>
-        <div className="flex items-baseline gap-2">
-          <span className="hidden text-[10px] font-medium uppercase text-muted-foreground sm:inline">
-            Profile
-          </span>
-          <span className="font-mono text-xs font-semibold tabular-nums text-foreground">
-            #{pokemonId.toString().padStart(4, "0")}
-          </span>
-        </div>
-      </header>
-      <main className="min-h-0 w-full flex-1 overflow-hidden">
-        <MainTab pokemonId={pokemonId} />
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

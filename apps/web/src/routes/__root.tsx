@@ -6,14 +6,12 @@ import {
   Outlet,
   Scripts,
   createRootRouteWithContext,
-  useRouterState,
 } from "@tanstack/react-router";
 
 import type { orpc } from "@/utils/orpc";
 
 import { Toaster } from "@/components/ui/sonner";
 
-import { SidebarLeft } from "@/components/sidebar-left";
 import appCss from "../index.css?url";
 
 const RouterDevtools = import.meta.env.DEV
@@ -52,7 +50,7 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "My App",
+        title: "Pokemon Explorer",
       },
     ],
     links: [
@@ -85,25 +83,13 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 });
 
 function RootDocument() {
-  const isCatalogRoute = useRouterState({
-    select: (state) => state.location.pathname === "/",
-  });
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        <div
-          className={
-            isCatalogRoute ? "grid h-full grid-cols-[auto_1fr]" : "h-full"
-          }
-        >
-          {isCatalogRoute ? <SidebarLeft /> : null}
-          <div className="h-full overflow-hidden">
-            <Outlet />
-          </div>
-        </div>
+        <div className="h-full overflow-hidden"><Outlet /></div>
         <Toaster richColors />
         {RouterDevtools ? (
           <Suspense fallback={null}>

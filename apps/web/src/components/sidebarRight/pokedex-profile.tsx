@@ -16,13 +16,13 @@ function SectionHeading({
   title: string;
 }) {
   return (
-    <div className="flex min-w-0 items-start gap-3">
-      <div className="mt-0.5 flex size-9 shrink-0 items-center justify-center rounded-md border border-primary/25 bg-primary/8 text-primary">
-        <Icon className="size-4" />
+    <div className="flex min-w-0 items-start gap-2.5">
+      <div className="flex size-8 shrink-0 items-center justify-center rounded-[4px] border border-primary/25 bg-primary/8 text-primary">
+        <Icon className="size-3.5" />
       </div>
       <div className="min-w-0">
-        <h2 className="text-lg font-semibold text-foreground">{title}</h2>
-        <p className="mt-0.5 text-sm leading-5 text-muted-foreground">
+        <h2 className="text-base font-semibold text-foreground">{title}</h2>
+        <p className="text-xs leading-5 text-muted-foreground">
           {description}
         </p>
       </div>
@@ -75,19 +75,19 @@ export default function PokedexProfile() {
   ];
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
-      <div className="grid gap-10 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
+    <div className="flex w-full flex-col gap-6 p-4 md:p-5 lg:p-6">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(18rem,0.85fr)]">
         <section className="min-w-0">
           <SectionHeading
             description="Core Pokédex information for this form."
             icon={BookOpen}
             title="Pokédex data"
           />
-          <dl className="mt-6 grid overflow-hidden rounded-md border border-border bg-card sm:grid-cols-2">
+          <dl className="mt-4 grid overflow-hidden rounded-md border bg-card sm:grid-cols-2">
             {profileData.map((item, index) => (
               <div
                 key={item.label}
-                className={`flex min-h-16 items-center justify-between gap-4 px-4 py-3 ${
+                className={`flex min-h-12 items-center justify-between gap-3 px-3 py-2 ${
                   index < profileData.length - 2 ? "border-b" : ""
                 } ${index % 2 === 0 ? "sm:border-r" : ""} ${
                   index === profileData.length - 2 ? "border-b sm:border-b-0" : ""
@@ -100,9 +100,9 @@ export default function PokedexProfile() {
               </div>
             ))}
           </dl>
-          <div className="mt-4 flex items-start gap-3 border-l-2 border-primary bg-primary/5 px-4 py-3">
+          <div className="mt-3 flex items-start gap-2.5 border-l-2 border-primary bg-primary/5 px-3 py-2.5">
             <span className="mt-1 size-1.5 shrink-0 rounded-full bg-primary" />
-            <p className="text-sm leading-6 text-muted-foreground">
+            <p className="text-xs leading-5 text-muted-foreground">
               {pokemon.locationAreaEncounters
                 ? "Encounter records are available for this Pokémon across supported game versions."
                 : "Encounter records are not available for this Pokémon yet."}
@@ -110,18 +110,18 @@ export default function PokedexProfile() {
           </div>
         </section>
 
-        <section className="min-w-0 border-t border-border pt-8 xl:border-l xl:border-t-0 xl:pl-10 xl:pt-0">
+        <section className="min-w-0 border-t pt-5 xl:border-l xl:border-t-0 xl:pl-6 xl:pt-0">
           <SectionHeading
             description="Battle traits, including hidden abilities."
             icon={Sparkles}
             title="Abilities"
           />
-          <div className="mt-6 grid gap-2">
+          <div className="mt-4 grid gap-2">
             {pokemon.abilities.length > 0 ? (
               pokemon.abilities.map((entry, index) => (
                 <div
                   key={`${entry.ability.name}-${index}`}
-                  className="group flex min-h-16 items-center justify-between gap-4 rounded-md border border-border bg-card px-4 py-3 transition-[background-color,border-color] duration-150 hover:border-primary/30 hover:bg-primary/5 motion-reduce:transition-none"
+                  className="group flex min-h-12 items-center justify-between gap-3 rounded-md border bg-card px-3 py-2 transition-colors hover:border-primary/30 hover:bg-primary/5 motion-reduce:transition-none"
                 >
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold text-foreground">
@@ -145,7 +145,7 @@ export default function PokedexProfile() {
         </section>
       </div>
 
-      <section className="border-t border-border pt-8">
+      <section className="border-t pt-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <SectionHeading
             description="Species values before level, nature and training modifiers."
@@ -154,7 +154,7 @@ export default function PokedexProfile() {
           />
         </div>
 
-        <div className="mt-7 grid gap-x-12 gap-y-5 lg:grid-cols-2">
+        <div className="mt-5 grid gap-x-8 gap-y-4 lg:grid-cols-2">
           {stats.map((stat) => {
             const percentage = Math.min(100, (stat.base_stat / 255) * 100);
 

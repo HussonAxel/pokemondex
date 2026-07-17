@@ -81,4 +81,65 @@ describe("queryPokemonCatalog", () => {
       pageSize: 1,
     });
   });
+
+  it("filters by generation and base stat bounds", () => {
+    expect(
+      queryPokemonCatalog(catalog, {
+        page: 1,
+        pageSize: 30,
+        generation: 1,
+        minBst: 400,
+        maxBst: 650,
+      }).items.map((item) => item.id),
+    ).toEqual([6]);
+  });
+
+  it("supports any, all and none operators for multi-value fields", () => {
+    const queryTypes = (typeOperator: "is_any_of" | "includes_all" | "is_not_any_of") =>
+      queryPokemonCatalog(catalog, {
+        page: 1,
+        pageSize: 30,
+        type: ["fire", "dragon"],
+        typeOperator,
+      }).items.map((item) => item.id);
+
+    expect(queryTypes("is_any_of")).toEqual([4, 6]);
+    expect(queryTypes("includes_all")).toEqual([6]);
+    expect(queryTypes("is_not_any_of")).toEqual([1]);
+  });
+
+  it("combines independent filters with global AND or OR semantics", () => {
+    const input = {
+      page: 1,
+      pageSize: 30,
+      type: ["grass"],
+      generation: 1,
+      generationOperator: "is_not" as const,
+    };
+
+    expect(queryPokemonCatalog(catalog, input).items).toEqual([]);
+    expect(
+      queryPokemonCatalog(catalog, { ...input, filterJoin: "or" }).items.map((item) => item.id),
+    ).toEqual([1]);
+  });
+
+  it("supports inverse and equality base-stat operators", () => {
+    expect(
+      queryPokemonCatalog(catalog, {
+        page: 1,
+        pageSize: 30,
+        minBst: 309,
+        bstOperator: "equals",
+      }).items.map((item) => item.id),
+    ).toEqual([4]);
+    expect(
+      queryPokemonCatalog(catalog, {
+        page: 1,
+        pageSize: 30,
+        minBst: 300,
+        maxBst: 400,
+        bstOperator: "not_between",
+      }).items.map((item) => item.id),
+    ).toEqual([6]);
+  });
 });

@@ -341,7 +341,7 @@ export default function SpritesComponent({
   const cryCount = [pokemon.cries?.latest, pokemon.cries?.legacy].filter(Boolean).length;
 
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-7xl flex-col gap-5 overflow-y-auto overflow-x-hidden px-4 py-4 md:px-6 md:py-5">
+    <div className="flex h-full min-h-0 w-full flex-col gap-4 overflow-y-auto overflow-x-hidden p-4 md:p-5 lg:p-6">
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         <div className="rounded-md border border-border px-3 py-3 text-center">
           <p className="text-[10px] uppercase tracking-wider text-muted-foreground/70">

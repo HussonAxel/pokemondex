@@ -20,9 +20,24 @@ export type PokemonCatalogInput = {
   pageSize: number;
   search?: string;
   type?: string[];
+  typeOperator?: "is_any_of" | "includes_all" | "is_not_any_of";
   ability?: string[];
+  abilityOperator?: "is_any_of" | "includes_all" | "is_not_any_of";
+  generation?: number;
+  generationOperator?: "is" | "is_not";
+  minBst?: number;
+  maxBst?: number;
+  bstOperator?:
+    | "greater_than"
+    | "less_than"
+    | "between"
+    | "not_between"
+    | "equals"
+    | "not_equals";
+  filterJoin?: "and" | "or";
   collection?: string;
   pokemonIds?: number[];
+  pokemonIdsOperator?: "is" | "is_not";
 };
 
 export type PokemonCatalogPage = {
@@ -53,6 +68,44 @@ function matchesSearchTerm(item: PokemonCatalogItem, term: string) {
   );
 }
 
+function matchesValues(
+  availableValues: readonly string[],
+  selectedValues: readonly string[],
+  operator: "is_any_of" | "includes_all" | "is_not_any_of",
+) {
+  if (operator === "is_any_of") {
+    return selectedValues.some((value) => availableValues.includes(value));
+  }
+  if (operator === "is_not_any_of") {
+    return selectedValues.every((value) => !availableValues.includes(value));
+  }
+  return selectedValues.every((value) => availableValues.includes(value));
+}
+
+function matchesBst(itemBst: number, input: PokemonCatalogInput) {
+  const first = input.minBst;
+  const second = input.maxBst;
+  const operator = input.bstOperator ??
+    (first !== undefined && second !== undefined
+      ? "between"
+      : second !== undefined
+        ? "less_than"
+        : "greater_than");
+
+  if (operator === "between") {
+    return (first === undefined || itemBst >= first) &&
+      (second === undefined || itemBst <= second);
+  }
+  if (operator === "not_between") {
+    return (first !== undefined && itemBst < first) ||
+      (second !== undefined && itemBst > second);
+  }
+  if (operator === "less_than") return second !== undefined ? itemBst <= second : first === undefined || itemBst <= first;
+  if (operator === "equals") return first === undefined || itemBst === first;
+  if (operator === "not_equals") return first === undefined || itemBst !== first;
+  return first === undefined || itemBst >= first;
+}
+
 export function queryPokemonCatalog(
   items: readonly PokemonCatalogItem[],
   input: PokemonCatalogInput,
@@ -63,19 +116,35 @@ export function queryPokemonCatalog(
     : undefined;
 
   const filteredItems = items.filter((item) => {
-    if (pokemonIds && !pokemonIds.has(item.id)) return false;
     if (!searchTerms.every((term) => matchesSearchTerm(item, term))) {
       return false;
     }
-    if (!(input.type ?? []).every((type) => item.types.includes(type))) {
-      return false;
-    }
-
     const abilities = [
       ...item.visibleAbilityNames,
       ...item.hiddenAbilityNames,
     ];
-    return (input.ability ?? []).every((ability) => abilities.includes(ability));
+    const criteria: boolean[] = [];
+
+    if (pokemonIds) {
+      const isIncluded = pokemonIds.has(item.id);
+      criteria.push(input.pokemonIdsOperator === "is_not" ? !isIncluded : isIncluded);
+    }
+    if (input.type?.length) {
+      criteria.push(matchesValues(item.types, input.type, input.typeOperator ?? "includes_all"));
+    }
+    if (input.ability?.length) {
+      criteria.push(matchesValues(abilities, input.ability, input.abilityOperator ?? "includes_all"));
+    }
+    if (input.generation) {
+      const isGeneration = item.generation === input.generation;
+      criteria.push(input.generationOperator === "is_not" ? !isGeneration : isGeneration);
+    }
+    if (input.minBst !== undefined || input.maxBst !== undefined) {
+      criteria.push(matchesBst(item.bst, input));
+    }
+
+    if (!criteria.length) return true;
+    return input.filterJoin === "or" ? criteria.some(Boolean) : criteria.every(Boolean);
   });
 
   const offset = (input.page - 1) * input.pageSize;

@@ -40,8 +40,8 @@ export default function BreedingComponent() {
   const numberFormatter = new Intl.NumberFormat("en-US");
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-6 md:px-8 md:py-8 lg:px-10 lg:py-10">
-      <div className="border-b border-border pb-6">
+    <div className="flex w-full flex-col gap-5 p-4 md:p-5 lg:p-6">
+      <div className="border-b pb-4">
         <p className="font-mono text-[10px] font-medium uppercase text-muted-foreground">
           Nursery data
         </p>
