@@ -52,6 +52,7 @@ type PokeApiSpeciesPayload = {
   habitat?: { name: string; url: string } | null;
   hatch_counter: number;
   shape?: { name: string; url: string } | null;
+  varieties?: PokemonVariety[];
 };
 
 function getLocalizedAbilityText(
@@ -99,18 +100,6 @@ function getLocalizedFlavorText(
 
   const fallback = entries.find((entry) => entry.flavor_text);
   return fallback?.flavor_text?.replace(/\s+/g, " ").trim() ?? null;
-}
-
-async function getSpeciesVarieties(speciesUrl?: string | null) {
-  if (!speciesUrl) {
-    return [] as PokemonVariety[];
-  }
-
-  const data = await fetchPokeApiJson<{
-    varieties?: PokemonVariety[];
-  }>(speciesUrl);
-
-  return data.varieties ?? [];
 }
 
 export const appRouter = {
@@ -210,7 +199,6 @@ export const appRouter = {
       }
 
       const p = pokemonData[0]!;
-      const varieties = await getSpeciesVarieties(p.species?.url);
 
       return {
         id: p.id,
@@ -231,7 +219,6 @@ export const appRouter = {
         pastAbilities: p.pastAbilities || [],
         moves: p.moves || [],
         forms: p.forms || [],
-        varieties,
         gameIndices: p.gameIndices || [],
         heldItems: p.heldItems || [],
         species: p.species,

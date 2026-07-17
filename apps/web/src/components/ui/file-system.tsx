@@ -45,6 +45,7 @@ type FileSystemProps = {
   onSearchChange?: (value: string) => void;
   onViewChange?: (view: FileSystemView) => void;
   onSelectionChange?: (item: FileSystemItem | null) => void;
+  onFileIntent?: (file: FileSystemFileItem) => void;
   onFileOpen?: (file: FileSystemFileItem) => void;
   renderFilePreview?: (file: FileSystemFileItem, large?: boolean) => React.ReactNode;
   renderFileDetails?: (file: FileSystemFileItem) => React.ReactNode;
@@ -105,6 +106,7 @@ export function FileSystem({
   onSearchChange,
   onViewChange,
   onSelectionChange,
+  onFileIntent,
   onFileOpen,
   renderFilePreview,
   renderFileDetails,
@@ -183,8 +185,11 @@ export function FileSystem({
     "aria-selected": selectedPath === file.path,
     "data-file-index": index,
     "data-cuelume-hover": "release",
+    onFocus: () => onFileIntent?.(file),
     onClick: () => openSelected(file),
     onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
+    onPointerDown: () => onFileIntent?.(file),
+    onPointerEnter: () => onFileIntent?.(file),
     tabIndex: selectedPath === file.path || (!selectedPath && index === 0) ? 0 : -1,
   });
 

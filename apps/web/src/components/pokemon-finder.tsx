@@ -24,7 +24,7 @@ import { queryPokemonCatalogIsomorphic } from "@/features/pokemon-catalog/isomor
 import { HOME_CATALOG_PAGE_SIZE, Route } from "@/routes";
 import { orpc } from "@/utils/orpc";
 import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
+import { useLoaderData, useNavigate, useRouter, useSearch } from "@tanstack/react-router";
 import {
   Activity,
   BookOpen,
@@ -60,6 +60,7 @@ export function PokemonFinder() {
   const { catalog } = useLoaderData({ from: Route.id });
   const searchParams = useSearch({ from: Route.id });
   const navigate = useNavigate({ from: Route.id });
+  const router = useRouter();
   const queryClient = useQueryClient();
   const { resolvedTheme, setTheme } = useTheme();
   const [searchValue, setSearchValue] = React.useState(searchParams.search ?? "");
@@ -160,10 +161,25 @@ export function PokemonFinder() {
   const prefetchPokemon = (file: FileSystemFileItem) => {
     const id = Number(file.key);
     if (!Number.isFinite(id)) return;
-    void queryClient.prefetchQuery({
-      ...orpc.getPokemonOverview.queryOptions({ input: { id } }),
-      staleTime: 5 * 60 * 1000,
+
+    void router.preloadRoute({
+      to: "/pokemon/$pokemonId",
+      params: { pokemonId: String(id) },
+    }).catch(() => undefined);
+    void import("@/components/sidebarRight/pokedex-profile");
+
+    const overviewQueryOptions = orpc.getPokemonOverview.queryOptions({
+      input: { id },
     });
+    void queryClient.ensureQueryData({
+      ...overviewQueryOptions,
+      staleTime: 5 * 60 * 1000,
+    }).then((pokemon) => {
+      const imageUrl = pokemon.officialArtworkUrl ?? pokemon.spriteUrl;
+      if (!imageUrl) return;
+      const image = new Image();
+      image.src = imageUrl;
+    }).catch(() => undefined);
     const speciesUrl = file.metadata?.speciesUrl;
     if (speciesUrl) {
       void queryClient.prefetchQuery({
@@ -171,9 +187,14 @@ export function PokemonFinder() {
         staleTime: 5 * 60 * 1000,
       });
     }
+    if (file.previewImageUrl) {
+      const image = new Image();
+      image.src = file.previewImageUrl;
+    }
   };
 
   const openPokemon = (file: FileSystemFileItem) => {
+    prefetchPokemon(file);
     void navigate({
       to: "/pokemon/$pokemonId",
       params: { pokemonId: String(file.key) },
@@ -242,6 +263,7 @@ export function PokemonFinder() {
           searchValue={searchValue}
           onSearchChange={setSearchValue}
           onViewChange={(view) => updateFilters({ view })}
+          onFileIntent={prefetchPokemon}
           onSelectionChange={(item) => item?.kind === "file" && prefetchPokemon(item)}
           onFileOpen={openPokemon}
           hasMore={isInfiniteView && infiniteCatalog.hasNextPage}
