@@ -183,11 +183,7 @@ export function FileSystem({
     "aria-selected": selectedPath === file.path,
     "data-file-index": index,
     "data-cuelume-hover": "release",
-    onClick: () => {
-      selectFile(file);
-      if (window.matchMedia("(pointer: coarse)").matches) onFileOpen?.(file);
-    },
-    onDoubleClick: () => openSelected(file),
+    onClick: () => openSelected(file),
     onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
     tabIndex: selectedPath === file.path || (!selectedPath && index === 0) ? 0 : -1,
   });

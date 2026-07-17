@@ -230,7 +230,7 @@ export function PokemonFinder() {
             ))}
           </nav>
           <div className="border-t p-3 text-[10px] leading-4 text-muted-foreground">
-            Double-click a Pokemon to open its profile.
+            Click a Pokemon to open its profile.
           </div>
         </aside>
 
