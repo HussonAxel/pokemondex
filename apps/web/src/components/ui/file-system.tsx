@@ -45,7 +45,6 @@ type FileSystemProps = {
   onSearchChange?: (value: string) => void;
   onViewChange?: (view: FileSystemView) => void;
   onSelectionChange?: (item: FileSystemItem | null) => void;
-  onFileIntent?: (file: FileSystemFileItem) => void;
   onFileOpen?: (file: FileSystemFileItem) => void;
   renderFilePreview?: (file: FileSystemFileItem, large?: boolean) => React.ReactNode;
   renderFileDetails?: (file: FileSystemFileItem) => React.ReactNode;
@@ -106,7 +105,6 @@ export function FileSystem({
   onSearchChange,
   onViewChange,
   onSelectionChange,
-  onFileIntent,
   onFileOpen,
   renderFilePreview,
   renderFileDetails,
@@ -124,7 +122,6 @@ export function FileSystem({
   const [internalView, setInternalView] = React.useState(defaultView);
   const [selectedPath, setSelectedPath] = React.useState<string | null>(null);
   const iconGridRef = React.useRef<HTMLDivElement>(null);
-  const intentTimeoutsRef = React.useRef(new Map<string, number>());
   const view = controlledView ?? internalView;
   const files = items.filter(
     (item): item is FileSystemFileItem => item.kind === "file",
@@ -138,41 +135,9 @@ export function FileSystem({
     }
   }, [files, onSelectionChange, selectedPath]);
 
-  React.useEffect(() => {
-    const intentTimeouts = intentTimeoutsRef.current;
-
-    return () => {
-      for (const timeout of intentTimeouts.values()) {
-        window.clearTimeout(timeout);
-      }
-      intentTimeouts.clear();
-    };
-  }, []);
-
   const selectFile = (file: FileSystemFileItem) => {
     setSelectedPath(file.path);
     onSelectionChange?.(file);
-  };
-
-  const clearFileIntent = (file: FileSystemFileItem) => {
-    const timeout = intentTimeoutsRef.current.get(file.path);
-    if (timeout === undefined) return;
-    window.clearTimeout(timeout);
-    intentTimeoutsRef.current.delete(file.path);
-  };
-
-  const signalFileIntent = (file: FileSystemFileItem) => {
-    clearFileIntent(file);
-    onFileIntent?.(file);
-  };
-
-  const scheduleFileIntent = (file: FileSystemFileItem) => {
-    clearFileIntent(file);
-    const timeout = window.setTimeout(() => {
-      intentTimeoutsRef.current.delete(file.path);
-      onFileIntent?.(file);
-    }, 100);
-    intentTimeoutsRef.current.set(file.path, timeout);
   };
 
   const openSelected = (file: FileSystemFileItem) => {
@@ -218,12 +183,15 @@ export function FileSystem({
     "aria-selected": selectedPath === file.path,
     "data-file-index": index,
     "data-cuelume-hover": "release",
-    onFocus: () => signalFileIntent(file),
-    onClick: () => openSelected(file),
+    onClick: () => {
+      selectFile(file);
+      const usesInspector = view === "columns" || view === "gallery";
+      if (!usesInspector && window.matchMedia("(pointer: coarse)").matches) {
+        onFileOpen?.(file);
+      }
+    },
+    onDoubleClick: () => openSelected(file),
     onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),
-    onPointerDown: () => signalFileIntent(file),
-    onPointerEnter: () => scheduleFileIntent(file),
-    onPointerLeave: () => clearFileIntent(file),
     tabIndex: selectedPath === file.path || (!selectedPath && index === 0) ? 0 : -1,
   });
 
@@ -325,14 +293,14 @@ export function FileSystem({
                 key={file.path}
                 type="button"
                 {...itemProps(file, index)}
-                className="group grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto_auto] items-center gap-1 rounded-md p-1 outline-none transition-colors hover:bg-muted/55 focus-visible:ring-2 focus-visible:ring-ring/40 aria-selected:bg-primary/10 lg:gap-0.5"
+                className="group grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto_auto] items-center gap-0.5 rounded-md p-0 outline-none transition-colors hover:bg-muted/55 focus-visible:ring-2 focus-visible:ring-ring/40 aria-selected:bg-primary/10 lg:gap-0.5"
               >
                 <span className="relative h-full min-h-0 w-full place-self-center overflow-hidden rounded-md border border-transparent bg-muted/25 transition-colors group-hover:border-border group-aria-selected:border-primary/35 group-aria-selected:bg-primary/5">
-                  <span className="absolute inset-1 grid min-h-0 min-w-0 place-items-center [&_img]:absolute [&_img]:inset-0 [&_img]:m-auto [&_img]:h-full [&_img]:max-h-[6.75rem] [&_img]:w-full [&_img]:max-w-[6.75rem] [&_img]:scale-110 [&_img]:object-contain sm:[&_img]:max-h-[7.25rem] sm:[&_img]:max-w-[7.25rem] 2xl:[&_img]:max-h-28 2xl:[&_img]:max-w-28">
+                  <span className="absolute inset-0.5 grid min-h-0 min-w-0 place-items-center [&_img]:absolute [&_img]:inset-0 [&_img]:m-auto [&_img]:h-full [&_img]:max-h-28 [&_img]:w-full [&_img]:max-w-28 [&_img]:scale-110 [&_img]:object-contain">
                     <FilePreview file={file} render={renderFilePreview} />
                   </span>
                 </span>
-                <span className="max-w-full truncate text-center text-[13px] font-semibold leading-4 sm:text-xs">{displayName(file)}</span>
+                <span className="max-w-full truncate text-center text-xs font-medium">{displayName(file)}</span>
                 <span className="font-mono text-[10px] text-muted-foreground">{file.metadata?.number}</span>
               </button>
             ))}
