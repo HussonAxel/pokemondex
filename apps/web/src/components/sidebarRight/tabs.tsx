@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 
 import Loader from "@/components/demo/loader";
 import { Tabs, TabsList, TabsPanel, TabsTab } from "@/components/ui/tabs";
@@ -33,6 +33,7 @@ export default function TabsComponent({
   selectedSpriteSrc,
 }: TabsComponentProps) {
   const [activeTab, setActiveTab] = useState("tab-1");
+  const navigationRef = useRef<HTMLElement>(null);
   const pokemonId = usePokemonDetailId();
   const queryClient = useQueryClient();
 
@@ -44,16 +45,25 @@ export default function TabsComponent({
     });
   };
 
+  const selectTab = (value: string) => {
+    setActiveTab(value);
+    navigationRef.current?.scrollIntoView({
+      behavior: "auto",
+      block: "start",
+    });
+  };
+
   return (
     <Tabs
-      className="flex h-full min-h-0 flex-col gap-0"
+      className="flex min-h-0 flex-col gap-0 md:h-full"
       defaultValue="tab-1"
       value={activeTab}
-      onValueChange={setActiveTab}
+      onValueChange={selectTab}
     >
       <nav
+        ref={navigationRef}
         aria-label="Pokemon profile sections"
-        className="flex min-h-12 shrink-0 items-center border-b bg-muted/15 px-2"
+        className="sticky top-0 z-20 flex min-h-12 shrink-0 items-center border-y bg-background/95 px-2 backdrop-blur after:pointer-events-none after:absolute after:inset-y-0 after:right-0 after:w-8 after:bg-linear-to-l after:from-background after:to-transparent after:content-[''] md:static md:border-t-0 md:bg-muted/15 md:after:hidden"
       >
         <TabsList
           variant="underline"
@@ -85,35 +95,35 @@ export default function TabsComponent({
           </TabsTab>
         </TabsList>
       </nav>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-1">
+      <TabsPanel className="min-h-0 overflow-visible md:overflow-y-auto" value="tab-1">
         {activeTab === "tab-1" ? (
           <Suspense fallback={<Loader />}>
             <PokedexProfile />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-2">
+      <TabsPanel className="min-h-0 overflow-visible md:overflow-y-auto" value="tab-2">
         {activeTab === "tab-2" ? (
           <Suspense fallback={<Loader />}>
             <TrainingRelationsComponent />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-3">
+      <TabsPanel className="min-h-0 overflow-visible md:overflow-y-auto" value="tab-3">
         {activeTab === "tab-3" ? (
           <Suspense fallback={<Loader />}>
             <BreedingComponent />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-4">
+      <TabsPanel className="min-h-0 overflow-visible md:overflow-y-auto" value="tab-4">
         {activeTab === "tab-4" ? (
           <Suspense fallback={<Loader />}>
             <MovePoolComponent />
           </Suspense>
         ) : null}
       </TabsPanel>
-      <TabsPanel className="min-h-0 overflow-y-auto" value="tab-5">
+      <TabsPanel className="min-h-0 overflow-visible md:overflow-y-auto" value="tab-5">
         {activeTab === "tab-5" ? (
           <Suspense fallback={<Loader />}>
             <SpritesComponent

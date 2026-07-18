@@ -279,7 +279,7 @@ export default function MovePoolComponent() {
   );
 
   return (
-    <div className="flex h-full min-h-0 flex-col gap-4 overflow-hidden px-4 py-4 md:px-6 md:py-5">
+    <div className="flex min-h-0 flex-col gap-4 overflow-visible px-4 py-4 md:h-full md:overflow-hidden md:px-6 md:py-5">
       <div className="shrink-0 rounded-md border border-border bg-card p-3">
         <div className="flex flex-wrap items-center gap-2">
           <div className="rounded-lg border border-border bg-background/55 px-2 py-1 text-center">
@@ -385,7 +385,7 @@ export default function MovePoolComponent() {
 
       {filteredMoves.length > 0 ? (
         <div className="min-h-0 flex-1 overflow-hidden rounded-md border border-border bg-card">
-          <div className="h-full overflow-auto">
+          <div className="overflow-x-auto md:h-full md:overflow-auto">
             <Table className="min-w-[1040px] table-fixed">
               <TableHeader className="sticky top-0 z-10">
                 <TableRow>

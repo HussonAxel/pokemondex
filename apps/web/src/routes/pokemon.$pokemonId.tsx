@@ -84,7 +84,10 @@ function PokemonDetailPage() {
             </Button>
           </div>
         </header>
-        <div className="min-h-0 w-full flex-1 overflow-auto md:overflow-hidden">
+        <div
+          className="min-h-0 w-full flex-1 overflow-auto overscroll-y-contain pb-[calc(1rem+env(safe-area-inset-bottom))] md:overflow-hidden md:pb-0"
+          data-pokemon-detail-scroll
+        >
           <MainTab pokemonId={pokemonId} />
         </div>
       </div>
