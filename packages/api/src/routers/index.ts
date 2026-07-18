@@ -40,6 +40,8 @@ type PokeApiAbilityPayload = {
 };
 
 type PokeApiSpeciesPayload = {
+  base_happiness?: number | null;
+  capture_rate?: number;
   color?: { name: string; url: string } | null;
   egg_groups?: Array<{ name: string; url: string }>;
   flavor_text_entries?: Array<{
@@ -48,6 +50,10 @@ type PokeApiSpeciesPayload = {
     version?: { name: string; url: string };
   }>;
   gender_rate: number;
+  genera?: Array<{
+    genus: string;
+    language?: PokeApiLanguageEntry;
+  }>;
   growth_rate: { name: string; url: string };
   habitat?: { name: string; url: string } | null;
   hatch_counter: number;
