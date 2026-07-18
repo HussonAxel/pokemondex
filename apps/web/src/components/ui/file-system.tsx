@@ -185,7 +185,10 @@ export function FileSystem({
     "data-cuelume-hover": "release",
     onClick: () => {
       selectFile(file);
-      if (window.matchMedia("(pointer: coarse)").matches) onFileOpen?.(file);
+      const usesInspector = view === "columns" || view === "gallery";
+      if (!usesInspector && window.matchMedia("(pointer: coarse)").matches) {
+        onFileOpen?.(file);
+      }
     },
     onDoubleClick: () => openSelected(file),
     onKeyDown: (event: React.KeyboardEvent) => handleKeyDown(event, index),

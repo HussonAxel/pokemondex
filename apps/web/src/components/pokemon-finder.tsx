@@ -19,11 +19,10 @@ import {
   type FilterFieldConfig,
 } from "@/components/ui/filters";
 import { Progress } from "@/components/ui/progress";
-import { pokemonCollectionFilterMap, pokemonCollectionFilters } from "@/data/data";
-import { queryPokemonCatalogIsomorphic } from "@/features/pokemon-catalog/isomorphic";
+import { pokemonCollectionFilters } from "@/data/data";
 import { HOME_CATALOG_PAGE_SIZE, Route } from "@/routes";
 import { orpc } from "@/utils/orpc";
-import { useInfiniteQuery, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLoaderData, useNavigate, useSearch } from "@tanstack/react-router";
 import {
   Activity,
@@ -90,51 +89,9 @@ export function PokemonFinder() {
     searchParams.view === "grid" || !searchParams.view
       ? "icons"
       : searchParams.view;
-  const isInfiniteView = currentView === "columns" || currentView === "gallery";
   const totalPages = Math.max(1, Math.ceil(catalog.total / HOME_CATALOG_PAGE_SIZE));
 
-  const infiniteCatalogInput = React.useMemo(() => ({
-    ability: searchParams.ability ?? [],
-    abilityOperator: searchParams.abilityOperator,
-    bstOperator: searchParams.bstOperator,
-    collection: searchParams.collection,
-    filterJoin: searchParams.filterJoin,
-    generation: searchParams.generation,
-    generationOperator: searchParams.generationOperator,
-    maxBst: searchParams.maxBst,
-    minBst: searchParams.minBst,
-    pageSize: HOME_CATALOG_PAGE_SIZE,
-    pokemonIds: searchParams.collection
-      ? pokemonCollectionFilterMap[searchParams.collection]?.pokemonIds
-      : undefined,
-    pokemonIdsOperator: searchParams.collectionOperator,
-    search: searchParams.search?.trim() || undefined,
-    type: searchParams.type ?? [],
-    typeOperator: searchParams.typeOperator,
-  }), [searchParams]);
-
-  const infiniteCatalog = useInfiniteQuery({
-    queryKey: ["pokemon-catalog", "infinite", infiniteCatalogInput],
-    queryFn: ({ pageParam }) => queryPokemonCatalogIsomorphic({
-      ...infiniteCatalogInput,
-      page: pageParam,
-    }),
-    initialPageParam: 1,
-    initialData: catalog.page === 1
-      ? { pages: [catalog], pageParams: [1] }
-      : undefined,
-    getNextPageParam: (lastPage) =>
-      lastPage.page * HOME_CATALOG_PAGE_SIZE < lastPage.total
-        ? lastPage.page + 1
-        : undefined,
-    enabled: isInfiniteView,
-  });
-
-  const visibleCatalogItems = isInfiniteView
-    ? infiniteCatalog.data?.pages.flatMap((page) => page.items) ?? catalog.items
-    : catalog.items;
-
-  const items: FileSystemItem[] = visibleCatalogItems.map((pokemon) => ({
+  const items: FileSystemItem[] = catalog.items.map((pokemon) => ({
     kind: "file",
     key: String(pokemon.id),
     path: `pokemon/${pokemon.id}`,
@@ -155,6 +112,10 @@ export function PokemonFinder() {
 
   const updateFilters = (next: Partial<typeof searchParams>) => {
     void navigate({ search: { ...searchParams, ...next, page: undefined } });
+  };
+
+  const changeView = (view: FileSystemView) => {
+    void navigate({ search: { ...searchParams, view } });
   };
 
   const prefetchPokemon = (file: FileSystemFileItem) => {
@@ -189,7 +150,7 @@ export function PokemonFinder() {
 
   const activeTypes = searchParams.type ?? [];
   const activeAbilities = searchParams.ability ?? [];
-  const abilityOptions = [...new Set(visibleCatalogItems.flatMap((pokemon) => [
+  const abilityOptions = [...new Set(catalog.items.flatMap((pokemon) => [
     ...pokemon.visibleAbilityNames,
     ...pokemon.hiddenAbilityNames,
   ]))].sort();
@@ -241,15 +202,9 @@ export function PokemonFinder() {
           view={currentView}
           searchValue={searchValue}
           onSearchChange={setSearchValue}
-          onViewChange={(view) => updateFilters({ view })}
+          onViewChange={changeView}
           onSelectionChange={(item) => item?.kind === "file" && prefetchPokemon(item)}
           onFileOpen={openPokemon}
-          hasMore={isInfiniteView && infiniteCatalog.hasNextPage}
-          isLoadingMore={infiniteCatalog.isFetchingNextPage}
-          onLoadMore={() => {
-            if (!infiniteCatalog.hasNextPage || infiniteCatalog.isFetchingNextPage) return;
-            void infiniteCatalog.fetchNextPage();
-          }}
           renderFilePreview={(file, large) => (
             <img
               src={file.previewImageUrl ?? undefined}
@@ -325,14 +280,7 @@ export function PokemonFinder() {
               onUpdate={updateFilters}
             />
           )}
-          footer={isInfiniteView ? (
-            <div className="flex w-full items-center justify-between gap-3">
-              <span>{visibleCatalogItems.length} of {catalog.total} Pokemon loaded</span>
-              <span className="font-mono text-[10px]">
-                {infiniteCatalog.isFetchingNextPage ? "Loading…" : "Scroll to explore"}
-              </span>
-            </div>
-          ) : (
+          footer={(
             <div className="flex w-full items-center justify-between gap-3">
               <span>{catalog.total} Pokemon · Page {catalog.page} of {totalPages}</span>
               <div className="flex items-center gap-1">
