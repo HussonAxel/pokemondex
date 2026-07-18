@@ -261,22 +261,28 @@ body {
 
     .finder-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 7rem), 1fr));
-        grid-auto-rows: minmax(0, 1fr);
-        align-content: stretch;
-        gap: 0.25rem;
-        overflow: hidden;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 8.75rem), 1fr));
+        grid-auto-rows: 9.75rem;
+        align-content: start;
+        gap: 0.5rem;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     @media (min-width: 48rem) {
         .finder-grid {
-            grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+            grid-auto-rows: 10.25rem;
         }
     }
 
     @media (min-width: 96rem) {
         .finder-grid {
             grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+            grid-auto-rows: minmax(0, 1fr);
+            align-content: stretch;
+            gap: 0.25rem;
+            overflow: hidden;
         }
     }
 

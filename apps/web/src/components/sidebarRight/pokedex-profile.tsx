@@ -33,7 +33,7 @@ function SectionHeading({
 export default function PokedexProfile() {
   const pokemonId = usePokemonDetailId();
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonSummary.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;

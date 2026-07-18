@@ -4,27 +4,18 @@ import TabsComponent from "@/components/sidebarRight/tabs";
 import { Badge } from "@/components/ui/badge";
 import BadgeTypes from "@/components/ui/badge-type";
 import { cn } from "@/lib/utils";
-import { orpc } from "@/utils/orpc";
 import { useQuery } from "@tanstack/react-query";
+import { orpc } from "@/utils/orpc";
 import { PokemonDetailProvider } from "./pokemon-detail-context";
 import { formatPokemonText } from "./utils";
 
 export default function MainTab({ pokemonId }: { pokemonId: number }) {
   const pokemonQuery = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonSummary.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
   const pokemon = pokemonQuery.data;
-  const speciesUrl = pokemon?.species?.url ?? "";
-  const species = useQuery({
-    ...orpc.getPokemonSpeciesData.queryOptions({
-      input: { url: speciesUrl },
-    }),
-    enabled: Boolean(speciesUrl),
-    staleTime: 30 * 60 * 1000,
-    gcTime: 24 * 60 * 60 * 1000,
-  }).data;
 
   const [selectedSprite, setSelectedSprite] = useState<{
     alt: string;
@@ -44,12 +35,6 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
     "";
   const previewAlt = selectedSprite?.alt || `${pokemon.name} official artwork`;
   const pokemonName = formatPokemonText(pokemon.name);
-  const pokedexEntry = [...(species?.flavor_text_entries ?? [])]
-    .reverse()
-    .find((entry) => entry.language?.name === "en")
-    ?.flavor_text?.replace(/[\n\f\r]+/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
   const physicalProfile = [
     {
       label: "Height",
@@ -60,16 +45,14 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
       value: pokemon.weight ? `${(pokemon.weight / 10).toFixed(1)} kg` : "—",
     },
     {
-      label: "Shape",
-      value: species?.shape?.name
-        ? formatPokemonText(species.shape.name)
+      label: "Introduced",
+      value: pokemon.generation
+        ? `Generation ${pokemon.generation}`
         : "Unknown",
     },
     {
-      label: "Color",
-      value: species?.color?.name
-        ? formatPokemonText(species.color.name)
-        : "Unknown",
+      label: "Base XP",
+      value: pokemon.baseExperience?.toString() ?? "Unknown",
     },
   ];
 
@@ -151,10 +134,11 @@ export default function MainTab({ pokemonId }: { pokemonId: number }) {
                 id="pokedex-entry-title"
                 className="finder-label"
               >
-                Pokedex Entry
+                Summary
               </h2>
               <p className="text-xs leading-5 text-foreground/75">
-                {pokedexEntry ?? "No Pokedex entry is available for this form."}
+                {pokemonName} is a {pokemon.types.map(formatPokemonText).join(" / ")} Pokemon
+                {pokemon.generation ? ` introduced in Generation ${pokemon.generation}` : ""}.
               </p>
             </section>
 

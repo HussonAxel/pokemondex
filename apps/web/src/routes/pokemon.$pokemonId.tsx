@@ -14,21 +14,21 @@ import { ArrowLeft, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 
 export const Route = createFileRoute("/pokemon/$pokemonId")({
+  staleTime: 5 * 60 * 1000,
+  gcTime: 10 * 60 * 1000,
+  pendingMs: 120,
+  pendingMinMs: 120,
   loader: async ({ context, params }) => {
     const pokemonId = Number(params.pokemonId);
     if (!Number.isInteger(pokemonId) || pokemonId <= 0) throw notFound();
 
     const pokemon = await context.queryClient.ensureQueryData(
-      orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+      {
+        ...orpc.getPokemonSummary.queryOptions({ input: { id: pokemonId } }),
+        staleTime: 5 * 60 * 1000,
+        gcTime: 10 * 60 * 1000,
+      },
     );
-
-    if (pokemon.species?.url) {
-      await context.queryClient.ensureQueryData(
-        orpc.getPokemonSpeciesData.queryOptions({
-          input: { url: pokemon.species.url },
-        }),
-      );
-    }
 
     return { pokemonId, pokemonName: formatPokemonText(pokemon.name) };
   },

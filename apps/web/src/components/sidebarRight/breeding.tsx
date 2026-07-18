@@ -9,7 +9,7 @@ export default function BreedingComponent() {
   const pokemonSpeciesUrl = `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`;
 
   const species = useQuery({
-    ...orpc.getPokemonSpeciesData.queryOptions({
+    ...orpc.getPokemonSpeciesSummary.queryOptions({
       input: { url: pokemonSpeciesUrl },
     }),
     enabled: true,

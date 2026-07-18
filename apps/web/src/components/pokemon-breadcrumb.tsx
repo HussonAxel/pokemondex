@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { HouseIcon } from "lucide-react";
 
-import { Frame, FramePanel } from "@/components/reui/frame";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -23,35 +22,36 @@ export function PokemonBreadcrumb({
   const pokemonNumber = pokemonId.toString().padStart(4, "0");
 
   return (
-    <Frame className="min-w-0" spacing="xs">
-      <FramePanel fit className="px-3! py-2!">
-        <Breadcrumb>
-          <BreadcrumbList className="flex-nowrap">
-            <BreadcrumbItem>
-              <BreadcrumbLink
-                className="flex items-center gap-1.5"
-                render={<Link to="/" />}
-              >
-                <HouseIcon aria-hidden="true" />
-                <span className="hidden sm:inline">Pokemon Explorer</span>
-                <span className="sr-only sm:hidden">Pokemon Explorer</span>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem className="hidden sm:inline-flex">
-              <BreadcrumbLink render={<Link to="/" />}>
-                National Pokedex
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden sm:list-item" />
-            <BreadcrumbItem className="min-w-0">
-              <BreadcrumbPage className="truncate font-semibold">
-                {pokemonName} #{pokemonNumber}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      </FramePanel>
-    </Frame>
+    <Breadcrumb className="min-w-0">
+      <BreadcrumbList className="flex-nowrap gap-1 text-[11px] sm:text-xs">
+        <BreadcrumbItem>
+          <BreadcrumbLink
+            className="inline-flex h-7 items-center gap-1.5 rounded-[4px] px-1.5 font-medium text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+            render={<Link to="/" />}
+          >
+            <HouseIcon className="size-3.5 text-primary" aria-hidden="true" />
+            <span className="hidden sm:inline">Pokemon Explorer</span>
+            <span className="sr-only sm:hidden">Pokemon Explorer</span>
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator className="text-muted-foreground/50 [&>svg]:size-3" />
+        <BreadcrumbItem className="hidden sm:inline-flex">
+          <BreadcrumbLink
+            className="inline-flex h-7 items-center rounded-[4px] px-1.5 font-medium text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/40"
+            render={<Link to="/" />}
+          >
+            National Pokedex
+          </BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator className="hidden text-muted-foreground/50 sm:list-item [&>svg]:size-3" />
+        <BreadcrumbItem className="min-w-0">
+          <BreadcrumbPage className="flex h-7 max-w-[min(52vw,24rem)] min-w-0 items-center rounded-[4px] border bg-background/70 px-2 font-semibold shadow-xs sm:max-w-[32rem]">
+            <span className="truncate">
+              {pokemonName} #{pokemonNumber}
+            </span>
+          </BreadcrumbPage>
+        </BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }

@@ -249,7 +249,7 @@ export default function SpritesComponent({
   const [mediaFilter, setMediaFilter] = useState("all");
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonSpritesData.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   }).data;
@@ -321,16 +321,7 @@ export default function SpritesComponent({
     }
 
 
-    return [
-      asset.label,
-      asset.pathLabel,
-      asset.sourceLabel,
-      asset.generationLabel ?? "",
-      asset.setLabel ?? "",
-      asset.tags.join(" "),
-    ]
-      .join(" ")
-      .toLowerCase()
+    return true;
   });
 
   const shinyCount = allAssets.filter((asset) => asset.tags.includes("shiny")).length;

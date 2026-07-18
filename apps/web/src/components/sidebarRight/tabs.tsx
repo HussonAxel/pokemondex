@@ -10,15 +10,15 @@ import { usePokemonDetailId } from "./pokemon-detail-context";
 const PokedexProfile = lazy(
   () => import("@/components/sidebarRight/pokedex-profile"),
 );
-const BreedingComponent = lazy(
-  () => import("@/components/sidebarRight/breeding"),
-);
-const TrainingRelationsComponent = lazy(
-  () => import("@/components/sidebarRight/training-relations"),
-);
-const SpritesComponent = lazy(
-  () => import("@/components/sidebarRight/sprites"),
-);
+const loadBreedingComponent = () =>
+  import("@/components/sidebarRight/breeding");
+const BreedingComponent = lazy(loadBreedingComponent);
+const loadTrainingRelationsComponent = () =>
+  import("@/components/sidebarRight/training-relations");
+const TrainingRelationsComponent = lazy(loadTrainingRelationsComponent);
+const loadSpritesComponent = () =>
+  import("@/components/sidebarRight/sprites");
+const SpritesComponent = lazy(loadSpritesComponent);
 const loadMovePoolComponent = () =>
   import("@/components/sidebarRight/move-pool");
 const MovePoolComponent = lazy(loadMovePoolComponent);
@@ -40,7 +40,33 @@ export default function TabsComponent({
   const prefetchMovePool = () => {
     void loadMovePoolComponent();
     void queryClient.prefetchQuery({
-      ...orpc.getPokemonMoveData.queryOptions({ input: { id: pokemonId } }),
+      ...orpc.getPokemonMovePoolData.queryOptions({ input: { id: pokemonId } }),
+      staleTime: 24 * 60 * 60 * 1000,
+    });
+  };
+
+  const prefetchTraining = () => {
+    void loadTrainingRelationsComponent();
+    void queryClient.prefetchQuery({
+      ...orpc.getPokemonTrainingData.queryOptions({ input: { id: pokemonId } }),
+      staleTime: 5 * 60 * 1000,
+    });
+  };
+
+  const prefetchBreeding = () => {
+    void loadBreedingComponent();
+    void queryClient.prefetchQuery({
+      ...orpc.getPokemonSpeciesSummary.queryOptions({
+        input: { url: `https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/` },
+      }),
+      staleTime: 30 * 60 * 1000,
+    });
+  };
+
+  const prefetchSprites = () => {
+    void loadSpritesComponent();
+    void queryClient.prefetchQuery({
+      ...orpc.getPokemonSpritesData.queryOptions({ input: { id: pokemonId } }),
       staleTime: 24 * 60 * 60 * 1000,
     });
   };
@@ -73,23 +99,39 @@ export default function TabsComponent({
             <BookOpen />
             Pokédex
           </TabsTab>
-          <TabsTab className="h-8 grow-0 px-3" value="tab-2">
+          <TabsTab
+            className="h-8 grow-0 px-3"
+            onFocus={prefetchTraining}
+            onMouseEnter={prefetchTraining}
+            value="tab-2"
+          >
             <Activity />
             Training
           </TabsTab>
-          <TabsTab className="h-8 grow-0 px-3" value="tab-3">
+          <TabsTab
+            className="h-8 grow-0 px-3"
+            onFocus={prefetchBreeding}
+            onMouseEnter={prefetchBreeding}
+            value="tab-3"
+          >
             <Dna />
             Breeding
           </TabsTab>
           <TabsTab
             className="h-8 grow-0 px-3"
+            onFocus={prefetchMovePool}
             onMouseEnter={prefetchMovePool}
             value="tab-4"
           >
             <Swords />
             Moves
           </TabsTab>
-          <TabsTab className="h-8 grow-0 px-3" value="tab-5">
+          <TabsTab
+            className="h-8 grow-0 px-3"
+            onFocus={prefetchSprites}
+            onMouseEnter={prefetchSprites}
+            value="tab-5"
+          >
             <Images />
             Gallery
           </TabsTab>

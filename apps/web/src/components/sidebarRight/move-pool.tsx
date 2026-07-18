@@ -130,22 +130,17 @@ export default function MovePoolComponent() {
   const sortBy = "level-asc";
   const deferredSearch = useDeferredValue(search);
 
-  const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-  }).data;
-  const moveMetadataQuery = useQuery({
-    ...orpc.getPokemonMoveData.queryOptions({ input: { id: pokemonId } }),
+  const movePoolQuery = useQuery({
+    ...orpc.getPokemonMovePoolData.queryOptions({ input: { id: pokemonId } }),
     staleTime: 24 * 60 * 60 * 1000,
     gcTime: 24 * 60 * 60 * 1000,
   });
 
   const metadataByName = new Map(
-    (moveMetadataQuery.data ?? []).map((move) => [move.name, move]),
+    (movePoolQuery.data?.metadata ?? []).map((move) => [move.name, move]),
   );
 
-  const allMoves = (pokemon?.moves ?? []).map<MoveRow>((entry) => ({
+  const allMoves = (movePoolQuery.data?.moves ?? []).map<MoveRow>((entry) => ({
     details: (entry.version_group_details ?? []).map((detail) => ({
       level: detail.level_learned_at,
       method: formatPokemonText(detail.move_learn_method.name),
@@ -180,7 +175,7 @@ export default function MovePoolComponent() {
     }
   }, [allVersions, versionFilter]);
 
-  if (!pokemon) {
+  if (!movePoolQuery.data) {
     return null;
   }
 
@@ -307,7 +302,7 @@ export default function MovePoolComponent() {
             </p>
           </div>
           <p className="ml-auto text-[11px] font-medium text-muted-foreground">
-            {moveMetadataQuery.isPending
+            {movePoolQuery.isPending
               ? "Loading battle data..."
               : `Showing ${filteredMoves.length} / ${allMoves.length}`}
           </p>

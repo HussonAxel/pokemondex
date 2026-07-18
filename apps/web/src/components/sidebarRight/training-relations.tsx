@@ -14,9 +14,16 @@ export default function TrainingRelationsComponent() {
   const pokemonId = usePokemonDetailId();
 
   const pokemon = useQuery({
-    ...orpc.getPokemonOverview.queryOptions({ input: { id: pokemonId } }),
+    ...orpc.getPokemonTrainingData.queryOptions({ input: { id: pokemonId } }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
+  }).data;
+  const speciesUrl = pokemon?.species?.url ?? "";
+  const species = useQuery({
+    ...orpc.getPokemonSpeciesSummary.queryOptions({ input: { url: speciesUrl } }),
+    enabled: Boolean(speciesUrl),
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   }).data;
 
   if (!pokemon) {
@@ -31,7 +38,7 @@ export default function TrainingRelationsComponent() {
     }));
   const totalEvYield = evYield.reduce((sum, stat) => sum + stat.value, 0);
   const heldItems = pokemon.heldItems ?? [];
-  const varieties = pokemon.varieties ?? [];
+  const varieties = species?.varieties ?? [];
   const versionPresence = Array.from(
     new Set(
       (pokemon.gameIndices ?? []).map((entry) =>
