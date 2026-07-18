@@ -325,14 +325,14 @@ export function FileSystem({
                 key={file.path}
                 type="button"
                 {...itemProps(file, index)}
-                className="group grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto_auto] items-center gap-0.5 rounded-md p-0 outline-none transition-colors hover:bg-muted/55 focus-visible:ring-2 focus-visible:ring-ring/40 aria-selected:bg-primary/10 lg:gap-0.5"
+                className="group grid min-h-0 min-w-0 grid-rows-[minmax(0,1fr)_auto_auto] items-center gap-1 rounded-md p-1 outline-none transition-colors hover:bg-muted/55 focus-visible:ring-2 focus-visible:ring-ring/40 aria-selected:bg-primary/10 lg:gap-0.5"
               >
                 <span className="relative h-full min-h-0 w-full place-self-center overflow-hidden rounded-md border border-transparent bg-muted/25 transition-colors group-hover:border-border group-aria-selected:border-primary/35 group-aria-selected:bg-primary/5">
-                  <span className="absolute inset-0.5 grid min-h-0 min-w-0 place-items-center [&_img]:absolute [&_img]:inset-0 [&_img]:m-auto [&_img]:h-full [&_img]:max-h-28 [&_img]:w-full [&_img]:max-w-28 [&_img]:scale-110 [&_img]:object-contain">
+                  <span className="absolute inset-1 grid min-h-0 min-w-0 place-items-center [&_img]:absolute [&_img]:inset-0 [&_img]:m-auto [&_img]:h-full [&_img]:max-h-[6.75rem] [&_img]:w-full [&_img]:max-w-[6.75rem] [&_img]:scale-110 [&_img]:object-contain sm:[&_img]:max-h-[7.25rem] sm:[&_img]:max-w-[7.25rem] 2xl:[&_img]:max-h-28 2xl:[&_img]:max-w-28">
                     <FilePreview file={file} render={renderFilePreview} />
                   </span>
                 </span>
-                <span className="max-w-full truncate text-center text-xs font-medium">{displayName(file)}</span>
+                <span className="max-w-full truncate text-center text-[13px] font-semibold leading-4 sm:text-xs">{displayName(file)}</span>
                 <span className="font-mono text-[10px] text-muted-foreground">{file.metadata?.number}</span>
               </button>
             ))}
