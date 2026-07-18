@@ -359,19 +359,20 @@ function PokemonListAbilities({ file }: { file: FileSystemFileItem }) {
     .map(formatName) ?? [];
 
   return (
-    <span className="flex min-w-0 flex-col items-start gap-1">
-      <span className="w-full truncate text-xs font-medium">
-        {visibleAbilities.join(" · ") || "No standard ability"}
-      </span>
-      {hiddenAbilities.length ? (
-        <Badge className="max-w-full truncate" variant="secondary">
-          Hidden: {hiddenAbilities.join(" · ")}
+    <span className="flex min-w-0 flex-wrap gap-1">
+      {visibleAbilities.map((ability) => (
+        <Badge key={`standard-${ability}`} className="max-w-full" variant="outline">
+          <span className="truncate">Standard · {ability}</span>
         </Badge>
-      ) : (
-        <span className="text-[10px] text-muted-foreground">
-          No hidden ability
-        </span>
-      )}
+      ))}
+      {hiddenAbilities.map((ability) => (
+        <Badge key={`hidden-${ability}`} className="max-w-full" variant="secondary">
+          <span className="truncate">Hidden · {ability}</span>
+        </Badge>
+      ))}
+      {!visibleAbilities.length && !hiddenAbilities.length ? (
+        <span className="text-[10px] text-muted-foreground">No ability</span>
+      ) : null}
     </span>
   );
 }
@@ -392,7 +393,6 @@ function PokemonListPower({ file }: { file: FileSystemFileItem }) {
     <span className="flex min-w-0 flex-col gap-1.5 pr-1">
       <span className="flex items-baseline justify-between gap-2">
         <span className="font-mono text-sm font-semibold tabular-nums">{bst}</span>
-        <span className="text-[10px] text-muted-foreground">{tier}</span>
       </span>
       <Progress
         aria-hidden="true"
@@ -433,6 +433,15 @@ function PokemonInspector({ file, onOpen, onTypeClick, onAbilityClick }: {
   const flavorText = species?.flavor_text_entries?.find(
     (entry) => entry.language?.name === "en",
   )?.flavor_text?.replace(/\s+/g, " ").trim();
+  const genus = species?.genera?.find(
+    (entry) => entry.language?.name === "en",
+  )?.genus ?? "Unknown classification";
+  const captureRate = species?.capture_rate !== undefined
+    ? `${species.capture_rate} / 255`
+    : "—";
+  const baseFriendship = species?.base_happiness != null
+    ? species.base_happiness.toString()
+    : "—";
   const gender = species?.gender_rate === -1
     ? "Genderless"
     : species?.gender_rate !== undefined
@@ -442,27 +451,26 @@ function PokemonInspector({ file, onOpen, onTypeClick, onAbilityClick }: {
   return (
     <div className="space-y-5 pb-2">
       <section className="relative overflow-hidden rounded-lg border bg-background">
-        <div className="relative grid grid-cols-[7rem_minmax(0,1fr)] items-center gap-4 p-4">
-          <div className="grid aspect-square place-items-center rounded-md border bg-muted/25 p-1.5 shadow-sm">
-            <img
-              src={file.previewImageUrl ?? undefined}
-              alt={`${file.name} sprite`}
-              className="h-full w-full object-contain pixelated drop-shadow-md"
-            />
+        <div className="p-4">
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-mono text-[10px] font-medium tracking-wider text-muted-foreground">{file.metadata?.number}</p>
+            <span className="rounded-full border bg-background/75 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{file.metadata?.generation}</span>
           </div>
-          <div className="min-w-0">
-            <div className="flex items-center justify-between gap-2">
-              <p className="font-mono text-[10px] font-medium tracking-wider text-muted-foreground">{file.metadata?.number}</p>
-              <span className="rounded-full border bg-background/75 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">{file.metadata?.generation}</span>
+          <h2 className="mt-1 truncate text-2xl font-bold tracking-tight">{file.name}</h2>
+          <BadgeTypes
+            className="mt-2 gap-1.5"
+            classNameBadge="px-2.5 py-1 text-[9px]"
+            pokemonTypes={types}
+            onClick={(event, type) => { event.stopPropagation(); onTypeClick(type); }}
+          />
+          <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-3 border-t pt-3">
+            <div className="col-span-2 min-w-0">
+              <dt className="text-[9px] font-medium uppercase tracking-wider text-muted-foreground">Classification</dt>
+              <dd className="mt-0.5 truncate text-xs font-semibold">{genus}</dd>
             </div>
-            <h2 className="mt-1 truncate text-2xl font-bold tracking-tight">{file.name}</h2>
-            <BadgeTypes
-              className="mt-2 gap-1.5"
-              classNameBadge="px-2.5 py-1 text-[9px]"
-              pokemonTypes={types}
-              onClick={(event, type) => { event.stopPropagation(); onTypeClick(type); }}
-            />
-          </div>
+            <InspectorTextDatum label="Capture rate" value={captureRate} />
+            <InspectorTextDatum label="Base friendship" value={baseFriendship} />
+          </dl>
         </div>
       </section>
 
